@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_testing/components/inputField.dart';
-import 'package:flutter_testing/components/popupMessage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projeto_sti/components/inputField.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 
 import '../components/appLogo.dart';
 import '../components/inputFieldLabel.dart';
