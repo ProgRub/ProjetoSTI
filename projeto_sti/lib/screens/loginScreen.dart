@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
+import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 
 import '../components/appLogo.dart';
 import '../components/inputFieldLabel.dart';
@@ -134,8 +135,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               onPressed: () {
                 if (_signUpFormKey.currentState!.validate()) {
-                  showPopupMessage(
-                      context, "success", "Your account has been created!");
+                  showPopupMessageWithFunction(
+                      context, "success", "Your account has been created!", () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChooseGenresScreen()));
+                  });
                 }
               },
               child: Text(
