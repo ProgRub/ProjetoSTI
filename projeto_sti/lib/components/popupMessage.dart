@@ -58,36 +58,36 @@ class PopupMessage extends StatelessWidget {
 
 showPopupMessageWithFunction(BuildContext context, String type, String message,
     Null Function() functionToCall) {
-  late Timer _timer;
+  // late Timer _timer;
   showDialog(
       context: context,
       builder: (BuildContext builderContext) {
-        _timer = Timer(const Duration(seconds: 2), () {
-          Navigator.of(context).pop();
-        });
+        // _timer = Timer(const Duration(seconds: 2), () {
+        //   Navigator.of(context).pop();
+        // });
 
         return PopupMessage(
             type: type, message: message, function: functionToCall);
       }).then((val) {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
+    // if (_timer.isActive) {
+    //   _timer.cancel();
+    // }
   });
 }
 
 showPopupMessage(BuildContext context, String type, String message) {
-  late Timer _timer;
+  // late Timer _timer;
   showDialog(
       context: context,
       builder: (BuildContext builderContext) {
-        _timer = Timer(const Duration(seconds: 2), () {
-          Navigator.of(context).pop();
-        });
+        // _timer = Timer(const Duration(seconds: 2), () {
+        //   Navigator.of(context).pop();
+        // });
 
         return PopupMessage(type: type, message: message, function: () {});
       }).then((val) {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
+    // if (_timer.isActive) {
+    //   _timer.cancel();
+    // }
   });
 }

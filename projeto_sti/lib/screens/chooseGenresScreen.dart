@@ -61,6 +61,24 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
     node.options = options;
   }
 
+  void clearSelectedGenres() {
+    selectedGenres.clear();
+    childrenNodes.clear();
+    GenresAPI.Genres.forEach((element) {
+      var node = BubbleNode.leaf(
+          value: 5,
+          options: BubbleOptions(
+              child: Text(element),
+              color: Colors.white,
+              border: Border.all(
+                  color: const Color.fromARGB(255, 187, 134, 252), width: 2)));
+      node.options?.onTap = () => setState(() {
+            clickedGenre(node);
+          });
+      childrenNodes.add(node);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,16 +87,65 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
       body: Stack(
         children: [
           const AppLogo(),
-          Padding(
-            padding: const EdgeInsets.only(top: 90.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 60, right: 60),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 60, right: 60, top: 60),
+                child: Text(
+                  "Choose three or more of your favourite genres:",
+                  style: GoogleFonts.lato(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 0, top: 0),
+                child: Container(
+                  // padding:
+                  //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
+                  height: MediaQuery.of(context).size.width <
+                          MediaQuery.of(context).size.height
+                      ? MediaQuery.of(context).size.width
+                      : MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width <
+                          MediaQuery.of(context).size.height
+                      ? MediaQuery.of(context).size.width
+                      : MediaQuery.of(context).size.height,
+                  child: BubbleChartLayout(
+                    duration: Duration(milliseconds: 500),
+                    padding: 0,
+                    children: [
+                      BubbleNode.node(
+                          padding: 3,
+                          children: childrenNodes,
+                          options: BubbleOptions(color: Colors.transparent))
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 0,
+                  right: 60,
+                  left: 60,
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromRGBO(55, 0, 179, 1),
+                    minimumSize: const Size(300, 50),
+                  ),
+                  onPressed: () {
+                    if (selectedGenres.length < 3) {
+                      print("NOT ENOUGH");
+                      return;
+                    }
+                  },
                   child: Text(
-                    "Choose three or more of your favourite genres:",
+                    "Let's start!",
                     style: GoogleFonts.lato(
                       fontSize: 18,
                       color: Colors.white,
@@ -86,40 +153,24 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10, top: 10),
-                  child: Container(
-                    // padding:
-                    //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width,
-                    child: BubbleChartLayout(
-                      padding: 0,
-                      children: [
-                        BubbleNode.node(
-                            padding: 3,
-                            children: childrenNodes,
-                            options: BubbleOptions(color: Colors.transparent))
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 10.0,
-                    right: 60,
-                    left: 60,
-                  ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(right: 60, left: 60, bottom: 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: const Color.fromRGBO(55, 0, 179, 1),
+                      primary: const Color.fromARGB(0, 54, 0, 179),
                       minimumSize: const Size(300, 50),
                     ),
                     onPressed: () {
-                      print("START");
+                      setState(() {
+                        clearSelectedGenres();
+                      });
                     },
                     child: Text(
-                      "Let's start!",
+                      "Reset",
                       style: GoogleFonts.lato(
                         fontSize: 18,
                         color: Colors.white,
@@ -128,34 +179,8 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 60,
-                      left: 60,
-                    ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: const Color.fromARGB(0, 54, 0, 179),
-                        minimumSize: const Size(300, 50),
-                      ),
-                      onPressed: () {
-                        print("RESET");
-                      },
-                      child: Text(
-                        "Reset",
-                        style: GoogleFonts.lato(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
