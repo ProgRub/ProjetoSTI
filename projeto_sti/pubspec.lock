@@ -15,6 +15,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  bubble_chart:
+    dependency: "direct main"
+    description:
+      name: bubble_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
+  bubble_widget:
+    dependency: "direct main"
+    description:
+      name: bubble_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   characters:
     dependency: transitive
     description:

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:projeto_sti/components/inputField.dart';
-import 'package:projeto_sti/components/popupMessage.dart';
-
+import 'package:projeto_sti/api/genres.dart';
+import 'package:bubble_chart/bubble_chart.dart';
 import '../components/appLogo.dart';
-import '../components/inputFieldLabel.dart';
 
 class ChooseGenresScreen extends StatefulWidget {
   const ChooseGenresScreen({Key? key}) : super(key: key);
@@ -14,29 +12,90 @@ class ChooseGenresScreen extends StatefulWidget {
 }
 
 class _ChooseGenresState extends State<ChooseGenresScreen> {
-  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  final TextEditingController _confirmPass = TextEditingController();
+  List<BubbleNode> childrenNodes = [];
+  late BubbleChartLayout bubbleChartLayout;
+  List<String> selectedGenres = [];
+
+  @override
+  void initState() {
+    super.initState();
+    GenresAPI.Genres.forEach((element) {
+      var node = BubbleNode.leaf(
+          value: 5,
+          options: BubbleOptions(
+              child: Text(element),
+              color: Colors.white,
+              border: Border.all(
+                  color: const Color.fromARGB(255, 187, 134, 252), width: 2)));
+      node.options?.onTap = () => setState(() {
+            clickedGenre(node);
+          });
+      childrenNodes.add(node);
+    });
+    bubbleChartLayout = BubbleChartLayout(
+      padding: 0,
+      children: [
+        BubbleNode.node(
+            padding: 3,
+            children: childrenNodes,
+            options: BubbleOptions(color: Colors.transparent))
+      ],
+    );
+  }
+
+  void clickedGenre(BubbleNode node) {
+    var genre = (node.options?.child as Text).data.toString();
+    var alreadySelected = selectedGenres.contains(genre);
+    var options = BubbleOptions(
+        onTap: () => setState(() {
+              clickedGenre(node);
+            }),
+        child: Text(
+          genre,
+          style:
+              TextStyle(color: alreadySelected ? Colors.black : Colors.white),
+        ),
+        color: alreadySelected
+            ? Colors.white
+            : const Color.fromARGB(255, 187, 134, 252),
+        border: Border.all(
+            color: alreadySelected
+                ? const Color.fromARGB(255, 187, 134, 252)
+                : Colors.white,
+            width: 2));
+    if (alreadySelected) {
+      selectedGenres.remove(genre);
+    } else {
+      selectedGenres.add(genre);
+    }
+    node.options = options;
+    bubbleChartLayout = BubbleChartLayout(
+      padding: 0,
+      children: [
+        BubbleNode.node(
+            padding: 3,
+            children: childrenNodes,
+            options: BubbleOptions(color: Colors.transparent))
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromRGBO(18, 18, 18, 1),
+      backgroundColor: const Color.fromARGB(255, 56, 51, 51),
       body: Stack(
         children: [
           const AppLogo(),
           Padding(
-            padding: const EdgeInsets.only(top: 50.0),
+            padding: const EdgeInsets.only(top: 90.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 60, right: 60, bottom: 120),
+                  padding: const EdgeInsets.only(left: 60, right: 60),
                   child: Text(
                     "Choose three or more of your favourite genres:",
                     style: GoogleFonts.lato(
@@ -47,8 +106,18 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Container(
+                    // padding:
+                    //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width,
+                    child: bubbleChartLayout,
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(
-                    top: 30.0,
+                    bottom: 10.0,
                     right: 60,
                     left: 60,
                   ),
@@ -72,13 +141,12 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: 30.0,
                     right: 60,
                     left: 60,
                   ),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(0, 54, 0, 179),
+                      primary: const Color.fromARGB(0, 54, 0, 179),
                       minimumSize: const Size(300, 50),
                     ),
                     onPressed: () {

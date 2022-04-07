@@ -9,7 +9,7 @@ class AppLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30.0, top: 30.0),
+      padding: const EdgeInsets.only(left: 20.0, top: 15.0),
       child: RichText(
         text: TextSpan(
           text: "P",
