@@ -217,23 +217,20 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           const AppLogo(),
-          Padding(
-            padding: const EdgeInsets.only(top: 50.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                tabs,
-                AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 300),
-                  firstChild: loginPage,
-                  secondChild: signUpPage,
-                  crossFadeState: selectedCategory == 0
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                ),
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              tabs,
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                firstChild: loginPage,
+                secondChild: signUpPage,
+                crossFadeState: selectedCategory == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
+            ],
           ),
         ],
       ),

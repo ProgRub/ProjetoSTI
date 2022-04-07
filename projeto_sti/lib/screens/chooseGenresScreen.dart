@@ -13,7 +13,6 @@ class ChooseGenresScreen extends StatefulWidget {
 
 class _ChooseGenresState extends State<ChooseGenresScreen> {
   List<BubbleNode> childrenNodes = [];
-  late BubbleChartLayout bubbleChartLayout;
   List<String> selectedGenres = [];
 
   @override
@@ -32,15 +31,6 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
           });
       childrenNodes.add(node);
     });
-    bubbleChartLayout = BubbleChartLayout(
-      padding: 0,
-      children: [
-        BubbleNode.node(
-            padding: 3,
-            children: childrenNodes,
-            options: BubbleOptions(color: Colors.transparent))
-      ],
-    );
   }
 
   void clickedGenre(BubbleNode node) {
@@ -69,15 +59,6 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
       selectedGenres.add(genre);
     }
     node.options = options;
-    bubbleChartLayout = BubbleChartLayout(
-      padding: 0,
-      children: [
-        BubbleNode.node(
-            padding: 3,
-            children: childrenNodes,
-            options: BubbleOptions(color: Colors.transparent))
-      ],
-    );
   }
 
   @override
@@ -112,7 +93,15 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
                     height: MediaQuery.of(context).size.width,
                     width: MediaQuery.of(context).size.width,
-                    child: bubbleChartLayout,
+                    child: BubbleChartLayout(
+                      padding: 0,
+                      children: [
+                        BubbleNode.node(
+                            padding: 3,
+                            children: childrenNodes,
+                            options: BubbleOptions(color: Colors.transparent))
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -139,25 +128,28 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 60,
-                    left: 60,
-                  ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color.fromARGB(0, 54, 0, 179),
-                      minimumSize: const Size(300, 50),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 60,
+                      left: 60,
                     ),
-                    onPressed: () {
-                      print("RESET");
-                    },
-                    child: Text(
-                      "Reset",
-                      style: GoogleFonts.lato(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: const Color.fromARGB(0, 54, 0, 179),
+                        minimumSize: const Size(300, 50),
+                      ),
+                      onPressed: () {
+                        print("RESET");
+                      },
+                      child: Text(
+                        "Reset",
+                        style: GoogleFonts.lato(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                   ),
