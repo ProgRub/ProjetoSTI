@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:bubble_chart/bubble_chart.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/styles/style.dart';
 import '../components/appLogo.dart';
 
@@ -23,9 +24,16 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
       var node = BubbleNode.leaf(
         value: 5,
         options: BubbleOptions(
-          child: Text(element),
+          child: Text(
+            element,
+            style: GoogleFonts.lato(
+              fontSize: 12,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           color: Colors.white,
-          border: Border.all(color: Styles.colors.purple),
+          border: Border.all(color: Styles.colors.purple, width: 2.0),
         ),
       );
       node.options?.onTap = () => setState(() {
@@ -150,7 +158,8 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     ),
                     onPressed: () {
                       if (selectedGenres.length < 3) {
-                        print("NOT ENOUGH");
+                        showPopupMessage(context, "error",
+                            "You have to choose at least 3 genres!");
                         return;
                       }
                     },

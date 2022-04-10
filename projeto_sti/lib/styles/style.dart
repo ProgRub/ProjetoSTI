@@ -14,6 +14,7 @@ class _Colors {
   final error = const Color.fromARGB(255, 101, 5, 0);
   final errorText = const Color.fromARGB(255, 245, 140, 133);
   final successText = const Color.fromARGB(255, 173, 247, 176);
+  final lightBlue = const Color.fromRGBO(47, 253, 246, 1);
 }
 
 class _TextStyle {
@@ -31,5 +32,10 @@ class _TextStyle {
     fontSize: 18,
     color: Colors.white,
     fontWeight: FontWeight.w900,
+  );
+  final placeholder = GoogleFonts.lato(
+    fontSize: 14,
+    color: const Color.fromARGB(255, 125, 125, 125),
+    fontWeight: FontWeight.w300,
   );
 }

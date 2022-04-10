@@ -60,6 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 primary: Styles.colors.button,
                 minimumSize: const Size(300, 50),
               ),
@@ -127,6 +130,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 primary: Styles.colors.button,
                 minimumSize: const Size(300, 50),
               ),

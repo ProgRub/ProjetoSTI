@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/styles/style.dart';
 
 class InputField extends StatelessWidget {
   final TextEditingController controller;
@@ -33,24 +34,29 @@ class InputField extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.white),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Color.fromRGBO(47, 253, 246, 1), width: 3.0),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:
+                  BorderSide(color: Styles.colors.lightBlue, width: 1.0),
             ),
-            errorBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red, width: 3.0),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 1.0),
             ),
-            focusedErrorBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Color.fromRGBO(47, 253, 246, 1), width: 3.0),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:
+                  BorderSide(color: Styles.colors.lightBlue, width: 1.0),
             ),
             errorStyle: const TextStyle(fontSize: 13.0),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             hintText: hintText,
+            hintStyle: Styles.fonts.placeholder,
           ),
           validator: validator,
         ),
