@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
+import 'package:projeto_sti/styles/style.dart';
 
 import '../components/appLogo.dart';
 import '../components/inputFieldLabel.dart';
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromRGBO(55, 0, 179, 1),
+                primary: Styles.colors.button,
                 minimumSize: const Size(300, 50),
               ),
               onPressed: () {
@@ -74,11 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 'Login',
-                style: GoogleFonts.lato(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: Styles.fonts.button,
               ),
             ),
           ),
@@ -130,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromRGBO(55, 0, 179, 1),
+                primary: Styles.colors.button,
                 minimumSize: const Size(300, 50),
               ),
               onPressed: () {
@@ -140,17 +137,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ChooseGenresScreen()));
+                            builder: (context) => const ChooseGenresScreen()));
                   });
                 }
               },
               child: Text(
                 'Next',
-                style: GoogleFonts.lato(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: Styles.fonts.button,
               ),
             ),
           ),
@@ -169,8 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 33,
                     fontWeight: FontWeight.w900,
                     color: index == selectedCategory
-                        ? const Color.fromRGBO(187, 134, 252, 1)
-                        : Colors.white.withOpacity(0.25))),
+                        ? Styles.colors.purple
+                        : Styles.colors.grey)),
             Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 height: 6,
@@ -178,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: index == selectedCategory
-                        ? const Color.fromRGBO(187, 134, 252, 1)
+                        ? Styles.colors.purple
                         : Colors.transparent))
           ],
         ),
@@ -211,28 +204,30 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromRGBO(18, 18, 18, 1),
-      body: Stack(
-        children: [
-          const AppLogo(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              tabs,
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 300),
-                firstChild: loginPage,
-                secondChild: signUpPage,
-                crossFadeState: selectedCategory == 0
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-              ),
-            ],
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Styles.colors.background,
+        body: Stack(
+          children: [
+            const AppLogo(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                tabs,
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  firstChild: loginPage,
+                  secondChild: signUpPage,
+                  crossFadeState: selectedCategory == 0
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

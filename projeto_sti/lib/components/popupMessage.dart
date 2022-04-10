@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projeto_sti/styles/style.dart';
 
 class PopupMessage extends StatelessWidget {
   final String type;
@@ -24,16 +25,13 @@ class PopupMessage extends StatelessWidget {
           message,
           style: GoogleFonts.roboto(
             fontSize: 18,
-            color: type == "error"
-                ? const Color.fromARGB(255, 101, 5, 0)
-                : Colors.black,
+            color: type == "error" ? Styles.colors.error : Colors.black,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
       content: type == "error"
-          ? const Icon(Icons.error_outline,
-              size: 40.0, color: Color.fromARGB(255, 101, 5, 0))
+          ? Icon(Icons.error_outline, size: 40.0, color: Styles.colors.error)
           : const Icon(Icons.check_circle, size: 40.0),
       actions: [
         TextButton(
@@ -47,9 +45,9 @@ class PopupMessage extends StatelessWidget {
   Color popupColor() {
     switch (type) {
       case "error":
-        return const Color.fromARGB(255, 245, 140, 133);
+        return Styles.colors.errorText;
       case "success":
-        return const Color.fromARGB(255, 173, 247, 176);
+        return Styles.colors.successText;
       default:
         return Colors.white;
     }
