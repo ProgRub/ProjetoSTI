@@ -11,10 +11,13 @@ class _Colors {
   final purple = const Color.fromRGBO(187, 134, 252, 1);
   final button = const Color.fromRGBO(55, 0, 179, 1);
   final grey = Colors.white.withOpacity(0.25);
+  final darker = Colors.black.withOpacity(0.25);
   final error = const Color.fromARGB(255, 101, 5, 0);
   final errorText = const Color.fromARGB(255, 245, 140, 133);
   final successText = const Color.fromARGB(255, 173, 247, 176);
   final lightBlue = const Color.fromRGBO(47, 253, 246, 1);
+  final female = const Color.fromARGB(255, 233, 137, 255);
+  final male = const Color.fromARGB(255, 113, 205, 245);
 }
 
 class _TextStyle {
@@ -37,5 +40,10 @@ class _TextStyle {
     fontSize: 14,
     color: const Color.fromARGB(255, 125, 125, 125),
     fontWeight: FontWeight.w300,
+  );
+  final gender = GoogleFonts.lato(
+    fontSize: 13,
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
   );
 }

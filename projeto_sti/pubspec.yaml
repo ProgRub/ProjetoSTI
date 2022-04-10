@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   bubble_chart: ^0.4.0
   bubble_widget: ^0.0.2
+  image_picker: ^0.8.5
 
 dev_dependencies:
   flutter_test:

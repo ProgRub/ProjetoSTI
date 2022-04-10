@@ -4,6 +4,7 @@ import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
+import 'package:projeto_sti/validators.dart';
 
 import '../components/appLogo.dart';
 import '../components/inputFieldLabel.dart';
@@ -246,32 +247,4 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
-
-  String? passwordValidator(String? value) {
-    if (inputIsEmptyOrNull(value)) {
-      return 'Please enter your password';
-    }
-    return null;
-  }
-
-  String? emailValidator(String? value) {
-    if (inputIsEmptyOrNull(value)) {
-      return 'Please enter an email';
-    } else if (!isValidEmail(value)) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  }
-}
-
-//JUST FOR TESTING!!!
-bool userExists(email, password) =>
-    email == "test@test.com" && password == "test";
-
-bool inputIsEmptyOrNull(value) => value == null || value.isEmpty;
-
-bool isValidEmail(email) {
-  return RegExp(
-          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-      .hasMatch(email);
 }

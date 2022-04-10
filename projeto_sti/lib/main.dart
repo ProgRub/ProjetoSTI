@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:projeto_sti/screens/loginScreen.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:projeto_sti/screens/userInfoScreen.dart';
 
 void main() {
   runApp(DevicePreview(
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const LoginScreen(),
+      //const UserInfoScreen(),
     );
   }
 }

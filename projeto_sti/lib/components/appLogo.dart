@@ -21,7 +21,7 @@ class AppLogo extends StatelessWidget {
           children: <TextSpan>[
             TextSpan(
               text: "C",
-              style: GoogleFonts.notoSans(
+              style: GoogleFonts.openSans(
                 fontSize: 55,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
