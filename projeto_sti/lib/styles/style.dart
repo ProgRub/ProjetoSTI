@@ -18,6 +18,9 @@ class _Colors {
   final lightBlue = const Color.fromRGBO(47, 253, 246, 1);
   final female = const Color.fromARGB(255, 233, 137, 255);
   final male = const Color.fromARGB(255, 113, 205, 245);
+  final logout = const Color.fromARGB(255, 142, 7, 0);
+  final blurred = Colors.black.withOpacity(0.05);
+  final genre = const Color.fromARGB(255, 12, 12, 12);
 }
 
 class _TextStyle {
@@ -41,8 +44,18 @@ class _TextStyle {
     color: const Color.fromARGB(255, 125, 125, 125),
     fontWeight: FontWeight.w300,
   );
-  final gender = GoogleFonts.lato(
+  final edit = GoogleFonts.lato(
     fontSize: 13,
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
+  final logout = GoogleFonts.lato(
+    fontSize: 13,
+    color: Styles.colors.logout,
+    fontWeight: FontWeight.w500,
+  );
+  final genre = GoogleFonts.lato(
+    fontSize: 15,
     color: Colors.white,
     fontWeight: FontWeight.w500,
   );

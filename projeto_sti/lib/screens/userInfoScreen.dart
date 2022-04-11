@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/inputFieldLabel.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -64,18 +65,18 @@ class _UserInfoState extends State<UserInfoScreen> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Styles.colors.lightBlue,
-                            radius: 40.0,
+                            radius: 38.0,
                             child: CircleAvatar(
-                              backgroundColor: Styles.colors.lightBlue,
+                              backgroundColor: Colors.white,
                               backgroundImage: imageFile == null
                                   ? null
                                   : Image.file(File(imageFile!.path)).image,
-                              radius: 37.0,
+                              radius: 34.0,
                             ),
                           ),
                           CircleAvatar(
                             backgroundColor: Styles.colors.darker,
-                            radius: 37.0,
+                            radius: 34.0,
                           ),
                           const Icon(Icons.file_upload_outlined,
                               color: Colors.white, size: 40),
@@ -92,7 +93,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                       validator: nameValidator,
                       controller: _name),
                   const Padding(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
+                    padding: EdgeInsets.only(bottom: 10.0),
                     child: InputFieldLabel(text: "Gender"),
                   ),
                   Row(
@@ -111,7 +112,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                       controller: _age),
                   Padding(
                     padding: const EdgeInsets.only(
-                        right: 60.0, left: 60.0, bottom: 10.0, top: 10.0),
+                        right: 60.0, left: 60.0, bottom: 10.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -121,7 +122,17 @@ class _UserInfoState extends State<UserInfoScreen> {
                         minimumSize: const Size(300, 50),
                       ),
                       onPressed: () {
-                        if (_userInfoFormKey.currentState!.validate()) {}
+                        if (_userInfoFormKey.currentState!.validate()) {
+                          if (_gender == Gender.none) {
+                            showPopupMessage(
+                                context, "error", "Choose your gender!");
+                          } else if (imageFile == null) {
+                            showPopupMessage(
+                                context, "error", "Upload your photo!");
+                          } else {
+                            //IR PARA ECRÂ CHOOSE GENRES
+                          }
+                        }
                       },
                       child: Text(
                         'Next',
@@ -151,32 +162,23 @@ class _UserInfoState extends State<UserInfoScreen> {
           },
         );
       },
-      child: Column(
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              const CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 25.0,
-              ),
-              CircleAvatar(
-                backgroundColor: (_gender == Gender.none || _gender != gender)
-                    ? Styles.colors.darker
-                    : (gender == Gender.female
-                        ? Styles.colors.female
-                        : Styles.colors.male),
-                radius: 23.0,
-              ),
-              Icon(gender == Gender.female ? Icons.female : Icons.male,
-                  color: Colors.white, size: 40),
-            ],
+          const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 25.0,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(gender == Gender.female ? "Female" : "Male",
-                style: Styles.fonts.gender),
+          CircleAvatar(
+            backgroundColor: (_gender == Gender.none || _gender != gender)
+                ? Styles.colors.darker
+                : (gender == Gender.female
+                    ? Styles.colors.female
+                    : Styles.colors.male),
+            radius: 23.0,
           ),
+          Icon(gender == Gender.female ? Icons.female : Icons.male,
+              color: Colors.white, size: 40),
         ],
       ),
     );
