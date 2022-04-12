@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/styles/style.dart';
+import 'package:projeto_sti/models/movie.dart';
 
 import 'package:like_button/like_button.dart';
 
@@ -15,36 +16,17 @@ class MovieInfoScreen extends StatefulWidget {
 }
 
 class _MovieInfoState extends State<MovieInfoScreen> {
-  late String movieTitle;
-  late String rating;
-  late String length;
-  late String year;
-  late String language;
-  late String age;
-  late String plot;
-  late List<String> movieGenres;
-
   late List<GenreOval> genres;
 
   @override
   initState() {
-    movieTitle = "Joker";
-    rating = "8.4";
-    length = "2h02m";
-    year = "2019";
-    language = "English";
-    age = "M/14";
-    movieGenres = ["Crime", "Drama", "Suspense"];
-    plot =
-        "Arthur Fleck works as a clown and is an aspiring stand-up comic. He has mental health issues, part of which involves uncontrollable laughter. Times are tough and, due to his issues and occupation, Arthur has an even worse time than most. Over time these issues bear down on him, shaping his actions, making him ultimately take on the persona he is more known as...Joker.";
-
     genres = _favouriteGenres();
     super.initState();
   }
 
   List<GenreOval> _favouriteGenres() {
     List<GenreOval> list = <GenreOval>[];
-    for (var title in movieGenres) {
+    for (var title in movies[0].genres) {
       list.add(GenreOval(text: title, color: _randomColor()));
     }
     return list;
@@ -73,7 +55,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: LikeButton(
-                size: 50.0,
+                size: 40.0,
                 onTap: onLikeButtonTapped,
               ),
             ),
@@ -108,7 +90,8 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 225.0),
-          child: Center(child: Text(movieTitle, style: Styles.fonts.label)),
+          child:
+              Center(child: Text(movies[0].title, style: Styles.fonts.title)),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 235.0),
@@ -117,13 +100,13 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             const Padding(
               padding: EdgeInsets.only(left: 30.0),
               child:
-                  Icon(Icons.share_outlined, size: 50.0, color: Colors.white),
+                  Icon(Icons.share_outlined, size: 40.0, color: Colors.white),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.only(top: 30.0),
               child: Row(children: [
                 Text(
-                  rating,
+                  movies[0].rating.toString(),
                   style: Styles.fonts.rating,
                 ),
                 const SizedBox(
@@ -135,13 +118,191 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: Icon(Icons.check_circle,
-                  size: 50.0, color: Styles.colors.grey),
+                  size: 40.0, color: Styles.colors.grey),
             ),
           ]),
         ),
       ],
     );
 
+    var plotSection = Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 35.0,
+        vertical: 10.0,
+      ),
+      child: Text(
+        movies[0].plot,
+        style: Styles.fonts.plot,
+        textAlign: TextAlign.justify,
+      ),
+    );
+
+    var videosSection = Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 130,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return Stack(
+              children: [
+                Container(
+                  width: 240,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Styles.colors.purple,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    image: const DecorationImage(
+                      image: AssetImage(
+                          "packages/projeto_sti/assets/images/profile.jpg"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      child: Icon(
+                        Icons.play_arrow,
+                        size: 35.0,
+                        color: Styles.colors.purple,
+                      ),
+                      onPressed: () {
+                        print("PLAY VIDEO");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        fixedSize: const Size(50, 50),
+                        shape: const CircleBorder(),
+                        side: BorderSide(
+                          width: 3.0,
+                          color: Styles.colors.purple,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              width: 20.0,
+            );
+          },
+        ),
+      ),
+    );
+
+    var genresSection = Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ...genres,
+        ],
+      ),
+    );
+
+    var infoSection = Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildInfoColumn("Lenght", movies[0].lenght),
+          _buildInfoColumn("Year", movies[0].year.toString()),
+          _buildInfoColumn("Language", movies[0].language),
+          _buildInfoColumn("Age", movies[0].age),
+        ],
+      ),
+    );
+
+    var photosSection = Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 180,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              width: 240,
+              height: 180,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Styles.colors.lightBlue,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                image: const DecorationImage(
+                  image: AssetImage(
+                      "packages/projeto_sti/assets/images/profile.jpg"),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              width: 20.0,
+            );
+          },
+        ),
+      ),
+    );
+
+    var castSection = Padding(
+      padding: const EdgeInsets.only(
+        top: 30.0,
+        left: 20.0,
+        right: 20.0,
+      ),
+      child: SizedBox(
+        height: 150,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              children: [
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 52.0,
+                      backgroundColor: Styles.colors.button,
+                      child: const CircleAvatar(
+                        radius: 50.0,
+                        backgroundImage: NetworkImage(
+                            "https://www.revistabula.com/wp/wp-content/uploads/2019/12/Joaquin-Phoenix-610x350.jpg.webp"),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 13.0),
+                  child: Text("Joaquin Phoenix",
+                      style: Styles.fonts.plot, textAlign: TextAlign.center),
+                ),
+              ],
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              width: 20.0,
+            );
+          },
+        ),
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -150,40 +311,27 @@ class _MovieInfoState extends State<MovieInfoScreen> {
           child: Column(
             children: [
               topSection,
+              genresSection,
+              infoSection,
+              _buildTitle("Plot"),
+              plotSection,
+              _buildTitle("Videos"),
+              videosSection,
+              _buildTitle("Photos"),
+              photosSection,
+              _buildTitle("Cast"),
+              castSection,
+              _buildTitle("Director"),
               Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ...genres,
-                  ],
+                padding: const EdgeInsets.only(top: 10.0, left: 40.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Todd Phillips",
+                    style: Styles.fonts.plot,
+                  ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildInfoColumn("Lenght", length),
-                    _buildInfoColumn("Year", year),
-                    _buildInfoColumn("Language", language),
-                    _buildInfoColumn("Age", age),
-                  ],
-                ),
-              ),
-              _buildTextLabel("Plot", Styles.fonts.title),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 35.0,
-                  vertical: 10.0,
-                ),
-                child: Text(
-                  plot,
-                  style: Styles.fonts.plot,
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-              _buildTextLabel("Videos", Styles.fonts.title),
             ],
           ),
         ),
@@ -203,14 +351,14 @@ class _MovieInfoState extends State<MovieInfoScreen> {
     );
   }
 
-  Padding _buildTextLabel(String text, TextStyle style) {
+  Padding _buildTitle(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0, left: 30.0),
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
           text,
-          style: style,
+          style: Styles.fonts.title,
         ),
       ),
     );
