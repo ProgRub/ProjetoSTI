@@ -19,12 +19,22 @@ class _ProfileState extends State<ProfileScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
   late List<String> favouriteGenres;
+  late List<GenreOval> genres;
 
   @override
   initState() {
     sections = ["All", "Movies", "Tv Shows"];
     favouriteGenres = ["Action", "Horror", "Drama"];
+    genres = _favouriteGenres();
     super.initState();
+  }
+
+  List<GenreOval> _favouriteGenres() {
+    List<GenreOval> list = <GenreOval>[];
+    for (var title in favouriteGenres) {
+      list.add(GenreOval(text: title, color: _randomColor()));
+    }
+    return list;
   }
 
   @override
@@ -72,7 +82,7 @@ class _ProfileState extends State<ProfileScreen> {
           itemBuilder: (context, index) => createTab(index, context),
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(
-              width: 30,
+              width: 50,
             );
           },
         ),
@@ -162,11 +172,35 @@ class _ProfileState extends State<ProfileScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      for (var title in favouriteGenres) GenreOval(text: title),
+                      ...genres,
                     ],
                   ),
                   _buildTextLabel("Watched", Styles.fonts.label),
                   tabs,
+                  GridView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    // number of items in your list
+                    itemCount: 5,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.asset(
+                            "packages/projeto_sti/assets/images/profile.jpg",
+                            fit: BoxFit.fill,
+                            height: 150.0,
+                            width: 100.0,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ],
@@ -174,6 +208,10 @@ class _ProfileState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Color _randomColor() {
+    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
   }
 
   Padding _buildTextLabel(String text, TextStyle style) {
