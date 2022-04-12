@@ -20,6 +20,7 @@ class GenreOval extends StatelessWidget {
       decoration: BoxDecoration(
           color: Styles.colors.genre,
           border: Border.all(
+            width: 2.0,
             color: color,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(20))),

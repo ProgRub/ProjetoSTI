@@ -59,4 +59,16 @@ class _TextStyle {
     color: Colors.white,
     fontWeight: FontWeight.w500,
   );
+
+  final rating = GoogleFonts.lato(
+    fontSize: 18,
+    color: Colors.grey,
+    fontWeight: FontWeight.w400,
+  );
+
+  final plot = GoogleFonts.lato(
+    fontSize: 16,
+    color: Colors.grey,
+    fontWeight: FontWeight.w400,
+  );
 }
