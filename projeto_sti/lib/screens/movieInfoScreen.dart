@@ -164,7 +164,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             return Stack(
               children: [
                 Container(
-                  width: 240,
+                  width: 220,
                   height: 130,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -243,14 +243,14 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         vertical: 20.0,
       ),
       child: SizedBox(
-        height: 180,
+        height: 160,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              width: 240,
-              height: 180,
+              width: 220,
+              height: 160,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Styles.colors.lightBlue,
@@ -337,7 +337,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             right: 20.0,
           ),
           child: SizedBox(
-            height: 240,
+            height: 200,
             child: ListView.separated(
               itemCount: 4,
               itemBuilder: (BuildContext context, int index) {
@@ -354,10 +354,10 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          radius: 38.0,
+                          radius: 30.0,
                           backgroundColor: Styles.colors.lightBlue,
                           child: const CircleAvatar(
-                            radius: 36.0,
+                            radius: 28.0,
                             backgroundImage: AssetImage(
                                 "packages/projeto_sti/assets/images/profile.jpg"),
                           ),
@@ -367,20 +367,20 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                           children: [
                             Text(
                               "Joaquin Phoenix",
-                              style: Styles.fonts.label,
+                              style: Styles.fonts.commentName,
                             ),
                             const SizedBox(
                               height: 8.0,
                             ),
                             Text("I totally recommend it!",
-                                style: Styles.fonts.plot),
+                                style: Styles.fonts.comment),
                           ],
                         ),
                         Column(
                           children: [
                             Row(
                               children: [
-                                Text("9/10", style: Styles.fonts.plot),
+                                Text("9/10", style: Styles.fonts.comment),
                                 const SizedBox(
                                   width: 5.0,
                                 ),
@@ -417,7 +417,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   primary: Styles.colors.button,
-                  minimumSize: const Size(300, 50),
+                  minimumSize: const Size(260, 50),
                 ),
                 onPressed: () {},
               ),
@@ -485,7 +485,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         const SizedBox(
           height: 10.0,
         ),
-        Text(value, style: Styles.fonts.rating),
+        Text(value, style: Styles.fonts.plot),
       ],
     );
   }

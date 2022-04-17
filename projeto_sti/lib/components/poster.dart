@@ -12,8 +12,8 @@ class Poster extends StatelessWidget {
         print("TAP POSTER");
       },
       child: Container(
-        width: 165,
-        height: 230,
+        width: 150,
+        height: 220,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
           image: DecorationImage(

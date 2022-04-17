@@ -39,6 +39,7 @@ dependencies:
   bubble_widget: ^0.0.2
   image_picker: ^0.8.5
   like_button: ^2.0.4
+  splashscreen: ^1.3.5
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
   assets:
     - packages/projeto_sti/assets/db/genres.json
     - packages/projeto_sti/assets/images/profile.jpg
+    - packages/projeto_sti/assets/images/film-popcorn.gif
     # - db/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -72,4 +72,16 @@ class _TextStyle {
     color: Colors.grey,
     fontWeight: FontWeight.w400,
   );
+
+  final comment = GoogleFonts.lato(
+    fontSize: 14,
+    color: Colors.grey,
+    fontWeight: FontWeight.w400,
+  );
+
+  final commentName = GoogleFonts.lato(
+    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.w600,
+  );
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/genres.dart';
-import 'package:projeto_sti/screens/loginScreen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
-import 'package:projeto_sti/screens/profileScreen.dart';
-import 'package:projeto_sti/screens/userInfoScreen.dart';
+import 'package:projeto_sti/styles/style.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() {
   runApp(DevicePreview(
@@ -19,6 +19,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GenresAPI.getAllGenres();
+
+    var appName = Text.rich(
+      TextSpan(
+        text: "POP",
+        style: GoogleFonts.openSans(
+          fontSize: 55,
+          fontWeight: FontWeight.w900,
+          color: const Color.fromRGBO(47, 253, 246, 1),
+        ),
+        children: <TextSpan>[
+          TextSpan(
+            text: "CORN",
+            style: GoogleFonts.openSans(
+              fontSize: 55,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+
     return MaterialApp(
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
@@ -28,8 +50,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: //const LoginScreen(),
-          const MovieInfoScreen(),
+      home: SplashScreen(
+        seconds: 5,
+        navigateAfterSeconds: const MovieInfoScreen(),
+        backgroundColor: Styles.colors.background,
+        loaderColor: Styles.colors.lightBlue,
+        title: appName,
+      ),
     );
   }
 }
