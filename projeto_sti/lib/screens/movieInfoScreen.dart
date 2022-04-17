@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/genreOval.dart';
+import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/models/movie.dart';
 
@@ -17,6 +18,7 @@ class MovieInfoScreen extends StatefulWidget {
 
 class _MovieInfoState extends State<MovieInfoScreen> {
   late List<GenreOval> genres;
+  late bool watched = false;
 
   @override
   initState() {
@@ -117,8 +119,19 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
-              child: Icon(Icons.check_circle,
-                  size: 40.0, color: Styles.colors.grey),
+              child: GestureDetector(
+                onTap: () {
+                  setState(
+                    () {
+                      watched = !watched;
+                    },
+                  );
+                },
+                child: Icon(Icons.check_circle,
+                    size: 40.0,
+                    color:
+                        watched ? Styles.colors.watched : Styles.colors.grey),
+              ),
             ),
           ]),
         ),
@@ -281,8 +294,8 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                       backgroundColor: Styles.colors.button,
                       child: const CircleAvatar(
                         radius: 50.0,
-                        backgroundImage: NetworkImage(
-                            "https://www.revistabula.com/wp/wp-content/uploads/2019/12/Joaquin-Phoenix-610x350.jpg.webp"),
+                        backgroundImage: AssetImage(
+                            "packages/projeto_sti/assets/images/profile.jpg"),
                       ),
                     ),
                   ],
@@ -294,6 +307,137 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 ),
               ],
             );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              width: 20.0,
+            );
+          },
+        ),
+      ),
+    );
+
+    var directorSection = Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 40.0),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text(
+          movies[0].director,
+          style: Styles.fonts.plot,
+        ),
+      ),
+    );
+
+    var commentsSection = Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 30.0,
+            left: 20.0,
+            right: 20.0,
+          ),
+          child: SizedBox(
+            height: 240,
+            child: ListView.separated(
+              itemCount: 4,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          radius: 38.0,
+                          backgroundColor: Styles.colors.lightBlue,
+                          child: const CircleAvatar(
+                            radius: 36.0,
+                            backgroundImage: AssetImage(
+                                "packages/projeto_sti/assets/images/profile.jpg"),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Joaquin Phoenix",
+                              style: Styles.fonts.label,
+                            ),
+                            const SizedBox(
+                              height: 8.0,
+                            ),
+                            Text("I totally recommend it!",
+                                style: Styles.fonts.plot),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text("9/10", style: Styles.fonts.plot),
+                                const SizedBox(
+                                  width: 5.0,
+                                ),
+                                const Icon(Icons.star,
+                                    size: 20.0, color: Colors.yellow),
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  height: 20.0,
+                );
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 30.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                child: Text("Share your opinion", style: Styles.fonts.button),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  primary: Styles.colors.button,
+                  minimumSize: const Size(300, 50),
+                ),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+    var moreLikeThisSection = Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 230,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return const Poster();
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(
@@ -322,16 +466,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
               _buildTitle("Cast"),
               castSection,
               _buildTitle("Director"),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 40.0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Todd Phillips",
-                    style: Styles.fonts.plot,
-                  ),
-                ),
-              ),
+              directorSection,
+              _buildTitle("Comments"),
+              commentsSection,
+              _buildTitle("More like " + movies[0].title),
+              moreLikeThisSection,
             ],
           ),
         ),

@@ -21,6 +21,7 @@ class _Colors {
   final logout = const Color.fromARGB(255, 142, 7, 0);
   final blurred = Colors.black.withOpacity(0.05);
   final genre = const Color.fromARGB(255, 12, 12, 12);
+  final watched = const Color.fromARGB(255, 96, 201, 100);
 }
 
 class _TextStyle {
