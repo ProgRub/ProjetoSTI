@@ -84,4 +84,10 @@ class _TextStyle {
     color: Colors.white,
     fontWeight: FontWeight.w600,
   );
+
+  final userName = GoogleFonts.lato(
+    fontSize: 25,
+    color: Colors.grey,
+    fontWeight: FontWeight.w700,
+  );
 }
