@@ -4,22 +4,20 @@ import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ByGenreScreen extends StatefulWidget {
-  const ByGenreScreen({Key? key}) : super(key: key);
+class FavouritesScreen extends StatefulWidget {
+  const FavouritesScreen({Key? key}) : super(key: key);
 
   @override
-  State<ByGenreScreen> createState() => _ByGenreState();
+  State<FavouritesScreen> createState() => _FavouritesState();
 }
 
-class _ByGenreState extends State<ByGenreScreen> {
-  late String genre;
+class _FavouritesState extends State<FavouritesScreen> {
   late int selectedCategory;
-  final List<String> categories = ["Movies", "Tv Shows"];
+  final List<String> categories = ["All", "Movies", "Tv Shows"];
 
   @override
   initState() {
     selectedCategory = 0;
-    genre = "Adventure";
     super.initState();
   }
 
@@ -30,9 +28,26 @@ class _ByGenreState extends State<ByGenreScreen> {
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
-          genre,
+          "Your Favourites",
           style: Styles.fonts.title,
         ),
+      ),
+    );
+
+    var allGrid = Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            childAspectRatio: 3 / 4,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
+        itemCount: 7,
+        itemBuilder: (BuildContext ctx, index) {
+          return _buildPoster(index);
+        },
       ),
     );
 
@@ -78,7 +93,7 @@ class _ByGenreState extends State<ByGenreScreen> {
           children: [
             Text(categories[index],
                 style: GoogleFonts.roboto(
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.w900,
                     color: index == selectedCategory
                         ? Styles.colors.purple
@@ -86,7 +101,7 @@ class _ByGenreState extends State<ByGenreScreen> {
             Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 height: 6,
-                width: 90,
+                width: index * 30.0 + 40,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: index == selectedCategory
@@ -105,7 +120,7 @@ class _ByGenreState extends State<ByGenreScreen> {
     }
 
     Padding tabs = Padding(
-      padding: const EdgeInsets.only(top: 10.0, left: 30.0),
+      padding: const EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0),
       child: SizedBox(
         height: 70,
         child: Row(
@@ -142,8 +157,8 @@ class _ByGenreState extends State<ByGenreScreen> {
               tabs,
               AnimatedCrossFade(
                 duration: const Duration(milliseconds: 200),
-                firstChild: moviesGrid,
-                secondChild: tvShowsGrid,
+                firstChild: allGrid,
+                secondChild: selectedCategory == 1 ? moviesGrid : tvShowsGrid,
                 crossFadeState: selectedCategory == 0
                     ? CrossFadeState.showFirst
                     : CrossFadeState.showSecond,
