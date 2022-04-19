@@ -121,16 +121,16 @@ class _MainScreenState extends State<MainScreen> {
             CircleAvatar(
               backgroundColor: Styles.colors.lightBlue,
               radius: 38.0,
-              child: const CircleAvatar(
+              child: CircleAvatar(
                 backgroundColor: Colors.white,
-                backgroundImage: AssetImage(
+                backgroundImage: const AssetImage(
                     "packages/projeto_sti/assets/images/profile.jpg"),
                 radius: 34.0,
+                child: CircleAvatar(
+                  backgroundColor: Styles.colors.darker,
+                  radius: 34.0,
+                ),
               ),
-            ),
-            CircleAvatar(
-              backgroundColor: Styles.colors.darker,
-              radius: 34.0,
             ),
           ],
         ),

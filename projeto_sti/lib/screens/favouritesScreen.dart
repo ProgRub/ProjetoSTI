@@ -120,7 +120,7 @@ class _FavouritesState extends State<FavouritesScreen> {
     }
 
     Padding tabs = Padding(
-      padding: const EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0),
+      padding: const EdgeInsets.only(top: 10.0, left: 30.0),
       child: SizedBox(
         height: 70,
         child: Row(
