@@ -90,4 +90,10 @@ class _TextStyle {
     color: Colors.grey,
     fontWeight: FontWeight.w700,
   );
+
+  final genreButton = GoogleFonts.lato(
+    fontSize: 20,
+    color: Colors.white,
+    fontWeight: FontWeight.w900,
+  );
 }

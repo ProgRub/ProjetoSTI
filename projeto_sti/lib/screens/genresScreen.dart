@@ -91,7 +91,7 @@ class _GenresState extends State<GenresScreen> {
         alignment: Alignment.center,
         child: Container(
           child: Center(
-            child: Text(genres[index], style: Styles.fonts.label),
+            child: Text(genres[index], style: Styles.fonts.genreButton),
           ),
           decoration: BoxDecoration(
             color: Styles.colors.darker,
