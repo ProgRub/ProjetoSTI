@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:projeto_sti/screens/mainScreen.dart';
-import 'package:projeto_sti/screens/movieInfoScreen.dart';
+import 'package:projeto_sti/screens/byGenreScreen.dart';
+import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -52,8 +52,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: SplashScreen(
+        //DEPOIS ALTERAR ISTO, PARA NÃO USAR BIBLIOTECA EXTERNA
         seconds: 5,
-        navigateAfterSeconds: const MainScreen(),
+        navigateAfterSeconds: const FavouritesScreen(),
         backgroundColor: Styles.colors.background,
         loaderColor: Styles.colors.lightBlue,
         title: appName,
