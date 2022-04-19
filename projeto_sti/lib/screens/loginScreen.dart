@@ -142,9 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   showPopupMessageWithFunction(
                       context, "success", "Your account has been created!", () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ChooseGenresScreen()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChooseGenresScreen(),
+                      ),
+                    );
                   });
                 }
               },

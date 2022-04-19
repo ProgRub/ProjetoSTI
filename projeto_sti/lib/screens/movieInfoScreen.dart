@@ -447,6 +447,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
       ),
     );
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,

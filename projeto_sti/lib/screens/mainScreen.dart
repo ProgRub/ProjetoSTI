@@ -69,6 +69,74 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
 
+    var recommendationSection = Container(
+      width: MediaQuery.of(context).size.width - 60,
+      height: 160,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        image: DecorationImage(
+          image: AssetImage("packages/projeto_sti/assets/images/profile.jpg"),
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+
+    var buttonsSection = Padding(
+      padding: const EdgeInsets.only(top: 40.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildButton(const Icon(Icons.favorite, size: 30.0), "Favourites"),
+          _buildButton(
+              const FaIcon(FontAwesomeIcons.trophy, size: 25.0), "Top iMDB"),
+          _buildButton(const Icon(Icons.grid_view, size: 32.0), "Genres"),
+          _buildButton(const Icon(Icons.person, size: 32.0), "Profile"),
+        ],
+      ),
+    );
+
+    var topSection = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text.rich(
+              TextSpan(
+                text: "Hey ",
+                style: Styles.fonts.title,
+                children: [
+                  TextSpan(text: "$usersName!", style: Styles.fonts.userName)
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            Text("Let's find cool things to watch", style: Styles.fonts.rating),
+          ],
+        ),
+        Stack(
+          children: [
+            CircleAvatar(
+              backgroundColor: Styles.colors.lightBlue,
+              radius: 38.0,
+              child: const CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(
+                    "packages/projeto_sti/assets/images/profile.jpg"),
+                radius: 34.0,
+              ),
+            ),
+            CircleAvatar(
+              backgroundColor: Styles.colors.darker,
+              radius: 34.0,
+            ),
+          ],
+        ),
+      ],
+    );
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -79,66 +147,14 @@ class _MainScreenState extends State<MainScreen> {
               child: AppLogo(),
               alignment: Alignment.topLeft,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        text: "Hey ",
-                        style: Styles.fonts.title,
-                        children: [
-                          TextSpan(
-                              text: "$usersName!", style: Styles.fonts.userName)
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    Text("Let's find cool things to watch",
-                        style: Styles.fonts.rating),
-                  ],
-                ),
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Styles.colors.lightBlue,
-                      radius: 38.0,
-                      child: const CircleAvatar(
-                        backgroundColor: Colors.white,
-                        backgroundImage: AssetImage(
-                            "packages/projeto_sti/assets/images/profile.jpg"),
-                        radius: 34.0,
-                      ),
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Styles.colors.darker,
-                      radius: 34.0,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildButton(
-                      const Icon(Icons.favorite, size: 30.0), "Favourites"),
-                  _buildButton(
-                      const FaIcon(FontAwesomeIcons.trophy, size: 25.0),
-                      "Top iMDB"),
-                  _buildButton(
-                      const Icon(Icons.grid_view, size: 32.0), "Genres"),
-                  _buildButton(const Icon(Icons.person, size: 32.0), "Profile"),
-                ],
-              ),
-            ),
+            topSection,
+            buttonsSection,
             _buildTextLabel("Today's Recommendation", Styles.fonts.title),
+            recommendationSection,
+            _buildTextLabel("New Releases", Styles.fonts.title),
+            topTvShows, //apenas para testar layout
+            _buildTextLabel("Trending Now", Styles.fonts.title),
+            topTvShows, //apenas para testar layout
             _buildTextLabel("Top Movies", Styles.fonts.title),
             topMovies,
             _buildTextLabel("Top Tv Shows", Styles.fonts.title),
@@ -158,14 +174,13 @@ class _MainScreenState extends State<MainScreen> {
           child: icon,
           onPressed: () {},
           style: ElevatedButton.styleFrom(
-              primary: Colors.black,
-              side: BorderSide(color: Styles.colors.purple, width: 2.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-              minimumSize:
-                  const Size(60.0, 60.0) // put the width and height you want
-              ),
+            primary: Colors.black,
+            side: BorderSide(color: Styles.colors.purple, width: 2.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            minimumSize: const Size(60.0, 60.0),
+          ),
         ),
         const SizedBox(height: 8.0),
         Text(label, style: Styles.fonts.comment),
@@ -175,9 +190,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Padding _buildTextLabel(String text, TextStyle style) {
     return Padding(
-      padding: style == Styles.fonts.title
-          ? const EdgeInsets.only(top: 70.0, left: 30.0)
-          : const EdgeInsets.only(top: 30.0, left: 30.0, bottom: 20.0),
+      padding: const EdgeInsets.only(top: 40.0, left: 30.0, bottom: 20.0),
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
