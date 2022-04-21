@@ -5,6 +5,7 @@ import 'package:bubble_chart/bubble_chart.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/styles/style.dart';
 import '../components/appLogo.dart';
+import 'dart:io' show Platform;
 
 class ChooseGenresScreen extends StatefulWidget {
   const ChooseGenresScreen({Key? key}) : super(key: key);
@@ -16,7 +17,6 @@ class ChooseGenresScreen extends StatefulWidget {
 class _ChooseGenresState extends State<ChooseGenresScreen> {
   List<BubbleNode> childrenNodes = [];
   List<String> selectedGenres = [];
-
   @override
   void initState() {
     super.initState();
@@ -123,16 +123,18 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10, top: 0),
                   child: SizedBox(
-                    // padding:
-                    //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
-                    height: MediaQuery.of(context).size.width <
-                            MediaQuery.of(context).size.height
-                        ? MediaQuery.of(context).size.width
-                        : MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width <
                             MediaQuery.of(context).size.height
                         ? MediaQuery.of(context).size.width
                         : MediaQuery.of(context).size.height,
+                    height: (Platform.isWindows ||
+                            Platform.isMacOS ||
+                            Platform.isLinux)
+                        ? MediaQuery.of(context).size.height - 250
+                        : (MediaQuery.of(context).size.width <
+                                MediaQuery.of(context).size.height
+                            ? MediaQuery.of(context).size.width
+                            : MediaQuery.of(context).size.height),
                     child: BubbleChartLayout(
                       duration: const Duration(milliseconds: 500),
                       padding: 0,

@@ -33,23 +33,13 @@ class _LoginScreenState extends State<LoginScreen> {
       key: _loginFormKey,
       child: Column(
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Email",
-            ),
-          ),
           InputField(
+              label: "Email",
               hintText: "Enter your email",
               validator: emailValidator,
               controller: _email),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Password",
-            ),
-          ),
           InputField(
+              label: "Password",
               hintText: "Enter your password",
               validator: passwordValidator,
               controller: _password),
@@ -93,36 +83,24 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Email",
-            ),
+          InputField(
+            label: "Email",
+            hintText: "Enter your email",
+            validator: emailValidator,
+            controller: _email,
           ),
           InputField(
-              hintText: "Enter your email",
-              validator: emailValidator,
-              controller: _email),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Password",
-            ),
+            label: "Password",
+            hintText: "Enter your password",
+            validator: passwordValidator,
+            controller: _password,
           ),
           InputField(
-              hintText: "Enter your password",
-              validator: passwordValidator,
-              controller: _password),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Confirm password",
-            ),
+            label: "Confirm password",
+            hintText: "Enter your password",
+            validator: confirmPasswordValidator,
+            controller: _confirmPass,
           ),
-          InputField(
-              hintText: "Enter your password",
-              validator: confirmPasswordValidator,
-              controller: _confirmPass),
           Padding(
             padding: const EdgeInsets.only(
               top: 10.0,
