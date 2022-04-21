@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
+import 'package:projeto_sti/screens/mainScreen.dart';
+import 'package:projeto_sti/screens/userInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/validators.dart';
 
@@ -62,6 +66,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (userExists(_email.text, _password.text)) {
                     showPopupMessage(
                         context, "success", "Successfully logged in!");
+                    Timer(
+                      const Duration(seconds: 3),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainScreen(),
+                        ),
+                      ),
+                    );
                   } else {
                     showPopupMessage(context, "error", "Invalid credentials");
                   }
@@ -122,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChooseGenresScreen(),
+                        builder: (context) => const UserInfoScreen(),
                       ),
                     );
                   });

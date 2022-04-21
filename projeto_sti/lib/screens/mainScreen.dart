@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/screens/favouritesScreen.dart';
+import 'package:projeto_sti/screens/genresScreen.dart';
+import 'package:projeto_sti/screens/profileScreen.dart';
+import 'package:projeto_sti/screens/topImdbScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,11 +21,30 @@ class _MainScreenState extends State<MainScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
   String usersName = "Susan";
+  late final ScrollController _controller;
+  bool visibleAppBar = false;
 
   @override
   initState() {
     sections = ["All", "Movies", "Tv Shows"];
     super.initState();
+    _controller = ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.userScrollDirection == ScrollDirection.forward) {
+        if (visibleAppBar && _controller.offset < 300) {
+          setState(() {
+            visibleAppBar = false;
+          });
+        }
+      }
+      if (_controller.position.userScrollDirection == ScrollDirection.reverse) {
+        if (!visibleAppBar && _controller.offset >= 300) {
+          setState(() {
+            visibleAppBar = true;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -86,11 +110,26 @@ class _MainScreenState extends State<MainScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildButton(const Icon(Icons.favorite, size: 30.0), "Favourites"),
           _buildButton(
-              const FaIcon(FontAwesomeIcons.trophy, size: 25.0), "Top iMDB"),
-          _buildButton(const Icon(Icons.grid_view, size: 32.0), "Genres"),
-          _buildButton(const Icon(Icons.person, size: 32.0), "Profile"),
+            const Icon(Icons.favorite, size: 30.0),
+            "Favourites",
+            const FavouritesScreen(),
+          ),
+          _buildButton(
+            const FaIcon(FontAwesomeIcons.trophy, size: 25.0),
+            "Top iMDB",
+            const TopImdbScreen(),
+          ),
+          _buildButton(
+            const Icon(Icons.grid_view, size: 32.0),
+            "Genres",
+            const GenresScreen(),
+          ),
+          _buildButton(
+            const Icon(Icons.person, size: 32.0),
+            "Profile",
+            const ProfileScreen(),
+          ),
         ],
       ),
     );
@@ -141,38 +180,87 @@ class _MainScreenState extends State<MainScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
-        body: SingleChildScrollView(
-          child: Column(children: [
-            const Align(
-              child: AppLogo(),
-              alignment: Alignment.topLeft,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              controller: _controller,
+              child: Column(children: [
+                const Align(
+                  child: AppLogo(),
+                  alignment: Alignment.topLeft,
+                ),
+                topSection,
+                buttonsSection,
+                _buildTextLabel("Today's Recommendation", Styles.fonts.title),
+                recommendationSection,
+                _buildTextLabel("New Releases", Styles.fonts.title),
+                topTvShows, //apenas para testar layout
+                _buildTextLabel("Trending Now", Styles.fonts.title),
+                topTvShows, //apenas para testar layout
+                _buildTextLabel("Top Movies", Styles.fonts.title),
+                topMovies,
+                _buildTextLabel("Top Tv Shows", Styles.fonts.title),
+                topTvShows,
+              ]),
             ),
-            topSection,
-            buttonsSection,
-            _buildTextLabel("Today's Recommendation", Styles.fonts.title),
-            recommendationSection,
-            _buildTextLabel("New Releases", Styles.fonts.title),
-            topTvShows, //apenas para testar layout
-            _buildTextLabel("Trending Now", Styles.fonts.title),
-            topTvShows, //apenas para testar layout
-            _buildTextLabel("Top Movies", Styles.fonts.title),
-            topMovies,
-            _buildTextLabel("Top Tv Shows", Styles.fonts.title),
-            topTvShows,
-          ]),
+            Visibility(
+              visible: visibleAppBar,
+              child: Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: _bottomNavBar,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Column _buildButton(Widget? icon, String label) {
+  Widget get _bottomNavBar {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(width: 3.0, color: Styles.colors.lightBlue),
+        ),
+      ),
+      child: BottomNavigationBar(
+        currentIndex: 2,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Styles.colors.purple,
+        unselectedItemColor: Styles.colors.grey,
+        backgroundColor: Colors.black,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: ""),
+          BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.trophy, size: 20.0), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
+        ],
+      ),
+    );
+  }
+
+  Column _buildButton(Widget? icon, String label, Widget state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
           child: icon,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => state,
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             primary: Colors.black,
             side: BorderSide(color: Styles.colors.purple, width: 2.0),
