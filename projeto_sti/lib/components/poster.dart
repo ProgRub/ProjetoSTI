@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/screens/movieInfoScreen.dart';
 
 class Poster extends StatelessWidget {
   const Poster({
@@ -9,7 +10,11 @@ class Poster extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("TAP POSTER");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MovieInfoScreen(),
+            ));
       },
       child: Container(
         width: 150,

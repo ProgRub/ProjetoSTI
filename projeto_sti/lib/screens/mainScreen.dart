@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
@@ -31,14 +32,14 @@ class _MainScreenState extends State<MainScreen> {
     _controller = ScrollController();
     _controller.addListener(() {
       if (_controller.position.userScrollDirection == ScrollDirection.forward) {
-        if (visibleAppBar && _controller.offset < 300) {
+        if (visibleAppBar && _controller.offset < 290) {
           setState(() {
             visibleAppBar = false;
           });
         }
       }
       if (_controller.position.userScrollDirection == ScrollDirection.reverse) {
-        if (!visibleAppBar && _controller.offset >= 300) {
+        if (!visibleAppBar && _controller.offset >= 290) {
           setState(() {
             visibleAppBar = true;
           });
@@ -205,43 +206,15 @@ class _MainScreenState extends State<MainScreen> {
             ),
             Visibility(
               visible: visibleAppBar,
-              child: Positioned(
+              child: const Positioned(
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: _bottomNavBar,
+                child: AppBarBottom(currentIndex: 0),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget get _bottomNavBar {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(width: 3.0, color: Styles.colors.lightBlue),
-        ),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: 2,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Styles.colors.purple,
-        unselectedItemColor: Styles.colors.grey,
-        backgroundColor: Colors.black,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: ""),
-          BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.trophy, size: 20.0), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
-        ],
       ),
     );
   }

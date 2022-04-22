@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/styles/style.dart';
@@ -452,6 +453,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
+        bottomNavigationBar: const AppBarBottom(currentIndex: 3),
         body: SingleChildScrollView(
           child: Column(
             children: [

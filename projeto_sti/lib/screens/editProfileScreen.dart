@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
+import 'package:projeto_sti/screens/profileScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -56,8 +58,13 @@ class _EditProfileState extends State<EditProfileScreen> {
     var logoutButton = Stack(
       children: [
         GestureDetector(
-            onTap: () =>
-                showPopupMessage(context, "error", "Logout"), //PARA TESTAR
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileScreen(),
+                  ));
+            },
             child: _buildQuarterCircle(80, Colors.white)),
         Padding(
           padding: const EdgeInsets.only(top: 20, right: 10),
@@ -79,18 +86,18 @@ class _EditProfileState extends State<EditProfileScreen> {
           children: [
             CircleAvatar(
               backgroundColor: Styles.colors.lightBlue,
-              radius: 38.0,
+              radius: 42.0,
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: imageFile == null
                     ? null
                     : Image.file(File(imageFile!.path)).image,
-                radius: 35.0,
+                radius: 39.0,
               ),
             ),
             CircleAvatar(
               backgroundColor: Styles.colors.darker,
-              radius: 35.0,
+              radius: 39.0,
             ),
             FaIcon(FontAwesomeIcons.userPen,
                 size: 26.0, color: Styles.colors.lightBlue),
@@ -104,7 +111,7 @@ class _EditProfileState extends State<EditProfileScreen> {
     var nameEdit = GestureDetector(
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +160,7 @@ class _EditProfileState extends State<EditProfileScreen> {
     );
 
     var favGenresButton = Padding(
-      padding: const EdgeInsets.only(right: 60.0, left: 60.0, bottom: 30.0),
+      padding: const EdgeInsets.only(right: 60.0, left: 60.0, bottom: 50.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -171,14 +178,14 @@ class _EditProfileState extends State<EditProfileScreen> {
     );
 
     var saveChangesButton = Padding(
-      padding: const EdgeInsets.only(right: 60.0, left: 60.0),
+      padding: const EdgeInsets.only(right: 60.0, left: 60.0, bottom: 20.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           primary: Styles.colors.button,
-          minimumSize: const Size(300, 40),
+          minimumSize: const Size(300, 50),
         ),
         onPressed: () {
           if (_userEditFormKey.currentState!.validate()) {}
@@ -191,7 +198,7 @@ class _EditProfileState extends State<EditProfileScreen> {
     );
 
     var deleteAccButton = Padding(
-      padding: const EdgeInsets.only(right: 60, left: 60),
+      padding: const EdgeInsets.only(right: 60, left: 60, bottom: 30.0),
       child: TextButton(
         onPressed: () {},
         child: Text(
@@ -205,34 +212,37 @@ class _EditProfileState extends State<EditProfileScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
-        body: Column(
-          children: [
-            Stack(
-              children: [
-                const Align(
-                  child: AppLogo(),
-                  alignment: Alignment.topLeft,
-                ),
-                logoutButton,
-              ],
-            ),
-            screenTitle,
-            Form(
-              key: _userEditFormKey,
-              child: Column(
+        bottomNavigationBar: const AppBarBottom(currentIndex: 4),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
                 children: [
-                  uploadPhotoSection,
-                  nameEdit,
-                  emailEdit,
-                  ageEdit,
-                  changePassButton,
-                  favGenresButton,
-                  saveChangesButton,
-                  deleteAccButton,
+                  const Align(
+                    child: AppLogo(),
+                    alignment: Alignment.topLeft,
+                  ),
+                  logoutButton,
                 ],
               ),
-            ),
-          ],
+              screenTitle,
+              Form(
+                key: _userEditFormKey,
+                child: Column(
+                  children: [
+                    uploadPhotoSection,
+                    nameEdit,
+                    emailEdit,
+                    ageEdit,
+                    changePassButton,
+                    favGenresButton,
+                    saveChangesButton,
+                    deleteAccButton,
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

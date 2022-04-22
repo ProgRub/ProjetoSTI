@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
+import 'package:projeto_sti/screens/byGenreScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 class GenresScreen extends StatefulWidget {
@@ -65,6 +67,7 @@ class _GenresState extends State<GenresScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
+        bottomNavigationBar: const AppBarBottom(currentIndex: 3),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,6 +89,11 @@ class _GenresState extends State<GenresScreen> {
     return GestureDetector(
       onTap: () {
         print("GENRE CLICKED - " + genres[index]);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ByGenreScreen(genre: genres[index]),
+            ));
       },
       child: Container(
         alignment: Alignment.center,

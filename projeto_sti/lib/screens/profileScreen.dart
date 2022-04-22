@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
+import 'package:projeto_sti/screens/editProfileScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -93,13 +95,19 @@ class _ProfileState extends State<ProfileScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
+        bottomNavigationBar: const AppBarBottom(currentIndex: 4),
         body: SingleChildScrollView(
           child: Stack(
             children: [
               const AppLogo(),
               GestureDetector(
-                  onTap: () => showPopupMessage(
-                      context, "error", "Edit Profile"), //PARA TESTAR
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfileScreen(),
+                        ));
+                  },
                   child: Stack(children: [
                     _buildQuarterCircle(140, Styles.colors.purple),
                     Padding(

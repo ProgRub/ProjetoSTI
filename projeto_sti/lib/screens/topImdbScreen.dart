@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
+import 'package:projeto_sti/screens/movieInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -178,27 +180,31 @@ class _TopImdbState extends State<TopImdbScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Align(
-                child: AppLogo(),
-                alignment: Alignment.topLeft,
-              ),
-              pageTitle,
-              tabs,
-              filterRow,
-              const SizedBox(height: 30.0),
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 0),
-                firstChild: moviesList,
-                secondChild: tvShowsList,
-                crossFadeState: selectedCategory == 0
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-              ),
-            ],
+        bottomNavigationBar: const AppBarBottom(currentIndex: 2),
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Align(
+                  child: AppLogo(),
+                  alignment: Alignment.topLeft,
+                ),
+                pageTitle,
+                tabs,
+                filterRow,
+                const SizedBox(height: 30.0),
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 0),
+                  firstChild: moviesList,
+                  secondChild: tvShowsList,
+                  crossFadeState: selectedCategory == 0
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -209,6 +215,12 @@ class _TopImdbState extends State<TopImdbScreen> {
     return GestureDetector(
       onTap: () {
         print("TAPPED MOVIE - $title");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MovieInfoScreen(),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
