@@ -209,15 +209,17 @@ class _MainScreenState extends State<MainScreen> {
                 ]),
               ),
             ),
-            Visibility(
-              visible: visibleAppBar,
-              child: const Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: AppBarBottom(currentIndex: 0),
-              ),
-            ),
+            visibleAppBar
+                ? Visibility(
+                    visible: visibleAppBar,
+                    child: const Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: AppBarBottom(currentIndex: 0),
+                    ),
+                  )
+                : const SizedBox(width: 0.0),
           ],
         ),
       ),
