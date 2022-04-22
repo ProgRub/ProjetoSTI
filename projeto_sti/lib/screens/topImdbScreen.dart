@@ -151,6 +151,7 @@ class _TopImdbState extends State<TopImdbScreen> {
         ListView.separated(
           itemCount: 10,
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return _buildMovieRow(index + 1, "Joker", "9.6");
           },
@@ -166,6 +167,7 @@ class _TopImdbState extends State<TopImdbScreen> {
         ListView.separated(
           itemCount: 7,
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return _buildMovieRow(index + 1, "Avatar", "9.5");
           },

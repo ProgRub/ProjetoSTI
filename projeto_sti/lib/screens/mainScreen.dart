@@ -183,26 +183,31 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Styles.colors.background,
         body: Stack(
           children: [
-            SingleChildScrollView(
-              controller: _controller,
-              child: Column(children: [
-                const Align(
-                  child: AppLogo(),
-                  alignment: Alignment.topLeft,
-                ),
-                topSection,
-                buttonsSection,
-                _buildTextLabel("Today's Recommendation", Styles.fonts.title),
-                recommendationSection,
-                _buildTextLabel("New Releases", Styles.fonts.title),
-                topTvShows, //apenas para testar layout
-                _buildTextLabel("Trending Now", Styles.fonts.title),
-                topTvShows, //apenas para testar layout
-                _buildTextLabel("Top Movies", Styles.fonts.title),
-                topMovies,
-                _buildTextLabel("Top Tv Shows", Styles.fonts.title),
-                topTvShows,
-              ]),
+            Padding(
+              padding: visibleAppBar
+                  ? const EdgeInsets.only(bottom: 80.0)
+                  : const EdgeInsets.only(bottom: 0.0),
+              child: SingleChildScrollView(
+                controller: _controller,
+                child: Column(children: [
+                  const Align(
+                    child: AppLogo(),
+                    alignment: Alignment.topLeft,
+                  ),
+                  topSection,
+                  buttonsSection,
+                  _buildTextLabel("Today's Recommendation", Styles.fonts.title),
+                  recommendationSection,
+                  _buildTextLabel("New Releases", Styles.fonts.title),
+                  topTvShows, //apenas para testar layout
+                  _buildTextLabel("Trending Now", Styles.fonts.title),
+                  topTvShows, //apenas para testar layout
+                  _buildTextLabel("Top Movies", Styles.fonts.title),
+                  topMovies,
+                  _buildTextLabel("Top Tv Shows", Styles.fonts.title),
+                  topTvShows,
+                ]),
+              ),
             ),
             Visibility(
               visible: visibleAppBar,

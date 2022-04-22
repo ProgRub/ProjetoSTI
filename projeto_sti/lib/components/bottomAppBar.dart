@@ -16,60 +16,66 @@ class AppBarBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(width: 3.0, color: Styles.colors.lightBlue),
+          gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+            Styles.colors.purple,
+            Styles.colors.lightBlue,
+          ])),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 3.0),
+        child: BottomNavigationBar(
+          currentIndex: currentIndex,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Styles.colors.purple,
+          unselectedItemColor: Styles.colors.grey,
+          backgroundColor: Colors.black,
+          items: [
+            BottomNavigationBarItem(
+                icon: IconButton(
+                  icon: const Icon(Icons.home),
+                  onPressed: () {
+                    _navigateTo(context, const MainScreen());
+                  },
+                ),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: IconButton(
+                  icon: const Icon(Icons.favorite),
+                  onPressed: () {
+                    _navigateTo(context, const FavouritesScreen());
+                  },
+                ),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.trophy, size: 20.0),
+                  onPressed: () {
+                    _navigateTo(context, const TopImdbScreen());
+                  },
+                ),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: IconButton(
+                  icon: const Icon(Icons.grid_view),
+                  onPressed: () {
+                    _navigateTo(context, const GenresScreen());
+                  },
+                ),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    _navigateTo(context, const ProfileScreen());
+                  },
+                ),
+                label: ""),
+          ],
         ),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Styles.colors.purple,
-        unselectedItemColor: Styles.colors.grey,
-        backgroundColor: Colors.black,
-        items: [
-          BottomNavigationBarItem(
-              icon: IconButton(
-                icon: const Icon(Icons.home),
-                onPressed: () {
-                  _navigateTo(context, const MainScreen());
-                },
-              ),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: IconButton(
-                icon: const Icon(Icons.favorite),
-                onPressed: () {
-                  _navigateTo(context, const FavouritesScreen());
-                },
-              ),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: IconButton(
-                icon: const FaIcon(FontAwesomeIcons.trophy, size: 20.0),
-                onPressed: () {
-                  _navigateTo(context, const TopImdbScreen());
-                },
-              ),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: IconButton(
-                icon: const Icon(Icons.grid_view),
-                onPressed: () {
-                  _navigateTo(context, const GenresScreen());
-                },
-              ),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: IconButton(
-                icon: const Icon(Icons.person),
-                onPressed: () {
-                  _navigateTo(context, const ProfileScreen());
-                },
-              ),
-              label: ""),
-        ],
       ),
     );
   }
