@@ -86,6 +86,12 @@ class _TextStyle {
     fontWeight: FontWeight.w600,
   );
 
+  final hintText = GoogleFonts.lato(
+    fontSize: 16,
+    color: Colors.grey,
+    fontWeight: FontWeight.w600,
+  );
+
   final userName = GoogleFonts.lato(
     fontSize: 25,
     color: Colors.grey,

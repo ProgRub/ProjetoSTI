@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/inputField.dart';
-import 'package:projeto_sti/components/popupMessage.dart';
+import 'package:projeto_sti/components/inputScreen.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
 import 'package:projeto_sti/screens/profileScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
@@ -31,8 +31,6 @@ class _EditProfileState extends State<EditProfileScreen> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _age = TextEditingController();
-
-  Gender? _gender = Gender.none;
 
   @override
   initState() {
@@ -109,14 +107,16 @@ class _EditProfileState extends State<EditProfileScreen> {
     );
 
     var nameEdit = GestureDetector(
-      onTap: () {},
+      onTap: () {
+        _navigateAndDisplayChange(context);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Susan Ceal", style: Styles.fonts.label),
+            Text(_name.text, style: Styles.fonts.label),
             const SizedBox(
               width: 5.0,
             ),
@@ -245,6 +245,19 @@ class _EditProfileState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  _navigateAndDisplayChange(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => InputScreen(text: _name.text)),
+    );
+
+    setState(
+      () {
+        _name.text = result;
+      },
     );
   }
 
