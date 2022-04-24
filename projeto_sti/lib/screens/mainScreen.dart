@@ -112,22 +112,22 @@ class _MainScreenState extends State<MainScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildButton(
-            const Icon(Icons.favorite, size: 30.0),
+            const Icon(Icons.favorite, size: 25.0),
             "Favourites",
             const FavouritesScreen(),
           ),
           _buildButton(
-            const FaIcon(FontAwesomeIcons.trophy, size: 25.0),
+            const FaIcon(FontAwesomeIcons.trophy, size: 20.0),
             "Top iMDB",
             const TopImdbScreen(),
           ),
           _buildButton(
-            const Icon(Icons.grid_view, size: 32.0),
+            const Icon(Icons.grid_view, size: 25.0),
             "Genres",
             const GenresScreen(),
           ),
           _buildButton(
-            const Icon(Icons.person, size: 32.0),
+            const Icon(Icons.person, size: 25.0),
             "Profile",
             const ProfileScreen(),
           ),
@@ -274,7 +274,7 @@ class _MainScreenState extends State<MainScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
-            minimumSize: const Size(60.0, 60.0),
+            minimumSize: const Size(50.0, 50.0),
           ),
         ),
         const SizedBox(height: 8.0),
