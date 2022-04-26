@@ -101,6 +101,13 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.width);
+    print(MediaQuery.of(context).size.height);
+    print("RESULT" +
+        (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height
+                ? MediaQuery.of(context).size.width
+                : MediaQuery.of(context).size.height)
+            .toString());
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -110,7 +117,7 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
             const AppLogo(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30, top: 70),
@@ -120,29 +127,22 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     style: Styles.fonts.title,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10, top: 0),
-                  child: SizedBox(
-                    // padding:
-                    //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
-                    height: MediaQuery.of(context).size.width <
-                            MediaQuery.of(context).size.height
-                        ? MediaQuery.of(context).size.width
-                        : MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width <
-                            MediaQuery.of(context).size.height
-                        ? MediaQuery.of(context).size.width
-                        : MediaQuery.of(context).size.height,
-                    child: BubbleChartLayout(
-                      duration: const Duration(milliseconds: 500),
-                      padding: 0,
-                      children: [
-                        BubbleNode.node(
-                            padding: 3,
-                            children: childrenNodes,
-                            options: BubbleOptions(color: Colors.transparent))
-                      ],
-                    ),
+                SizedBox(
+                  // padding:
+                  //     const EdgeInsets.only(left: 60, right: 60, bottom: 30),
+                  height: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).size.height ~/ 2,
+                  width: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).size.height ~/ 2,
+                  child: BubbleChartLayout(
+                    duration: const Duration(milliseconds: 500),
+                    padding: 0,
+                    children: [
+                      BubbleNode.node(
+                          padding: 3,
+                          children: childrenNodes,
+                          options: BubbleOptions(color: Colors.transparent))
+                    ],
                   ),
                 ),
                 Padding(

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "770132290689",
+    "project_id": "projeto-sti-popcorn",
+    "storage_bucket": "projeto-sti-popcorn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770132290689:android:2ff3a34c9f8523467e3180",
+        "android_client_info": {
+          "package_name": "com.example.projeto_sti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770132290689-2h6omforkf2n952v4qfnaado0kipanh3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALEFLXP8OCdKN1OzTL8ruYQ2YgbtTUKk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770132290689-2h6omforkf2n952v4qfnaado0kipanh3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770132290689-d375nuqqvhvlu1q0f7gvr7o5ul339uc9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.projetoSti"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

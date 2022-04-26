@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:projeto_sti/screens/byGenreScreen.dart';
+import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
 import 'package:projeto_sti/screens/mainScreen.dart';
@@ -11,7 +12,7 @@ import 'package:splashscreen/splashscreen.dart';
 
 void main() {
   runApp(DevicePreview(
-    enabled: false, //COLOCAR A TRUE PARA TESTAR RESPONSIVIDADE
+    enabled: true, //COLOCAR A TRUE PARA TESTAR RESPONSIVIDADE
     builder: (context) => const MyApp(), // Wrap your app
   ));
 }
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(
         //DEPOIS ALTERAR ISTO, PARA NÃO USAR BIBLIOTECA EXTERNA
         seconds: 5,
-        navigateAfterSeconds: const MainScreen(),
+        navigateAfterSeconds: const ChooseGenresScreen(),
         backgroundColor: Styles.colors.background,
         loaderColor: Styles.colors.lightBlue,
         title: appName,
