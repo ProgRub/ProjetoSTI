@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/authentication.dart';
+import 'package:projeto_sti/api/configurations.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:projeto_sti/screens/byGenreScreen.dart';
@@ -12,8 +14,12 @@ import 'package:projeto_sti/screens/splashScreen.dart';
 import 'package:projeto_sti/screens/topImdbScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(DevicePreview(
     enabled: true, //COLOCAR A TRUE PARA TESTAR RESPONSIVIDADE
     builder: (context) => const MyApp(), // Wrap your app
@@ -26,7 +32,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GenresAPI.getAllGenres();
-
+    Authentication auth = Authentication();
+    auth.login("test@gmail.com", "test");
     return MaterialApp(
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),

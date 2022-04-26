@@ -100,40 +100,57 @@ import 'package:firebase_auth/firebase_auth.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class Authentication {
+  Authentication._privateConstructor();
+
+  static final Authentication _instance = Authentication._privateConstructor();
+
+  factory Authentication() {
+    return _instance;
+  }
+
   void signOut() async {
-    bool someoneSignedIn = false;
+    // bool someoneSignedIn = false;
     final User? user = await _auth.currentUser;
     if (user == null) {
       return;
     }
     await _auth.signOut();
-    final String uid = user.uid;
+    // final String uid = user.uid;
   }
 
   void registerUser(String email, String password) async {
-    final User? user = (await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    ))
-        .user;
-    if (user != null) {
-      //already exists
-    } else {
-      //new user created
+    try {
+      final User? user = (await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
+          .user;
+      if (user != null) {
+        //already exists
+      } else {
+        //new user created
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
     }
   }
 
   void login(String email, String password) async {
-    final User? user = (await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    ))
-        .user;
+    //Firebase já trata da verificação de email
+    try {
+      final User? user = (await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
+          .user;
 
-    if (user != null) {
-      //sucesso
-    } else {
-      //erro
+      if (user != null) {
+        //sucesso
+      } else {
+        //erro
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
     }
   }
 }
