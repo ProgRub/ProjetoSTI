@@ -49,7 +49,7 @@ class _ByGenreState extends State<ByGenreScreen> {
             mainAxisSpacing: 20),
         itemCount: 5,
         itemBuilder: (BuildContext ctx, index) {
-          return _buildPoster(index);
+          return _buildPoster(index, 0);
         },
       ),
     );
@@ -66,7 +66,7 @@ class _ByGenreState extends State<ByGenreScreen> {
             mainAxisSpacing: 20),
         itemCount: 2,
         itemBuilder: (BuildContext ctx, index) {
-          return _buildPoster(index);
+          return _buildPoster(index, 1);
         },
       ),
     );
@@ -157,12 +157,12 @@ class _ByGenreState extends State<ByGenreScreen> {
     );
   }
 
-  GestureDetector _buildPoster(int index) {
+  GestureDetector _buildPoster(int index, int type) {
     return GestureDetector(
       onTap: () {
         print("POSTER CLICKED");
       },
-      child: const Poster(),
+      child: Poster(type: type),
     );
   }
 }

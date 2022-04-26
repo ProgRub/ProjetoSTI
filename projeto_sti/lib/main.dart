@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
-      title: 'Movie App',
+      title: 'POPCORN',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

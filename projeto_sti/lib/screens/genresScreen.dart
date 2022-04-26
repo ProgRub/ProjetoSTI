@@ -109,7 +109,7 @@ class _GenresState extends State<GenresScreen> {
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
           image: DecorationImage(
-            image: AssetImage("packages/projeto_sti/assets/images/profile.jpg"),
+            image: AssetImage("packages/projeto_sti/assets/images/xmen.jpg"),
             fit: BoxFit.fill,
           ),
         ),

@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
-            return const Poster();
+            return Poster(type: 0);
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(
@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
-            return const Poster();
+            return Poster(type: 1);
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(
@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(15)),
         image: DecorationImage(
-          image: AssetImage("packages/projeto_sti/assets/images/profile.jpg"),
+          image: AssetImage("packages/projeto_sti/assets/images/avatar.jpg"),
           fit: BoxFit.fill,
         ),
       ),
@@ -164,7 +164,7 @@ class _MainScreenState extends State<MainScreen> {
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: const AssetImage(
-                    "packages/projeto_sti/assets/images/profile.jpg"),
+                    "packages/projeto_sti/assets/images/profile_pic.jpg"),
                 radius: 34.0,
                 child: CircleAvatar(
                   backgroundColor: Styles.colors.darker,
@@ -228,7 +228,7 @@ class _MainScreenState extends State<MainScreen> {
                   _buildTextLabel("New Releases", Styles.fonts.title),
                   topTvShows, //apenas para testar layout
                   _buildTextLabel("Trending Now", Styles.fonts.title),
-                  topTvShows, //apenas para testar layout
+                  topMovies, //apenas para testar layout
                   _buildTextLabel("Top Movies", Styles.fonts.title),
                   topMovies,
                   _buildTextLabel("Top Tv Shows", Styles.fonts.title),
