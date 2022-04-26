@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ByGenreScreen extends StatefulWidget {
-  const ByGenreScreen({Key? key}) : super(key: key);
+  const ByGenreScreen({Key? key, required this.genre}) : super(key: key);
+
+  final String genre;
 
   @override
   State<ByGenreScreen> createState() => _ByGenreState();
 }
 
 class _ByGenreState extends State<ByGenreScreen> {
-  late String genre;
   late int selectedCategory;
   final List<String> categories = ["Movies", "Tv Shows"];
 
   @override
   initState() {
     selectedCategory = 0;
-    genre = "Adventure";
     super.initState();
   }
 
@@ -30,7 +31,7 @@ class _ByGenreState extends State<ByGenreScreen> {
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
-          genre,
+          widget.genre,
           style: Styles.fonts.title,
         ),
       ),
@@ -130,6 +131,7 @@ class _ByGenreState extends State<ByGenreScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
+        bottomNavigationBar: const AppBarBottom(currentIndex: 3),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

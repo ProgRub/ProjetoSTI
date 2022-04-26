@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:projeto_sti/components/appLogo.dart';
+import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/screens/favouritesScreen.dart';
+import 'package:projeto_sti/screens/genresScreen.dart';
+import 'package:projeto_sti/screens/profileScreen.dart';
+import 'package:projeto_sti/screens/topImdbScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,11 +22,30 @@ class _MainScreenState extends State<MainScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
   String usersName = "Susan";
+  late final ScrollController _controller;
+  bool visibleAppBar = false;
 
   @override
   initState() {
     sections = ["All", "Movies", "Tv Shows"];
     super.initState();
+    _controller = ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.userScrollDirection == ScrollDirection.forward) {
+        if (visibleAppBar && _controller.offset < 290) {
+          setState(() {
+            visibleAppBar = false;
+          });
+        }
+      }
+      if (_controller.position.userScrollDirection == ScrollDirection.reverse) {
+        if (!visibleAppBar && _controller.offset >= 290) {
+          setState(() {
+            visibleAppBar = true;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -86,11 +111,26 @@ class _MainScreenState extends State<MainScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildButton(const Icon(Icons.favorite, size: 30.0), "Favourites"),
           _buildButton(
-              const FaIcon(FontAwesomeIcons.trophy, size: 25.0), "Top iMDB"),
-          _buildButton(const Icon(Icons.grid_view, size: 32.0), "Genres"),
-          _buildButton(const Icon(Icons.person, size: 32.0), "Profile"),
+            const Icon(Icons.favorite, size: 25.0),
+            "Favourites",
+            const FavouritesScreen(),
+          ),
+          _buildButton(
+            const FaIcon(FontAwesomeIcons.trophy, size: 20.0),
+            "Top iMDB",
+            const TopImdbScreen(),
+          ),
+          _buildButton(
+            const Icon(Icons.grid_view, size: 25.0),
+            "Genres",
+            const GenresScreen(),
+          ),
+          _buildButton(
+            const Icon(Icons.person, size: 25.0),
+            "Profile",
+            const ProfileScreen(),
+          ),
         ],
       ),
     );
@@ -137,49 +177,104 @@ class _MainScreenState extends State<MainScreen> {
       ],
     );
 
+    var searchBar = Padding(
+      padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
+      child: TextField(
+        autocorrect: false,
+        enableSuggestions: false,
+        style: Styles.fonts.commentName,
+        decoration: InputDecoration(
+          hintText: 'What are you looking for?',
+          hintStyle: Styles.fonts.hintText,
+          fillColor: Colors.black,
+          filled: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+          prefixIcon:
+              Icon(Icons.search, size: 30.0, color: Styles.colors.lightBlue),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25.0),
+            borderSide: BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25.0),
+            borderSide: BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+          ),
+        ),
+      ),
+    );
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
-        body: SingleChildScrollView(
-          child: Column(children: [
-            const Align(
-              child: AppLogo(),
-              alignment: Alignment.topLeft,
+        body: Stack(
+          children: [
+            Padding(
+              padding: visibleAppBar
+                  ? const EdgeInsets.only(bottom: 80.0)
+                  : const EdgeInsets.only(bottom: 0.0),
+              child: SingleChildScrollView(
+                controller: _controller,
+                child: Column(children: [
+                  const Align(
+                    child: AppLogo(),
+                    alignment: Alignment.topLeft,
+                  ),
+                  topSection,
+                  buttonsSection,
+                  searchBar,
+                  _buildTextLabel("Today's Recommendation", Styles.fonts.title),
+                  recommendationSection,
+                  _buildTextLabel("New Releases", Styles.fonts.title),
+                  topTvShows, //apenas para testar layout
+                  _buildTextLabel("Trending Now", Styles.fonts.title),
+                  topTvShows, //apenas para testar layout
+                  _buildTextLabel("Top Movies", Styles.fonts.title),
+                  topMovies,
+                  _buildTextLabel("Top Tv Shows", Styles.fonts.title),
+                  topTvShows,
+                ]),
+              ),
             ),
-            topSection,
-            buttonsSection,
-            _buildTextLabel("Today's Recommendation", Styles.fonts.title),
-            recommendationSection,
-            _buildTextLabel("New Releases", Styles.fonts.title),
-            topTvShows, //apenas para testar layout
-            _buildTextLabel("Trending Now", Styles.fonts.title),
-            topTvShows, //apenas para testar layout
-            _buildTextLabel("Top Movies", Styles.fonts.title),
-            topMovies,
-            _buildTextLabel("Top Tv Shows", Styles.fonts.title),
-            topTvShows,
-          ]),
+            visibleAppBar
+                ? Visibility(
+                    visible: visibleAppBar,
+                    child: const Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: AppBarBottom(currentIndex: 0),
+                    ),
+                  )
+                : const SizedBox(width: 0.0),
+          ],
         ),
       ),
     );
   }
 
-  Column _buildButton(Widget? icon, String label) {
+  Column _buildButton(Widget? icon, String label, Widget state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
           child: icon,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => state,
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             primary: Colors.black,
             side: BorderSide(color: Styles.colors.purple, width: 2.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
-            minimumSize: const Size(60.0, 60.0),
+            minimumSize: const Size(50.0, 50.0),
           ),
         ),
         const SizedBox(height: 8.0),

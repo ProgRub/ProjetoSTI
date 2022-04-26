@@ -22,6 +22,7 @@ class _Colors {
   final blurred = Colors.black.withOpacity(0.05);
   final genre = const Color.fromARGB(255, 12, 12, 12);
   final watched = const Color.fromARGB(255, 96, 201, 100);
+  final greenButton = const Color.fromRGBO(1, 161, 156, 100);
 }
 
 class _TextStyle {
@@ -85,6 +86,12 @@ class _TextStyle {
     fontWeight: FontWeight.w600,
   );
 
+  final hintText = GoogleFonts.lato(
+    fontSize: 16,
+    color: Colors.grey,
+    fontWeight: FontWeight.w600,
+  );
+
   final userName = GoogleFonts.lato(
     fontSize: 25,
     color: Colors.grey,
@@ -95,5 +102,11 @@ class _TextStyle {
     fontSize: 20,
     color: Colors.white,
     fontWeight: FontWeight.w900,
+  );
+
+  final reset = GoogleFonts.lato(
+    fontSize: 18,
+    color: Colors.grey,
+    fontWeight: FontWeight.w500,
   );
 }

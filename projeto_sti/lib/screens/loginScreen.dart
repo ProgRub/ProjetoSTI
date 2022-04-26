@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
+import 'package:projeto_sti/screens/mainScreen.dart';
+import 'package:projeto_sti/screens/userInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/validators.dart';
 
@@ -33,23 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
       key: _loginFormKey,
       child: Column(
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Email",
-            ),
-          ),
           InputField(
+              label: "Email",
               hintText: "Enter your email",
               validator: emailValidator,
               controller: _email),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Password",
-            ),
-          ),
           InputField(
+              label: "Password",
               hintText: "Enter your password",
               validator: passwordValidator,
               controller: _password),
@@ -72,6 +66,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (userExists(_email.text, _password.text)) {
                     showPopupMessage(
                         context, "success", "Successfully logged in!");
+                    Timer(
+                      const Duration(seconds: 3),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainScreen(),
+                        ),
+                      ),
+                    );
                   } else {
                     showPopupMessage(context, "error", "Invalid credentials");
                   }
@@ -93,36 +96,24 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Email",
-            ),
+          InputField(
+            label: "Email",
+            hintText: "Enter your email",
+            validator: emailValidator,
+            controller: _email,
           ),
           InputField(
-              hintText: "Enter your email",
-              validator: emailValidator,
-              controller: _email),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Password",
-            ),
+            label: "Password",
+            hintText: "Enter your password",
+            validator: passwordValidator,
+            controller: _password,
           ),
           InputField(
-              hintText: "Enter your password",
-              validator: passwordValidator,
-              controller: _password),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: InputFieldLabel(
-              text: "Confirm password",
-            ),
+            label: "Confirm password",
+            hintText: "Enter your password",
+            validator: confirmPasswordValidator,
+            controller: _confirmPass,
           ),
-          InputField(
-              hintText: "Enter your password",
-              validator: confirmPasswordValidator,
-              controller: _confirmPass),
           Padding(
             padding: const EdgeInsets.only(
               top: 10.0,
@@ -144,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChooseGenresScreen(),
+                        builder: (context) => const UserInfoScreen(),
                       ),
                     );
                   });

@@ -84,14 +84,12 @@ class _UserInfoState extends State<UserInfoScreen> {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: InputFieldLabel(text: "Name"),
-                  ),
                   InputField(
-                      hintText: "Enter your name",
-                      validator: nameValidator,
-                      controller: _name),
+                    label: "Name",
+                    hintText: "Enter your name",
+                    validator: nameValidator,
+                    controller: _name,
+                  ),
                   const Padding(
                     padding: EdgeInsets.only(bottom: 10.0),
                     child: InputFieldLabel(text: "Gender"),
@@ -102,14 +100,12 @@ class _UserInfoState extends State<UserInfoScreen> {
                         _buildGender(Gender.female),
                         _buildGender(Gender.male),
                       ]),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
-                    child: InputFieldLabel(text: "Age"),
-                  ),
                   InputField(
-                      hintText: "Enter your age",
-                      validator: ageValidator,
-                      controller: _age),
+                    label: "Age",
+                    hintText: "Enter your age",
+                    validator: ageValidator,
+                    controller: _age,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(
                         right: 60.0, left: 60.0, bottom: 10.0),

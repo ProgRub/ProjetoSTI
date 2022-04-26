@@ -5,11 +5,13 @@ class InputField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String? Function(String?) validator;
+  final String label;
 
   const InputField(
       {required this.controller,
       required this.hintText,
       required this.validator,
+      required this.label,
       Key? key})
       : super(key: key);
 
@@ -33,44 +35,64 @@ class InputField extends StatelessWidget {
         right: 60,
         left: 60,
       ),
-      child: SizedBox(
-        height: 85,
-        child: TextFormField(
-          controller: controller,
-          textAlign: TextAlign.center,
-          keyboardType: _inputType(),
-          obscureText: hintText.contains("password"),
-          enableSuggestions: !hintText.contains("password"),
-          autocorrect: !hintText.contains("password"),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.white),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: SizedBox(
+              width: 300,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: Styles.fonts.label,
+                  ),
+                ],
+              ),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  BorderSide(color: Styles.colors.lightBlue, width: 1.0),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.red, width: 1.0),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  BorderSide(color: Styles.colors.lightBlue, width: 1.0),
-            ),
-            errorStyle: const TextStyle(fontSize: 13.0),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            hintText: hintText,
-            hintStyle: Styles.fonts.placeholder,
           ),
-          validator: validator,
-        ),
+          SizedBox(
+            height: 82,
+            width: 300,
+            child: TextFormField(
+              controller: controller,
+              textAlign: TextAlign.center,
+              keyboardType: _inputType(),
+              obscureText: hintText.contains("password"),
+              enableSuggestions: !hintText.contains("password"),
+              autocorrect: !hintText.contains("password"),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: Styles.colors.lightBlue, width: 1.0),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red, width: 1.0),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: Styles.colors.lightBlue, width: 1.0),
+                ),
+                errorStyle: const TextStyle(fontSize: 13.0),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 10.0),
+                hintText: hintText,
+                hintStyle: Styles.fonts.placeholder,
+              ),
+              validator: validator,
+            ),
+          ),
+        ],
       ),
     );
   }
