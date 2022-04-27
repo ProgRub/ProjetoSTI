@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:bubble_chart/bubble_chart.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
+import 'package:projeto_sti/screens/mainScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import '../components/appLogo.dart';
 import 'dart:io' show Platform;
@@ -163,13 +164,17 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Styles.colors.button,
-                      minimumSize: const Size(300, 50),
+                      minimumSize: const Size(200, 40),
                     ),
                     onPressed: () {
                       if (selectedGenres.length < 3) {
                         showPopupMessage(context, "error",
                             "You have to choose at least 3 genres!");
                         return;
+                      } else {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const MainScreen()));
                       }
                     },
                     child: Text(

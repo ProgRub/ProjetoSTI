@@ -94,6 +94,27 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
 
+    // var topTvShows = Transform.rotate(
+    //   angle: -pi / 2,
+    //   child: SizedBox(
+    //     height: 300,
+    //     width: double.infinity,
+    //     child: ListWheelScrollView(
+    //       diameterRatio: 2.5,
+    //       squeeze: 1.4,
+    //       physics: const BouncingScrollPhysics(),
+    //       itemExtent: 230,
+    //       children: List.generate(
+    //         10,
+    //         (index) => Transform.rotate(
+    //           angle: pi / 2,
+    //           child: Poster(type: index % 2),
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
+
     var recommendationSection = Container(
       width: MediaQuery.of(context).size.width - 60,
       height: 160,

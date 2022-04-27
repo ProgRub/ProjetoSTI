@@ -169,7 +169,7 @@ class _TopImdbState extends State<TopImdbScreen> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-            return _buildMovieRow(index + 1, "Stranger Things", "9.5", 1);
+            return _buildMovieRow(index + 1, "Stranger T...", "9.5", 1);
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(height: 30.0);

@@ -62,23 +62,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 minimumSize: const Size(300, 50),
               ),
               onPressed: () {
-                if (_loginFormKey.currentState!.validate()) {
-                  if (userExists(_email.text, _password.text)) {
-                    showPopupMessage(
-                        context, "success", "Successfully logged in!");
-                    Timer(
-                      const Duration(seconds: 3),
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainScreen(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    showPopupMessage(context, "error", "Invalid credentials");
-                  }
-                }
+                // if (_loginFormKey.currentState!.validate()) {
+                //   if (userExists(_email.text, _password.text)) {
+                //     showPopupMessage(
+                //         context, "success", "Successfully logged in!");
+                //     Timer(
+                //       const Duration(seconds: 3),
+                //       () => Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => const MainScreen(),
+                //         ),
+                //       ),
+                //     );
+                //   } else {
+                //     showPopupMessage(context, "error", "Invalid credentials");
+                //   }
+                // }
               },
               child: Text(
                 'Login',
@@ -129,17 +129,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 minimumSize: const Size(300, 50),
               ),
               onPressed: () {
-                if (_signUpFormKey.currentState!.validate()) {
-                  showPopupMessageWithFunction(
-                      context, "success", "Your account has been created!", () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserInfoScreen(),
-                      ),
-                    );
-                  });
-                }
+                // if (_signUpFormKey.currentState!.validate()) {
+                //   showPopupMessageWithFunction(
+                //       context, "success", "Your account has been created!", () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => const UserInfoScreen(),
+                //       ),
+                //     );
+                //   });
+                // }
+
+                showPopupMessageWithFunction(
+                    context, "success", "Your account has been created!", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UserInfoScreen(),
+                    ),
+                  );
+                });
               },
               child: Text(
                 'Next',
