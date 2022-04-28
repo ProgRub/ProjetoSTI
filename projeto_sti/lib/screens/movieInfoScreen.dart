@@ -230,10 +230,10 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildInfoColumn("Lenght", movies[0].lenght),
+          _buildInfoColumn("Lenght", movies[0].length),
           _buildInfoColumn("Year", movies[0].year.toString()),
           _buildInfoColumn("Language", movies[0].language),
-          _buildInfoColumn("Age", movies[0].age),
+          _buildInfoColumn("Age", movies[0].ageRating),
         ],
       ),
     );
