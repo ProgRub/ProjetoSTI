@@ -1,14 +1,15 @@
-class Movie {
+class TvShow {
   String id;
-  int year;
+  int year, seasons;
   double rating;
   List<String> genres;
   String plot, title, poster, length, language, ageRating, director;
   List<String> cast;
 
-  Movie({
+  TvShow({
     required this.id,
     required this.year,
+    required this.seasons,
     required this.rating,
     required this.genres,
     required this.plot,
@@ -22,11 +23,12 @@ class Movie {
   });
 }
 
-List<Movie> movies = [
-  Movie(
-    id: "1,",
+List<TvShow> movies = [
+  TvShow(
+    id: "1",
     title: "Joker",
     year: 2019,
+    seasons: 1,
     rating: 8.4,
     genres: ["Crime", "Drama", "Suspense"],
     plot:

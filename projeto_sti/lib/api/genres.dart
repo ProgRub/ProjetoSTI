@@ -1,16 +1,14 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-abstract class GenresAPI {
-  static List<String> genres = [];
-  static Future<void> getAllGenres() async {
-    if (genres.isNotEmpty) return;
-    String response = await rootBundle
-        .loadString('packages/projeto_sti/assets/db/genres.json');
-    List<dynamic> data = json.decode(response);
-    if (genres.isNotEmpty) return;
-    for (var element in data) {
-      genres.add(element['name']);
-    }
+class GenresAPI {
+  GenresAPI._privateConstructor();
+
+  static final GenresAPI _instance = GenresAPI._privateConstructor();
+
+  factory GenresAPI() {
+    return _instance;
   }
+
+  List<String> genres = [];
+  Future<void> getAllGenres() async {}
 }
