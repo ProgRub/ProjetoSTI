@@ -30,7 +30,7 @@ class InputFormWidget extends StatelessWidget {
               color: Colors.black.withOpacity(0.3), fontSize: 27),
         ),
         style: GoogleFonts.lato(
-            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 27),
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 27),
       ),
     );
   }

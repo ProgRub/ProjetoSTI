@@ -49,6 +49,7 @@ dependencies:
   provider: ^6.0.1
   simple_animations: ^4.0.1
   supercharged: ^2.1.1
+  firebase_core: ^1.15.0
 
 # dependency_overrides:
 #   firebase_storage_platform_interface: 4.0.14
@@ -88,6 +89,13 @@ flutter:
     - packages/projeto_sti/assets/db/genres.json
     - packages/projeto_sti/assets/images/profile.jpg
     - packages/projeto_sti/assets/images/film-popcorn.gif
+    - packages/projeto_sti/assets/images/avatar.jpg
+    - packages/projeto_sti/assets/images/joaquin_phoenix.jpg
+    - packages/projeto_sti/assets/images/joker_image.png
+    - packages/projeto_sti/assets/images/joker_poster.jpg
+    - packages/projeto_sti/assets/images/profile_pic.jpg
+    - packages/projeto_sti/assets/images/stranger_poster.jpg
+    - packages/projeto_sti/assets/images/xmen.jpg
     # - db/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

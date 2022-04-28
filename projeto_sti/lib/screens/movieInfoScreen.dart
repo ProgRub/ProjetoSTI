@@ -174,7 +174,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                     borderRadius: const BorderRadius.all(Radius.circular(15)),
                     image: const DecorationImage(
                       image: AssetImage(
-                          "packages/projeto_sti/assets/images/profile.jpg"),
+                          "packages/projeto_sti/assets/images/joker_image.png"),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -259,7 +259,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
                 image: const DecorationImage(
                   image: AssetImage(
-                      "packages/projeto_sti/assets/images/profile.jpg"),
+                      "packages/projeto_sti/assets/images/joker_image.png"),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -296,7 +296,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                       child: const CircleAvatar(
                         radius: 50.0,
                         backgroundImage: AssetImage(
-                            "packages/projeto_sti/assets/images/profile.jpg"),
+                            "packages/projeto_sti/assets/images/joaquin_phoenix.jpg"),
                       ),
                     ),
                   ],
@@ -360,7 +360,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                           child: const CircleAvatar(
                             radius: 28.0,
                             backgroundImage: AssetImage(
-                                "packages/projeto_sti/assets/images/profile.jpg"),
+                                "packages/projeto_sti/assets/images/profile_pic.jpg"),
                           ),
                         ),
                         Column(
@@ -438,7 +438,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
-            return const Poster();
+            return Poster(type: 1);
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(

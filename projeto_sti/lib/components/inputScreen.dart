@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/animation/fadeAnimation.dart';
 import 'package:projeto_sti/components/inputForm.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
+import 'package:projeto_sti/styles/style.dart';
 
 class InputScreen extends StatefulWidget {
   final String? text;
@@ -28,10 +29,10 @@ class InputState extends State<InputScreen> {
     var he = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xffF4F6FD),
+      backgroundColor: Styles.colors.background,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.check),
-        backgroundColor: Colors.green,
+        child: const Icon(Icons.check, size: 30.0),
+        backgroundColor: Styles.colors.purple,
         onPressed: editName,
       ),
       body: SingleChildScrollView(

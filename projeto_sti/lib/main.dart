@@ -21,7 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(DevicePreview(
-    enabled: true, //COLOCAR A TRUE PARA TESTAR RESPONSIVIDADE
+    enabled: false, //COLOCAR A TRUE PARA TESTAR RESPONSIVIDADE
     builder: (context) => const MyApp(), // Wrap your app
   ));
 }
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
-      title: 'Movie App',
+      title: 'POPCORN',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

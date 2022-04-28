@@ -153,7 +153,7 @@ class _TopImdbState extends State<TopImdbScreen> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-            return _buildMovieRow(index + 1, "Joker", "9.6");
+            return _buildMovieRow(index + 1, "Joker", "9.6", 0);
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(height: 30.0);
@@ -169,7 +169,7 @@ class _TopImdbState extends State<TopImdbScreen> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-            return _buildMovieRow(index + 1, "Avatar", "9.5");
+            return _buildMovieRow(index + 1, "Stranger T...", "9.5", 1);
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(height: 30.0);
@@ -213,7 +213,8 @@ class _TopImdbState extends State<TopImdbScreen> {
     );
   }
 
-  GestureDetector _buildMovieRow(int index, String title, String rating) {
+  GestureDetector _buildMovieRow(
+      int index, String title, String rating, int type) {
     return GestureDetector(
       onTap: () {
         print("TAPPED MOVIE - $title");
@@ -234,11 +235,14 @@ class _TopImdbState extends State<TopImdbScreen> {
                 Container(
                   width: 60,
                   height: 80,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
-                      image: AssetImage(
-                          "packages/projeto_sti/assets/images/profile.jpg"),
+                      image: type == 0
+                          ? const AssetImage(
+                              "packages/projeto_sti/assets/images/joker_poster.jpg")
+                          : const AssetImage(
+                              "packages/projeto_sti/assets/images/stranger_poster.jpg"),
                       fit: BoxFit.fill,
                     ),
                   ),

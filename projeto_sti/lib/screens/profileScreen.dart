@@ -3,6 +3,7 @@ import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
+import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
 import 'package:projeto_sti/screens/editProfileScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
@@ -155,7 +156,7 @@ class _ProfileState extends State<ProfileScreen> {
                             child: const CircleAvatar(
                               backgroundColor: Colors.white,
                               backgroundImage: AssetImage(
-                                  "packages/projeto_sti/assets/images/profile.jpg"), //TESTING
+                                  "packages/projeto_sti/assets/images/profile_pic.jpg"), //TESTING
                               radius: 38.0,
                             ),
                           ),
@@ -186,27 +187,17 @@ class _ProfileState extends State<ProfileScreen> {
                   _buildTextLabel("Watched", Styles.fonts.label),
                   tabs,
                   GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    primary: false,
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    // number of items in your list
-                    itemCount: 5,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            "packages/projeto_sti/assets/images/profile.jpg",
-                            fit: BoxFit.fill,
-                            height: 150.0,
-                            width: 100.0,
-                          ),
-                        ),
-                      );
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 4,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: 3,
+                    itemBuilder: (BuildContext ctx, index) {
+                      return Poster(type: 0);
                     },
                   ),
                 ],
@@ -225,7 +216,7 @@ class _ProfileState extends State<ProfileScreen> {
   Padding _buildTextLabel(String text, TextStyle style) {
     return Padding(
       padding: style == Styles.fonts.title
-          ? const EdgeInsets.only(top: 70.0, left: 30.0)
+          ? const EdgeInsets.only(top: 95.0, left: 30.0)
           : const EdgeInsets.only(top: 30.0, left: 30.0, bottom: 20.0),
       child: Align(
         alignment: Alignment.topLeft,
