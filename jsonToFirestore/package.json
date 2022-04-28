@@ -1,0 +1,15 @@
+{
+  "name": "jsontofirestore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/app-compat": "^0.1.22",
+    "firestore-export-import": "^1.1.0"
+  }
+}

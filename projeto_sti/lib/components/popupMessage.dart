@@ -34,9 +34,12 @@ class PopupMessage extends StatelessWidget {
           ? Icon(Icons.error_outline, size: 40.0, color: Styles.colors.error)
           : const Icon(Icons.check_circle, size: 40.0),
       actions: [
-        TextButton(
-          child: const Text("OK"),
-          onPressed: function,
+        Visibility(
+          visible: function != null,
+          child: TextButton(
+            child: const Text("OK"),
+            onPressed: function,
+          ),
         )
       ],
     );

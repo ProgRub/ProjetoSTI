@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projeto_sti/api/exceptions.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
@@ -10,6 +11,7 @@ import 'package:projeto_sti/screens/userInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/validators.dart';
 
+import '../api/authentication.dart';
 import '../components/appLogo.dart';
 import '../components/inputFieldLabel.dart';
 
@@ -21,6 +23,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final Authentication authentication = Authentication();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
@@ -62,23 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 minimumSize: const Size(300, 50),
               ),
               onPressed: () {
-                if (_loginFormKey.currentState!.validate()) {
-                  if (userExists(_email.text, _password.text)) {
-                    showPopupMessage(
-                        context, "success", "Successfully logged in!");
-                    Timer(
-                      const Duration(seconds: 3),
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainScreen(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    showPopupMessage(context, "error", "Invalid credentials");
-                  }
-                }
+                tryLogin(context);
               },
               child: Text(
                 'Login',
@@ -129,17 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 minimumSize: const Size(300, 50),
               ),
               onPressed: () {
-                if (_signUpFormKey.currentState!.validate()) {
-                  showPopupMessageWithFunction(
-                      context, "success", "Your account has been created!", () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserInfoScreen(),
-                      ),
-                    );
-                  });
-                }
+                trySignUp(context);
               },
               child: Text(
                 'Next',
@@ -230,6 +207,90 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void trySignUp(BuildContext context) async {
+    try {
+      await authentication.signUserUp(
+          _email.text, _password.text, _confirmPass.text);
+      showPopupMessageWithFunction(
+          context, "success", "Your account has been created!", () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const UserInfoScreen(),
+          ),
+        );
+      });
+    } on SignUpException catch (e) {
+      String message = "";
+      switch (e.code) {
+        case "empty-email":
+          message = "No email provided.";
+          break;
+        case "empty-password":
+          message = "No password provided.";
+          break;
+        case "empty-password-confirm":
+          message = "Please confirm your password.";
+          break;
+        case "passwords-dont-match":
+          message = "Passwords don't match.";
+          break;
+        case "email-already-in-use":
+          message = "That email is already taken.";
+          break;
+        case "invalid-email":
+          message = "Invalid email.";
+          break;
+        case "operation-not-allowed":
+          message = "Please contact the developers.";
+          break;
+        case "weak-password":
+          message = "Password not strong enough.";
+          break;
+      }
+      showPopupMessage(context, "error", message);
+    }
+  }
+
+  void tryLogin(BuildContext context) async {
+    try {
+      await authentication.login(_email.text, _password.text);
+      showPopupMessage(context, "success", "Successfully logged in!");
+      Timer(
+        const Duration(seconds: 3),
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(),
+          ),
+        ),
+      );
+    } on LoginException catch (e) {
+      String message = "";
+      switch (e.code) {
+        case "empty-email":
+          message = "No email provided.";
+          break;
+        case "empty-password":
+          message = "No password provided.";
+          break;
+        case "invalid-email":
+          message = "Invalid email.";
+          break;
+        case "user-disabled":
+          message = "User account deleted.";
+          break;
+        case "user-not-found":
+          message = "No user found.";
+          break;
+        case "wrong-password":
+          message = "Invalid credentials.";
+          break;
+      }
+      showPopupMessage(context, "error", message);
+    }
   }
 
   String? confirmPasswordValidator(String? value) {
