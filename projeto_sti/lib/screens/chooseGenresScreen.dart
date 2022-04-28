@@ -102,13 +102,6 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.width);
-    print(MediaQuery.of(context).size.height);
-    print("RESULT" +
-        (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height
-                ? MediaQuery.of(context).size.width
-                : MediaQuery.of(context).size.height)
-            .toString());
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -117,7 +110,6 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
           children: [
             const AppLogo(),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
@@ -131,18 +123,9 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10, top: 0),
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width <
-                            MediaQuery.of(context).size.height
-                        ? MediaQuery.of(context).size.width
-                        : MediaQuery.of(context).size.height,
-                    height: (Platform.isWindows ||
-                            Platform.isMacOS ||
-                            Platform.isLinux)
-                        ? MediaQuery.of(context).size.height - 250
-                        : (MediaQuery.of(context).size.width <
-                                MediaQuery.of(context).size.height
-                            ? MediaQuery.of(context).size.width
-                            : MediaQuery.of(context).size.height),
+                    width: double.infinity,
+                    height:
+                        (MediaQuery.of(context).size.height >= 740) ? 500 : 350,
                     child: BubbleChartLayout(
                       duration: const Duration(milliseconds: 500),
                       padding: 0,
@@ -155,32 +138,25 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 0,
-                    right: 60,
-                    left: 60,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Styles.colors.button,
+                    minimumSize: const Size(200, 40),
                   ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Styles.colors.button,
-                      minimumSize: const Size(200, 40),
-                    ),
-                    onPressed: () {
-                      if (selectedGenres.length < 3) {
-                        showPopupMessage(context, "error",
-                            "You have to choose at least 3 genres!");
-                        return;
-                      } else {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const MainScreen()));
-                      }
-                    },
-                    child: Text(
-                      "Let's start!",
-                      style: Styles.fonts.button,
-                    ),
+                  onPressed: () {
+                    if (selectedGenres.length < 3) {
+                      showPopupMessage(context, "error",
+                          "You have to choose at least 3 genres!");
+                      return;
+                    } else {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const MainScreen()));
+                    }
+                  },
+                  child: Text(
+                    "Let's start!",
+                    style: Styles.fonts.button,
                   ),
                 ),
                 Align(

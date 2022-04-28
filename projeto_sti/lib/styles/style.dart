@@ -42,9 +42,9 @@ class _TextStyle {
     fontWeight: FontWeight.w900,
   );
   final placeholder = GoogleFonts.lato(
-    fontSize: 14,
-    color: const Color.fromARGB(255, 125, 125, 125),
-    fontWeight: FontWeight.w300,
+    fontSize: 16,
+    color: Colors.grey,
+    fontWeight: FontWeight.w400,
   );
   final edit = GoogleFonts.lato(
     fontSize: 13,
@@ -93,7 +93,7 @@ class _TextStyle {
   );
 
   final userName = GoogleFonts.lato(
-    fontSize: 25,
+    fontSize: 23,
     color: Colors.grey,
     fontWeight: FontWeight.w700,
   );
