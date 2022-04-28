@@ -21,7 +21,7 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   @override
   void initState() {
     super.initState();
-    for (var element in GenresAPI.genres) {
+    for (var element in GenresAPI().genres) {
       var node = BubbleNode.leaf(
         value: 5,
         options: BubbleOptions(
@@ -74,7 +74,7 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   void clearSelectedGenres() {
     selectedGenres.clear();
     childrenNodes.clear();
-    for (var element in GenresAPI.genres) {
+    for (var element in GenresAPI().genres) {
       var node = BubbleNode.leaf(
         value: 5,
         options: BubbleOptions(

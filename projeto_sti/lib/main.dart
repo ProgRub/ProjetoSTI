@@ -31,9 +31,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GenresAPI.getAllGenres();
-    Authentication auth = Authentication();
-    auth.login("test@gmail.com", "test");
+    // GenresAPI.getAllGenres();
     return MaterialApp(
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),

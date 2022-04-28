@@ -1,0 +1,66 @@
+{
+    "tvShows": [
+        {
+            "Title": "Breaking Bad",
+            "Year": "2008–2013",
+            "Rated": "TV-MA",
+            "Runtime": "49 min",
+            "Genre": ["Crime", "Drama", "Thriller"],
+            "Director": "N/A",
+            "Writer": "Vince Gilligan",
+            "Actors": ["Bryan Cranston", "Aaron Paul", "Anna Gunn"],
+            "Plot": "When chemistry teacher Walter White is diagnosed with Stage III cancer and given only two years to live, he decides he has nothing to lose. He lives with his teenage son, who has cerebral palsy, and his wife, in New Mexico. Determined to ensure that his family will have a secure future, Walt embarks on a career of drugs and crime. He proves to be remarkably proficient in this new world as he begins manufacturing and selling methamphetamine with one of his former students. The series tracks the impacts of a fatal diagnosis on a regular, hard working man, and explores how a fatal diagnosis affects his morality and transforms him into a major player of the drug trade.",
+            "Language": "English, Spanish",
+            "Country": "United States",
+            "Poster": "https://m.media-amazon.com/images/M/MV5BZTE2YWRlMmYtOGFkYy00MjcxLWJkNmQtNTJmNTZkZjVhZGE1XkEyXkFqcGdeQXVyMTMzNDExODE5._V1_SX300.jpg",
+            "Ratings": [
+                {
+                    "Source": "Internet Movie Database",
+                    "Value": "9.5/10"
+                },
+                {
+                    "Source": "Rotten Tomatoes",
+                    "Value": "96%"
+                }
+            ],
+            "Metascore": "N/A",
+            "imdbRating": 9.5,
+            "imdbID": "tt0903747",
+            "Type": "series",
+            "totalSeasons": 5
+        },
+        {
+            "Title": "Stranger Things",
+            "Year": "2016–",
+            "Rated": "TV-14",
+            "Runtime": "51 min",
+            "Genre": [
+                "Drama",
+                "Fantasy",
+                "Horror"
+            ],
+            "Director": "N/A",
+            "Writer": "Matt Duffer, Ross Duffer",
+            "Actors": [
+                "Millie Bobby Brown",
+                "Finn Wolfhard",
+                "Winona Ryder"
+            ],
+            "Plot": "In a small town where everyone knows everyone, a peculiar incident starts a chain of events that leads to the disappearance of a child, which begins to tear at the fabric of an otherwise peaceful community. Dark government agencies and seemingly malevolent supernatural forces converge on the town, while a few of the locals begin to understand that there's more going on than meets the eye.",
+            "Language": "English, Russian",
+            "Country": "United States",
+            "Poster": "https://m.media-amazon.com/images/M/MV5BN2ZmYjg1YmItNWQ4OC00YWM0LWE0ZDktYThjOTZiZjhhN2Q2XkEyXkFqcGdeQXVyNjgxNTQ3Mjk@._V1_SX300.jpg",
+            "Ratings": [
+                {
+                    "Source": "Internet Movie Database",
+                    "Value": "8.7/10"
+                }
+            ],
+            "Metascore": "N/A",
+            "imdbRating": 8.7,
+            "imdbID": "tt4574334",
+            "Type": "series",
+            "totalSeasons": 4
+        }
+    ]
+}

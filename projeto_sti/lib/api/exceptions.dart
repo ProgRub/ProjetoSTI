@@ -1,24 +1,24 @@
 class LoginException implements Exception {
-  String _message = 'Error';
+  String code = 'Error';
 
-  LoginException([String message = 'Error']) {
-    _message = message;
+  LoginException([String code = 'Error']) {
+    this.code = code;
   }
   @override
   String toString() {
-    return _message;
+    return code;
   }
 }
 
 class SignUpException implements Exception {
-  String _message = 'Error';
+  String code = 'Error';
 
-  SignUpException([String message = 'Error']) {
-    _message = message;
+  SignUpException([String code = 'Error']) {
+    this.code = code;
   }
 
   @override
   String toString() {
-    return _message;
+    return code;
   }
 }
