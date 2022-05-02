@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // GenresAPI.getAllGenres();
+    GenresAPI().getAllGenres();
     return MaterialApp(
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),

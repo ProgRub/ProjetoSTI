@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/screens/loginScreen.dart';
 import 'package:projeto_sti/screens/mainScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
@@ -20,7 +21,7 @@ class _SplashState extends State<SplashScreen> {
     Timer(
         const Duration(seconds: 5),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => const LoginScreen())));
+            builder: (BuildContext context) => const ChooseGenresScreen())));
   }
 
   @override
