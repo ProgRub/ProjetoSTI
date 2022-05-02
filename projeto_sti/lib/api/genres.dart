@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models/genre.dart';
+
 class GenresAPI {
   GenresAPI._privateConstructor();
 
@@ -12,8 +14,16 @@ class GenresAPI {
   }
   FirebaseFirestore firebase = FirebaseFirestore.instance;
 
-  Set<String> genres = {};
   Future<void> getAllGenres() async {
+    await getNewGenresFromMoviesAndTvShows();
+    var genres = await firebase.collection('genres').get();
+    for (var genre in genres.docs) {
+      Genre.fromApi(genre);
+    }
+  }
+
+  Future<void> getNewGenresFromMoviesAndTvShows() async {
+    var genres = [];
     var movies = await firebase.collection('movies').get();
     for (var element in movies.docs) {
       try {

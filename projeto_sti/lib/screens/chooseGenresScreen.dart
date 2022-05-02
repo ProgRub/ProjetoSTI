@@ -8,6 +8,8 @@ import 'package:projeto_sti/styles/style.dart';
 import '../components/appLogo.dart';
 import 'dart:io' show Platform;
 
+import '../models/genre.dart';
+
 class ChooseGenresScreen extends StatefulWidget {
   const ChooseGenresScreen({Key? key}) : super(key: key);
 
@@ -21,12 +23,12 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   @override
   void initState() {
     super.initState();
-    for (var element in GenresAPI().genres) {
+    for (var element in Genre.genres) {
       var node = BubbleNode.leaf(
         value: 5,
         options: BubbleOptions(
           child: Text(
-            element,
+            element.name,
             style: GoogleFonts.lato(
               fontSize: 12,
               color: Colors.black,
@@ -74,12 +76,12 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   void clearSelectedGenres() {
     selectedGenres.clear();
     childrenNodes.clear();
-    for (var element in GenresAPI().genres) {
+    for (var element in Genre.genres) {
       var node = BubbleNode.leaf(
         value: 5,
         options: BubbleOptions(
           child: Text(
-            element,
+            element.name,
             style: GoogleFonts.lato(
               fontSize: 12,
               color: Colors.black,
