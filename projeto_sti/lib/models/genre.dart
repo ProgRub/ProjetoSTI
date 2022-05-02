@@ -10,6 +10,7 @@ class Genre {
   Genre({required this.name, required this.color}) {
     genres.add(this);
   }
+
   Genre.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse) {
     genres.add(
         Genre(name: apiResponse["name"], color: Color(apiResponse["color"])));
