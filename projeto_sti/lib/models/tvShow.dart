@@ -1,14 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TvShow {
   String id;
-  int year, seasons;
+  int seasons;
   double rating;
   List<String> genres;
-  String plot, title, poster, length, language, ageRating, director;
-  List<String> cast;
+  String plot, years, title, poster, length, language, ageRating;
+  List<String> cast, directors, writers;
 
   TvShow({
     required this.id,
-    required this.year,
+    required this.years,
     required this.seasons,
     required this.rating,
     required this.genres,
@@ -19,25 +21,23 @@ class TvShow {
     required this.length,
     required this.language,
     required this.ageRating,
-    required this.director,
+    required this.directors,
+    required this.writers,
   });
-}
 
-List<TvShow> movies = [
-  TvShow(
-    id: "1",
-    title: "Joker",
-    year: 2019,
-    seasons: 1,
-    rating: 8.4,
-    genres: ["Crime", "Drama", "Suspense"],
-    plot:
-        "Arthur Fleck works as a clown and is an aspiring stand-up comic. He has mental health issues, part of which involves uncontrollable laughter. Times are tough and, due to his issues and occupation, Arthur has an even worse time than most. Over time these issues bear down on him, shaping his actions, making him ultimately take on the persona he is more known as...Joker.",
-    poster: "...",
-    cast: ["Rick", "Angelina", "Sophia"],
-    length: "2h02m",
-    language: "English",
-    ageRating: "M/14",
-    director: "Todd Phillips",
-  ),
-];
+  TvShow.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
+      : id = apiResponse.id,
+        years = apiResponse["Year"],
+        seasons = apiResponse["totalSeasons"],
+        rating = apiResponse["imdbRating"],
+        genres = apiResponse["Genre"],
+        plot = apiResponse["Plot"],
+        title = apiResponse["Title"],
+        poster = apiResponse["Poster"],
+        cast = apiResponse["Actors"],
+        length = apiResponse["Runtime"],
+        language = apiResponse["Language"],
+        ageRating = apiResponse["Rated"],
+        directors = apiResponse["Director"],
+        writers = apiResponse["Writer"];
+}

@@ -19,7 +19,7 @@ class GenresAPI {
     List<Genre> genres = [];
     var genresApi = await firebase.collection('genres').get();
     for (var genre in genresApi.docs) {
-      genres.add(Genre(name: genre["name"], color: Color(genre["color"])));
+      genres.add(Genre.fromApi(genre));
     }
     return genres;
   }
