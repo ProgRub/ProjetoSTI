@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 
 class TvShow {
   String id;
@@ -40,4 +42,11 @@ class TvShow {
         ageRating = apiResponse["Rated"],
         directors = apiResponse["Director"],
         writers = apiResponse["Writer"];
+
+  Future<Image> getPoster(String poster) async {
+    Reference ref =
+        FirebaseStorage.instance.ref().child("tvShowPosters/" + poster);
+    String url = (await ref.getDownloadURL()).toString();
+    return Image.network(url);
+  }
 }

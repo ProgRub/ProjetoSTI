@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:projeto_sti/models/movie.dart';
 
 class MoviesAPI {
@@ -6,14 +8,18 @@ class MoviesAPI {
 
   static final MoviesAPI _instance = MoviesAPI._privateConstructor();
 
-  CollectionReference movies = FirebaseFirestore.instance.collection('movies');
+  CollectionReference<Map<String, dynamic>> collection =
+      FirebaseFirestore.instance.collection('movies');
 
   factory MoviesAPI() {
     return _instance;
   }
-
-  Future<List<Movie>> getAllMovies() {
-    movies.get();
-    return Future.value();
+  Future<List<Movie>> getAllMovies() async {
+    var movies = await collection.get();
+    List<Movie> returnMovies = [];
+    for (var movie in movies.docs) {
+      returnMovies.add(Movie.fromApi(movie));
+    }
+    return returnMovies;
   }
 }

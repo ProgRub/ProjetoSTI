@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/configurations.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/screens/byGenreScreen.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/screens/editProfileScreen.dart';
@@ -20,9 +24,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  MoviesAPI().getAllMovies();
   runApp(DevicePreview(
     enabled: false, //COLOCAR A TRUE PARA TESTAR RESPONSIVIDADE
-    builder: (context) => const MyApp(), // Wrap your app
+    builder: (context) => MaterialApp(
+      home: const MyApp(),
+    ), // Wrap your app
   ));
 }
 
@@ -31,8 +38,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // GenresAPI.getAllGenres();
-    GenresAPI().getAllGenres();
     return MaterialApp(
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),

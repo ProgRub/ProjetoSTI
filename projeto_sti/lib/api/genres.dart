@@ -8,6 +8,8 @@ class GenresAPI {
   GenresAPI._privateConstructor();
 
   static final GenresAPI _instance = GenresAPI._privateConstructor();
+  CollectionReference<Map<String, dynamic>> collection =
+      FirebaseFirestore.instance.collection('genres');
 
   factory GenresAPI() {
     return _instance;
@@ -17,7 +19,7 @@ class GenresAPI {
   Future<List<Genre>> getAllGenres() async {
     await getNewGenresFromMoviesAndTvShows();
     List<Genre> genres = [];
-    var genresApi = await firebase.collection('genres').get();
+    var genresApi = await collection.get();
     for (var genre in genresApi.docs) {
       genres.add(Genre.fromApi(genre));
     }

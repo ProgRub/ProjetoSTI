@@ -45,6 +45,7 @@ dependencies:
   cloud_firestore: ^3.1.10
   firebase_auth: ^1.0.0  
   firebase_dynamic_links: ^0.5.1    
+  firebase_storage: ^10.2.14
   google_sign_in: ^4.5.1
   provider: ^6.0.1
   simple_animations: ^4.0.1

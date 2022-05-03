@@ -25,30 +25,6 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   @override
   void initState() {
     super.initState();
-    // GenresAPI().getAllGenres().then((value) {
-    //   genres = value;
-    //   for (var element in genres) {
-    //     var node = BubbleNode.leaf(
-    //       value: 5,
-    //       options: BubbleOptions(
-    //         child: Text(
-    //           element.name,
-    //           style: GoogleFonts.lato(
-    //             fontSize: 12,
-    //             color: Colors.black,
-    //             fontWeight: FontWeight.w400,
-    //           ),
-    //         ),
-    //         color: Colors.white,
-    //         border: Border.all(color: Styles.colors.purple, width: 2.0),
-    //       ),
-    //     );
-    //     node.options?.onTap = () => setState(() {
-    //           clickedGenre(node);
-    //         });
-    //     childrenNodes.add(node);
-    //   }
-    // });
   }
 
   void clickedGenre(BubbleNode node) {

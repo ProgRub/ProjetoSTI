@@ -20,6 +20,7 @@ class MovieInfoScreen extends StatefulWidget {
 class _MovieInfoState extends State<MovieInfoScreen> {
   late List<GenreOval> genres;
   late bool watched = false;
+  List<Movie> movies = [];
 
   @override
   initState() {
@@ -323,7 +324,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
-          movies[0].director,
+          movies[0].directors.join(", "),
           style: Styles.fonts.plot,
         ),
       ),
