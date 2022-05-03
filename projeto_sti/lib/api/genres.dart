@@ -14,12 +14,14 @@ class GenresAPI {
   }
   FirebaseFirestore firebase = FirebaseFirestore.instance;
 
-  Future<void> getAllGenres() async {
+  Future<List<Genre>> getAllGenres() async {
     await getNewGenresFromMoviesAndTvShows();
-    var genres = await firebase.collection('genres').get();
-    for (var genre in genres.docs) {
-      Genre.fromApi(genre);
+    List<Genre> genres = [];
+    var genresApi = await firebase.collection('genres').get();
+    for (var genre in genresApi.docs) {
+      genres.add(Genre(name: genre["name"], color: Color(genre["color"])));
     }
+    return genres;
   }
 
   Future<void> getNewGenresFromMoviesAndTvShows() async {
