@@ -7,9 +7,9 @@ import 'package:projeto_sti/styles/style.dart';
 class PopupMessage extends StatelessWidget {
   final String type;
   final String message;
-  final Null Function()? function;
+  Null Function()? function;
 
-  const PopupMessage({
+  PopupMessage({
     required this.type,
     required this.message,
     this.function,
@@ -66,9 +66,14 @@ showPopupMessageWithFunction(BuildContext context, String type, String message,
         // _timer = Timer(const Duration(seconds: 2), () {
         //   Navigator.of(context).pop();
         // });
-
-        return PopupMessage(
+        var popup = PopupMessage(
             type: type, message: message, function: functionToCall);
+        Null Function() f = () {
+          Navigator.of(context, rootNavigator: true).pop(popup);
+          functionToCall();
+        };
+        popup.function = f;
+        return popup;
       }).then((val) {
     // if (_timer.isActive) {
     //   _timer.cancel();

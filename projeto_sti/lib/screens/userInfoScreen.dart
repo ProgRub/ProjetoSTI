@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/inputFieldLabel.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
+import 'package:projeto_sti/models/user.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
@@ -71,7 +73,8 @@ class _UserInfoState extends State<UserInfoScreen> {
                               backgroundColor: Colors.white,
                               backgroundImage: imageFile == null
                                   ? null
-                                  : Image.file(File(imageFile!.path)).image,
+                                  //: Image.file(File(imageFile!.path)).image,
+                                  : Image.network(imageFile!.path).image,
                               radius: 34.0,
                             ),
                           ),
@@ -119,20 +122,26 @@ class _UserInfoState extends State<UserInfoScreen> {
                         minimumSize: const Size(300, 50),
                       ),
                       onPressed: () {
-                        // if (_userInfoFormKey.currentState!.validate()) {
-                        //   if (_gender == Gender.none) {
-                        //     showPopupMessage(
-                        //         context, "error", "Choose your gender!");
-                        //   } else if (imageFile == null) {
-                        //     showPopupMessage(
-                        //         context, "error", "Upload your photo!");
-                        //   } else {
-                        //     //IR PARA ECRÂ CHOOSE GENRES
-                        //   }
-                        // }
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const ChooseGenresScreen()));
+                        if (_userInfoFormKey.currentState!.validate()) {
+                          if (_gender == Gender.none) {
+                            showPopupMessage(
+                                context, "error", "Choose your gender!");
+                          } else if (imageFile == null) {
+                            showPopupMessage(
+                                context, "error", "Upload your photo!");
+                          } else {
+                            UserAPI().addUser(User(
+                                id: "",
+                                name: _name.text,
+                                gender: _gender.toString(),
+                                age: int.parse(_age.text),
+                                genderPreferences: {}));
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const ChooseGenresScreen()));
+                          }
+                        }
                       },
                       child: Text(
                         'Next',
