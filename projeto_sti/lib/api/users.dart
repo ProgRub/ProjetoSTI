@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/genres.dart';
 
 import '../models/user.dart';
@@ -14,14 +15,17 @@ class UserAPI {
   CollectionReference<Map<String, dynamic>> collection =
       FirebaseFirestore.instance.collection('users');
 
-  late DocumentReference<Map<String, dynamic>> signingUpUser;
+  User? loggedInUser;
+
   Future<void> addUser(User user) async {
-    signingUpUser = await collection.add({
+    var signingUpUser = await collection.add({
       "age": user.age,
       "gender": user.gender,
       "name": user.name,
+      "authId": Authentication().loggedInUser!.uid,
       "genrePreferences": {}
     });
+    setLoggedInUser();
   }
 
   Future<void> setUserPreferences(List<String> selectedGenres) async {
@@ -31,6 +35,17 @@ class UserAPI {
       genrePreferences
           .addAll({genre.name: (selectedGenres.contains(genre.name)) ? 1 : 0});
     }
-    signingUpUser.update({"genrePreferences": genrePreferences});
+    var user = collection.doc(loggedInUser!.id);
+    user.update({"genrePreferences": genrePreferences});
+    loggedInUser!.genrePreferences = genrePreferences;
   }
+
+  Future<void> setLoggedInUser() async {
+    var firstWhere = (await collection.get()).docs.firstWhere(
+        (element) => element["authId"] == Authentication().loggedInUser!.uid);
+    Map<String, double> map = Map.from(firstWhere["genrePreferences"]);
+    loggedInUser = User.fromDocSnapshotAndMap(firstWhere, map);
+  }
+
+  Future<void> uploadProfilePicture() async {}
 }

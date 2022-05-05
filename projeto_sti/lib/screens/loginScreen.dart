@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/api/exceptions.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
@@ -257,13 +258,16 @@ class _LoginScreenState extends State<LoginScreen> {
   void tryLogin(BuildContext context) async {
     try {
       await authentication.login(_email.text, _password.text);
+      var chosenGenres = UserAPI().loggedInUser!.genrePreferences.isNotEmpty;
       showPopupMessage(context, "success", "Successfully logged in!");
       Timer(
         const Duration(seconds: 3),
         () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const MainScreen(),
+            builder: (context) => (chosenGenres
+                ? const MainScreen()
+                : const ChooseGenresScreen()),
           ),
         ),
       );

@@ -135,7 +135,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                                 name: _name.text,
                                 gender: _gender.toString(),
                                 age: int.parse(_age.text),
-                                genderPreferences: {}));
+                                genrePreferences: {}));
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
