@@ -11,6 +11,8 @@ import 'package:projeto_sti/styles/style.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../api/users.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -21,7 +23,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
-  String usersName = "Susan";
+  String usersName = UserAPI().loggedInUser!.name;
   late final ScrollController _controller;
   bool visibleAppBar = false;
 
@@ -184,8 +186,8 @@ class _MainScreenState extends State<MainScreen> {
               radius: 38.0,
               child: CircleAvatar(
                 backgroundColor: Colors.white,
-                backgroundImage: const AssetImage(
-                    "packages/projeto_sti/assets/images/profile_pic.jpg"),
+                backgroundImage:
+                    NetworkImage(UserAPI().loggedInUser!.imageDownloadUrl),
                 radius: 34.0,
                 child: CircleAvatar(
                   backgroundColor: Styles.colors.darker,

@@ -130,12 +130,16 @@ class _UserInfoState extends State<UserInfoScreen> {
                             showPopupMessage(
                                 context, "error", "Upload your photo!");
                           } else {
-                            UserAPI().addUser(User(
-                                id: "",
-                                name: _name.text,
-                                gender: _gender.toString(),
-                                age: int.parse(_age.text),
-                                genrePreferences: {}));
+                            UserAPI().addUser(
+                                User(
+                                    id: "",
+                                    name: _name.text,
+                                    gender: _gender.toString(),
+                                    age: int.parse(_age.text),
+                                    imageDownloadUrl: "",
+                                    authId: "",
+                                    genrePreferences: {}),
+                                imageFile!);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>

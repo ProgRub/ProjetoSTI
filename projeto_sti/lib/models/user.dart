@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
-  String id, name, gender;
+  String id, name, gender, imageDownloadUrl, authId;
   int age;
   Map<String, double> genrePreferences;
 
@@ -9,6 +9,8 @@ class User {
       {required this.id,
       required this.name,
       required this.gender,
+      required this.imageDownloadUrl,
+      required this.authId,
       required this.age,
       required this.genrePreferences});
 
@@ -17,13 +19,17 @@ class User {
         name = apiResponse["name"],
         gender = apiResponse["gender"],
         age = apiResponse["age"],
-        genrePreferences = apiResponse["genrePreferences"];
+        authId = apiResponse["authId"],
+        genrePreferences = apiResponse["genrePreferences"],
+        imageDownloadUrl = apiResponse["imageDownloadUrl"];
 
   User.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> documentSnapshot)
       : id = documentSnapshot.id,
         name = documentSnapshot["name"],
         gender = documentSnapshot["gender"],
         age = documentSnapshot["age"],
+        authId = documentSnapshot["authId"],
+        imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
         genrePreferences = documentSnapshot["genrePreferences"];
 
   User.fromDocSnapshotAndMap(
@@ -33,5 +39,7 @@ class User {
         name = documentSnapshot["name"],
         gender = documentSnapshot["gender"],
         age = documentSnapshot["age"],
+        authId = documentSnapshot["authId"],
+        imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
         genrePreferences = genrePrefs;
 }

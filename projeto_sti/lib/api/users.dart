@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/genres.dart';
 
@@ -8,7 +12,6 @@ class UserAPI {
   UserAPI._privateConstructor();
 
   static final UserAPI _instance = UserAPI._privateConstructor();
-
   factory UserAPI() {
     return _instance;
   }
@@ -17,12 +20,14 @@ class UserAPI {
 
   User? loggedInUser;
 
-  Future<void> addUser(User user) async {
+  Future<void> addUser(User user, XFile imageFile) async {
     var signingUpUser = await collection.add({
       "age": user.age,
       "gender": user.gender,
       "name": user.name,
       "authId": Authentication().loggedInUser!.uid,
+      "imageDownloadUrl": await uploadProfilePicture(
+          imageFile, Authentication().loggedInUser!.uid),
       "genrePreferences": {}
     });
     setLoggedInUser();
@@ -47,5 +52,13 @@ class UserAPI {
     loggedInUser = User.fromDocSnapshotAndMap(firstWhere, map);
   }
 
-  Future<void> uploadProfilePicture() async {}
+  Future<String> uploadProfilePicture(XFile imageFile, String filename) async {
+    print(imageFile);
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("userPictures/" + Authentication().loggedInUser!.uid);
+    var image = await ref.putData(await imageFile.readAsBytes(),
+        SettableMetadata(contentType: 'image/jpeg'));
+    return image.ref.getDownloadURL();
+  }
 }
