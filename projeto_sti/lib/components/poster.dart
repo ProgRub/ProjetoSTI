@@ -13,11 +13,11 @@ class Poster extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MovieInfoScreen(),
-            ));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const MovieInfoScreen(),
+        //     ));
       },
       child: Container(
         width: 150,

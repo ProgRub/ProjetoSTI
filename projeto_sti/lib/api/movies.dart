@@ -18,7 +18,8 @@ class MoviesAPI {
     var movies = await collection.get();
     List<Movie> returnMovies = [];
     for (var movie in movies.docs) {
-      returnMovies.add(Movie.fromApi(movie));
+      var movie2 = Movie.fromApi(movie);
+      returnMovies.add(movie2);
     }
     return returnMovies;
   }

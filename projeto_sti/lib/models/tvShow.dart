@@ -32,18 +32,18 @@ class TvShow {
         years = apiResponse["Year"],
         seasons = apiResponse["totalSeasons"],
         rating = apiResponse["imdbRating"],
-        genres = apiResponse["Genre"],
+        genres = apiResponse["Genre"].cast<String>(),
         plot = apiResponse["Plot"],
         title = apiResponse["Title"],
         poster = apiResponse["Poster"],
-        cast = apiResponse["Actors"],
+        cast = apiResponse["Actors"].cast<String>(),
         length = apiResponse["Runtime"],
         language = apiResponse["Language"],
         ageRating = apiResponse["Rated"],
-        directors = apiResponse["Director"],
-        writers = apiResponse["Writer"];
+        directors = apiResponse["Director"].cast<String>(),
+        writers = apiResponse["Writer"].cast<String>();
 
-  Future<Image> getPoster(String poster) async {
+  Future<Image> getPoster() async {
     Reference ref =
         FirebaseStorage.instance.ref().child("tvShowPosters/" + poster);
     String url = (await ref.getDownloadURL()).toString();

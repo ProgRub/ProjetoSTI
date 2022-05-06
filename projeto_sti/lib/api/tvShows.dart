@@ -13,7 +13,7 @@ class TVShowsAPI {
   factory TVShowsAPI() {
     return _instance;
   }
-  Future<List<TvShow>> getAllMovies() async {
+  Future<List<TvShow>> getAllTvShows() async {
     var shows = await collection.get();
     List<TvShow> tvShows = [];
     for (var show in shows.docs) {

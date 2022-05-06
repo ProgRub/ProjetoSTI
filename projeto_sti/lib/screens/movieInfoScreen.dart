@@ -11,26 +11,25 @@ import 'package:projeto_sti/models/movie.dart';
 import 'package:like_button/like_button.dart';
 
 class MovieInfoScreen extends StatefulWidget {
-  const MovieInfoScreen({Key? key}) : super(key: key);
-
+  late Movie movie;
+  MovieInfoScreen(this.movie, {Key? key}) : super(key: key);
   @override
-  State<MovieInfoScreen> createState() => _MovieInfoState();
+  State<StatefulWidget> createState() => _MovieInfoState(movie);
 }
 
 class _MovieInfoState extends State<MovieInfoScreen> {
   late List<GenreOval> genres;
   late bool watched = false;
-  List<Movie> movies = [];
+  late Movie movie;
 
-  @override
-  initState() {
+  _MovieInfoState(this.movie) {
     genres = _favouriteGenres();
     super.initState();
   }
 
   List<GenreOval> _favouriteGenres() {
     List<GenreOval> list = <GenreOval>[];
-    for (var title in movies[0].genres) {
+    for (var title in movie.genres) {
       list.add(GenreOval(text: title, color: _randomColor()));
     }
     return list;
@@ -94,8 +93,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 225.0),
-          child:
-              Center(child: Text(movies[0].title, style: Styles.fonts.title)),
+          child: Center(child: Text(movie.title, style: Styles.fonts.title)),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 235.0),
@@ -110,7 +108,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
               padding: const EdgeInsets.only(top: 30.0),
               child: Row(children: [
                 Text(
-                  movies[0].rating.toString(),
+                  movie.rating.toString(),
                   style: Styles.fonts.rating,
                 ),
                 const SizedBox(
@@ -146,7 +144,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         vertical: 10.0,
       ),
       child: Text(
-        movies[0].plot,
+        movie.plot,
         style: Styles.fonts.plot,
         textAlign: TextAlign.justify,
       ),
@@ -231,10 +229,10 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildInfoColumn("Lenght", movies[0].length),
-          _buildInfoColumn("Year", movies[0].year.toString()),
-          _buildInfoColumn("Language", movies[0].language),
-          _buildInfoColumn("Age", movies[0].ageRating),
+          _buildInfoColumn("Length", movie.length),
+          _buildInfoColumn("Year", movie.year.toString()),
+          _buildInfoColumn("Language", movie.language),
+          _buildInfoColumn("Age", movie.ageRating),
         ],
       ),
     );
@@ -324,7 +322,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
-          movies[0].directors.join(", "),
+          movie.directors.join(", "),
           style: Styles.fonts.plot,
         ),
       ),
@@ -473,7 +471,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
               directorSection,
               _buildTitle("Comments"),
               commentsSection,
-              _buildTitle("More like " + movies[0].title),
+              _buildTitle("More like " + movie.title),
               moreLikeThisSection,
             ],
           ),

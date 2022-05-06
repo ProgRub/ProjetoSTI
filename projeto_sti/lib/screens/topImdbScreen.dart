@@ -218,12 +218,12 @@ class _TopImdbState extends State<TopImdbScreen> {
     return GestureDetector(
       onTap: () {
         print("TAPPED MOVIE - $title");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MovieInfoScreen(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const MovieInfoScreen(),
+        //   ),
+        // );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),

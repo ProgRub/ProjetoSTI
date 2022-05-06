@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
 import 'package:projeto_sti/screens/profileScreen.dart';
@@ -12,6 +15,8 @@ import 'package:projeto_sti/styles/style.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../api/users.dart';
+import '../models/movie.dart';
+import 'movieInfoScreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,6 +31,10 @@ class _MainScreenState extends State<MainScreen> {
   String usersName = UserAPI().loggedInUser!.name;
   late final ScrollController _controller;
   bool visibleAppBar = false;
+  final Future<List<Movie>> moviesFuture = MoviesAPI().getAllMovies();
+  List<Movie> movies = [];
+  final Future<List<TvShow>> tvShowsFuture = TVShowsAPI().getAllTvShows();
+  List<TvShow> tvShows = [];
 
   @override
   initState() {
@@ -53,48 +62,111 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     var topMovies = Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30.0,
-        vertical: 20.0,
-      ),
-      child: SizedBox(
-        height: 230,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return Poster(type: 0);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20.0,
-            );
-          },
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30.0,
+          vertical: 20.0,
         ),
-      ),
-    );
+        child: SizedBox(
+            height: 230,
+            child: FutureBuilder(
+              future: moviesFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+                Widget child;
+                child = const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                );
+                if (snapshot.hasData) {
+                  movies = snapshot.data!;
+                  child = ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: movies.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FutureBuilder(
+                            future: movies[index].getPoster(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<Image> snapshot) {
+                              Widget child;
+                              child = const SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              );
+                              if (snapshot.hasData) {
+                                child = GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MovieInfoScreen(movies[index]),
+                                          ));
+                                    },
+                                    child: snapshot.data!);
+                              }
+                              return child;
+                            });
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 20.0,
+                        );
+                      });
+                }
+                return child;
+              },
+            )));
 
     var topTvShows = Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30.0,
-        vertical: 20.0,
-      ),
-      child: SizedBox(
-        height: 230,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return Poster(type: 1);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20.0,
-            );
-          },
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30.0,
+          vertical: 20.0,
         ),
-      ),
-    );
+        child: SizedBox(
+            height: 230,
+            child: FutureBuilder(
+              future: tvShowsFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+                Widget child;
+                child = const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                );
+                if (snapshot.hasData) {
+                  tvShows = snapshot.data!;
+                  child = ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: tvShows.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FutureBuilder(
+                            future: tvShows[index].getPoster(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<Image> snapshot) {
+                              Widget child;
+                              child = const SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              );
+                              if (snapshot.hasData) {
+                                child = snapshot.data!;
+                              }
+                              return child;
+                            });
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 20.0,
+                        );
+                      });
+                }
+                return child;
+              },
+            )));
 
     // var topTvShows = Transform.rotate(
     //   angle: -pi / 2,
