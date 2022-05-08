@@ -7,7 +7,7 @@ class Movie {
   int year;
   double rating;
   List<String> genres;
-  String plot, title, poster, length, language, ageRating;
+  String plot, title, poster, length, language, ageRating, wallpaper;
   List<String> cast, directors, writers;
 
   Movie(
@@ -18,6 +18,7 @@ class Movie {
       required this.plot,
       required this.title,
       required this.poster,
+      required this.wallpaper,
       required this.cast,
       required this.length,
       required this.language,
@@ -33,6 +34,7 @@ class Movie {
         rating = apiResponse["imdbRating"],
         year = apiResponse["Year"],
         plot = apiResponse["Plot"],
+        wallpaper = apiResponse["Wallpaper"],
         title = apiResponse["Title"],
         language = apiResponse["Language"],
         length = apiResponse["Runtime"],
@@ -45,5 +47,14 @@ class Movie {
         FirebaseStorage.instance.ref().child("moviePosters/" + poster);
     String url = (await ref.getDownloadURL()).toString();
     return Image.network(url);
+  }
+
+  Future<Image> getWallpaper(double height,
+      [double width = double.infinity]) async {
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("movieWallpapers/Wallpaper " + wallpaper);
+    String url = (await ref.getDownloadURL()).toString();
+    return Image.network(url, width: width, height: height, fit: BoxFit.cover);
   }
 }

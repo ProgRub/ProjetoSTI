@@ -39,11 +39,20 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   Widget build(BuildContext context) {
     var topSection = Stack(
       children: [
-        Image.network(
-            'https://images.hdqwalls.com/wallpapers/joker-2019-movie-4k-new-pw.jpg',
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover),
+        FutureBuilder(
+            future: movie.getWallpaper(300),
+            builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+              Widget child;
+              child = const SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              );
+              if (snapshot.hasData) {
+                child = snapshot.data!;
+              }
+              return child;
+            }),
         Container(
           width: double.infinity,
           height: 300,

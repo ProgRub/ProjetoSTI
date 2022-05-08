@@ -18,6 +18,7 @@ class TVShowsAPI {
     List<TvShow> tvShows = [];
     for (var show in shows.docs) {
       tvShows.add(TvShow.fromApi(show));
+      print("Wallpaper " + tvShows.last.title);
     }
     return tvShows;
   }

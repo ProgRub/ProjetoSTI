@@ -7,7 +7,7 @@ class TvShow {
   int seasons;
   double rating;
   List<String> genres;
-  String plot, years, title, poster, length, language, ageRating;
+  String plot, years, title, poster, length, language, ageRating, wallpaper;
   List<String> cast, directors, writers;
 
   TvShow({
@@ -19,6 +19,7 @@ class TvShow {
     required this.plot,
     required this.title,
     required this.poster,
+    required this.wallpaper,
     required this.cast,
     required this.length,
     required this.language,
@@ -36,6 +37,7 @@ class TvShow {
         plot = apiResponse["Plot"],
         title = apiResponse["Title"],
         poster = apiResponse["Poster"],
+        wallpaper = apiResponse["Wallpaper"],
         cast = apiResponse["Actors"].cast<String>(),
         length = apiResponse["Runtime"],
         language = apiResponse["Language"],
@@ -48,5 +50,14 @@ class TvShow {
         FirebaseStorage.instance.ref().child("tvShowPosters/" + poster);
     String url = (await ref.getDownloadURL()).toString();
     return Image.network(url);
+  }
+
+  Future<Image> getWallpaper(double height,
+      [double width = double.infinity]) async {
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("tvShowWallpapers/Wallpaper " + wallpaper);
+    String url = (await ref.getDownloadURL()).toString();
+    return Image.network(url, width: width, height: height, fit: BoxFit.cover);
   }
 }

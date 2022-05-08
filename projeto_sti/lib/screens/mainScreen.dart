@@ -154,6 +154,16 @@ class _MainScreenState extends State<MainScreen> {
                               );
                               if (snapshot.hasData) {
                                 child = snapshot.data!;
+                                // child = GestureDetector(
+                                //     onTap: () {
+                                //       Navigator.push(
+                                //           context,
+                                //           MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 MovieInfoScreen(tvShows[index]), CRIAR TVSHOW INFO SCREEN
+                                //           ));
+                                //     },
+                                //     child: snapshot.data!);
                               }
                               return child;
                             });
