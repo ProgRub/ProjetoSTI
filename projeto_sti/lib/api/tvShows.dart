@@ -22,4 +22,15 @@ class TVShowsAPI {
     }
     return tvShows;
   }
+
+  Future<List<TvShow>> getTvShowsOfGenre(String genre) async {
+    var tvShows = await collection.get();
+    List<TvShow> returnTvShows = [];
+    for (var tvShow
+        in tvShows.docs.where((element) => element["Genre"].contains(genre))) {
+      returnTvShows.add(TvShow.fromApi(tvShow));
+      print("Genre: " + returnTvShows.last.title);
+    }
+    return returnTvShows;
+  }
 }

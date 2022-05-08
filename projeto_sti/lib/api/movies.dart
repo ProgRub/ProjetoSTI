@@ -23,4 +23,15 @@ class MoviesAPI {
     }
     return returnMovies;
   }
+
+  Future<List<Movie>> getMoviesOfGenre(String genre) async {
+    var movies = await collection.get();
+    List<Movie> returnMovies = [];
+    for (var movie
+        in movies.docs.where((element) => element["Genre"].contains(genre))) {
+      returnMovies.add(Movie.fromApi(movie));
+      print("Genre: " + returnMovies.last.title);
+    }
+    return returnMovies;
+  }
 }

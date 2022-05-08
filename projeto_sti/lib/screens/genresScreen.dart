@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/genres.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/screens/byGenreScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
+
+import '../models/genre.dart';
 
 class GenresScreen extends StatefulWidget {
   const GenresScreen({Key? key}) : super(key: key);
@@ -12,24 +15,11 @@ class GenresScreen extends StatefulWidget {
 }
 
 class _GenresState extends State<GenresScreen> {
-  List<String> genres = [
-    "Action",
-    "Comedy",
-    "Sci-Fi",
-    "Horror",
-    "Romance",
-    "Thriller",
-    "Drama",
-    "Mystery",
-    "Crime",
-    "Animation",
-    "Adventure",
-    "Fantasy",
-  ];
+  Future<List<Genre>> genresFuture = GenresAPI().getAllGenres();
+  List<Genre> genres = [];
 
   @override
   initState() {
-    genres.sort((a, b) => a.compareTo(b)); //ordena alfabeticamente
     super.initState();
   }
 
@@ -46,22 +36,68 @@ class _GenresState extends State<GenresScreen> {
       ),
     );
 
-    var genresGrid = Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
-        itemCount: genres.length,
-        itemBuilder: (BuildContext ctx, index) {
-          return _buildGenreButton(index);
-        },
-      ),
-    );
+    // var genresGrid = Padding(
+    //   padding: const EdgeInsets.all(20.0),
+    //   child: GridView.builder(
+    //     physics: const NeverScrollableScrollPhysics(),
+    //     shrinkWrap: true,
+    //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+    //         maxCrossAxisExtent: 200,
+    //         childAspectRatio: 3 / 2,
+    //         crossAxisSpacing: 20,
+    //         mainAxisSpacing: 20),
+    //     itemCount: genres.length,
+    //     itemBuilder: (BuildContext ctx, index) {
+    //       return _buildGenreButton(index);
+    //     },
+    //   ),
+    // );
+    var genresGrid = FutureBuilder(
+        future: genresFuture,
+        builder: (BuildContext context, AsyncSnapshot<List<Genre>> snapshot) {
+          Widget child;
+          child = const SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          );
+          if (snapshot.hasData) {
+            genres = snapshot.data!;
+            genres.sort(
+                (a, b) => a.name.compareTo(b.name)); //ordena alfabeticamente
+            child = Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
+                itemCount: genres.length,
+                itemBuilder: (BuildContext ctx, index) {
+                  return FutureBuilder(
+                      future: genres[index].getImage(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        );
+                        if (snapshot.hasData) {
+                          child = _buildGenreButton(index, snapshot.data!);
+                        }
+                        return child;
+                      });
+                },
+              ),
+            );
+          }
+          return child;
+        });
 
     return SafeArea(
       child: Scaffold(
@@ -85,10 +121,10 @@ class _GenresState extends State<GenresScreen> {
     );
   }
 
-  GestureDetector _buildGenreButton(int index) {
+  GestureDetector _buildGenreButton(int index, Image image) {
     return GestureDetector(
       onTap: () {
-        print("GENRE CLICKED - " + genres[index]);
+        print("GENRE CLICKED - " + genres[index].name);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -99,17 +135,17 @@ class _GenresState extends State<GenresScreen> {
         alignment: Alignment.center,
         child: Container(
           child: Center(
-            child: Text(genres[index], style: Styles.fonts.genreButton),
+            child: Text(genres[index].name, style: Styles.fonts.genreButton),
           ),
           decoration: BoxDecoration(
             color: Styles.colors.darker,
             borderRadius: const BorderRadius.all(Radius.circular(15)),
           ),
         ),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
           image: DecorationImage(
-            image: AssetImage("packages/projeto_sti/assets/images/xmen.jpg"),
+            image: image.image,
             fit: BoxFit.fill,
           ),
         ),
