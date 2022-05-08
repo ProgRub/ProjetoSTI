@@ -101,7 +101,8 @@ class _MainScreenState extends State<MainScreen> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                MovieInfoScreen(movies[index]),
+                                                MovieInfoScreen(
+                                                    movie: movies[index]),
                                           ));
                                     },
                                     child: snapshot.data!);

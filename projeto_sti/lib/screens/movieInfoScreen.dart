@@ -11,8 +11,8 @@ import 'package:projeto_sti/models/movie.dart';
 import 'package:like_button/like_button.dart';
 
 class MovieInfoScreen extends StatefulWidget {
-  late Movie movie;
-  MovieInfoScreen(this.movie, {Key? key}) : super(key: key);
+  final Movie movie;
+  const MovieInfoScreen({Key? key, required this.movie}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _MovieInfoState(movie);
 }
@@ -20,7 +20,7 @@ class MovieInfoScreen extends StatefulWidget {
 class _MovieInfoState extends State<MovieInfoScreen> {
   late List<GenreOval> genres;
   late bool watched = false;
-  late Movie movie;
+  final Movie movie;
 
   _MovieInfoState(this.movie) {
     genres = _favouriteGenres();

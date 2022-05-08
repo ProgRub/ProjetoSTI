@@ -22,6 +22,8 @@ class GenresAPI {
     var genresApi = await collection.get();
     for (var genre in genresApi.docs) {
       genres.add(Genre.fromApi(genre));
+      collection.doc(genre.id).update({"Image": genres.last.name + ".jpg"});
+      print(genres.last.name);
     }
     return genres;
   }
