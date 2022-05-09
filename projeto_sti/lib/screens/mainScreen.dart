@@ -5,7 +5,6 @@ import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
-import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
@@ -175,16 +174,17 @@ class _MainScreenState extends State<MainScreen> {
                               );
                               if (snapshot.hasData) {
                                 child = snapshot.data!;
-                                // child = GestureDetector(
-                                //     onTap: () {
-                                //       Navigator.push(
-                                //           context,
-                                //           MaterialPageRoute(
-                                //             builder: (context) =>
-                                //                 MovieInfoScreen(tvShows[index]), CRIAR TVSHOW INFO SCREEN
-                                //           ));
-                                //     },
-                                //     child: snapshot.data!);
+                                child = GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TvShowInfoScreen(
+                                                    tvShows[index]),
+                                          ));
+                                    },
+                                    child: snapshot.data!);
                               }
                               return child;
                             });
