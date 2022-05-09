@@ -1,4 +1,3 @@
-//1
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,14 +5,23 @@ import 'package:projeto_sti/api/exceptions.dart';
 import 'package:projeto_sti/api/users.dart';
 // import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
-//2
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class Authentication {
-  Authentication._privateConstructor();
+  Authentication._privateConstructor() {
+    _auth.idTokenChanges().listen((User? user) {
+      print("HERE");
+      if (user == null) {
+        // print('User is currently signed out!');
+      } else {
+        loggedInUser = user;
+        UserAPI().setLoggedInUser();
+        // print('User is signed in!');
+      }
+    });
+  }
 
   static final Authentication _instance = Authentication._privateConstructor();
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   factory Authentication() {
     return _instance;
   }

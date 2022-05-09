@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/authentication.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/screens/loginScreen.dart';
 import 'package:projeto_sti/screens/mainScreen.dart';
@@ -17,11 +19,17 @@ class SplashScreen extends StatefulWidget {
 class _SplashState extends State<SplashScreen> {
   @override
   void initState() {
+    var auth = Authentication();
     super.initState();
-    Timer(
-        const Duration(seconds: 2),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => const LoginScreen())));
+    Timer(const Duration(seconds: 2), () {
+      if (auth.loggedInUser == null) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => const LoginScreen()));
+        return;
+      }
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => const MainScreen()));
+    });
   }
 
   @override
