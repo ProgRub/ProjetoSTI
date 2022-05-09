@@ -18,7 +18,7 @@ class TVShowsAPI {
     List<TvShow> tvShows = [];
     for (var show in shows.docs) {
       tvShows.add(TvShow.fromApi(show));
-      print("Wallpaper " + tvShows.last.title);
+      // print("Wallpaper " + tvShows.last.title);
     }
     return tvShows;
   }
@@ -29,7 +29,7 @@ class TVShowsAPI {
     for (var tvShow
         in tvShows.docs.where((element) => element["Genre"].contains(genre))) {
       returnTvShows.add(TvShow.fromApi(tvShow));
-      print("Genre: " + returnTvShows.last.title);
+      // print("Genre: " + returnTvShows.last.title);
     }
     return returnTvShows;
   }
