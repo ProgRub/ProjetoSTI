@@ -20,24 +20,34 @@ class PopupMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: popupColor(),
-      title: Center(
-        child: Text(
-          message,
-          style: GoogleFonts.roboto(
-            fontSize: 18,
-            color: type == "error" ? Styles.colors.error : Colors.black,
-            fontWeight: FontWeight.w600,
+      title: type == "error"
+          ? Icon(Icons.error_outline, size: 40.0, color: Styles.colors.error)
+          : const Icon(Icons.check_circle, size: 40.0),
+      content: SizedBox(
+        height: 40,
+        child: Center(
+          child: Text(
+            message,
+            style: GoogleFonts.roboto(
+              fontSize: 18,
+              color: type == "error" ? Styles.colors.error : Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
-      content: type == "error"
-          ? Icon(Icons.error_outline, size: 40.0, color: Styles.colors.error)
-          : const Icon(Icons.check_circle, size: 40.0),
       actions: [
         Visibility(
           visible: function != null,
           child: TextButton(
             child: const Text("OK"),
+            style: TextButton.styleFrom(
+              primary: Styles.colors.purple,
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
             onPressed: function,
           ),
         )

@@ -112,10 +112,21 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                         builder: (BuildContext context,
                             AsyncSnapshot<List<Genre>> snapshot) {
                           Widget child;
-                          child = const SizedBox(
+                          child = SizedBox(
                             width: 60,
-                            height: 60,
-                            child: CircularProgressIndicator(),
+                            height: (MediaQuery.of(context).size.height >= 740)
+                                ? 500
+                                : 350,
+                            child: Center(
+                              child: SizedBox(
+                                width: 90,
+                                height: 90,
+                                child: Image.asset(
+                                    "packages/projeto_sti/assets/images/film-popcorn.gif",
+                                    width: 90,
+                                    height: 90),
+                              ),
+                            ),
                           );
 
                           if (snapshot.hasData && genres.isEmpty) {
