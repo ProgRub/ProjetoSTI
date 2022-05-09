@@ -53,6 +53,7 @@ dependencies:
   firebase_core: ^1.15.0
   skeletons: ^0.0.3
   youtube_player_flutter: ^8.0.0
+  getwidget: ^2.0.4
 
 # dependency_overrides:
 #   firebase_storage_platform_interface: 4.0.14

@@ -19,7 +19,7 @@ class MoviesAPI {
     List<Movie> returnMovies = [];
     for (var movie in movies.docs) {
       returnMovies.add(Movie.fromApi(movie));
-      print("Wallpaper " + returnMovies.last.title);
+      // print("Wallpaper " + returnMovies.last.title);
     }
     return returnMovies;
   }
@@ -30,7 +30,7 @@ class MoviesAPI {
     for (var movie
         in movies.docs.where((element) => element["Genre"].contains(genre))) {
       returnMovies.add(Movie.fromApi(movie));
-      print("Genre: " + returnMovies.last.title);
+      // print("Genre: " + returnMovies.last.title);
     }
     return returnMovies;
   }

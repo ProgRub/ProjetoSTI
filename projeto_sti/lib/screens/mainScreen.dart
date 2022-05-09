@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:projeto_sti/api/general.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
@@ -11,6 +12,7 @@ import 'package:projeto_sti/screens/profileScreen.dart';
 import 'package:projeto_sti/screens/topImdbScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
+import 'package:getwidget/getwidget.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletons/skeletons.dart';
@@ -197,27 +199,6 @@ class _MainScreenState extends State<MainScreen> {
               },
             )));
 
-    // var topTvShows = Transform.rotate(
-    //   angle: -pi / 2,
-    //   child: SizedBox(
-    //     height: 300,
-    //     width: double.infinity,
-    //     child: ListWheelScrollView(
-    //       diameterRatio: 2.5,
-    //       squeeze: 1.4,
-    //       physics: const BouncingScrollPhysics(),
-    //       itemExtent: 230,
-    //       children: List.generate(
-    //         10,
-    //         (index) => Transform.rotate(
-    //           angle: pi / 2,
-    //           child: Poster(type: index % 2),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
-
     var recommendationSection = Container(
       width: MediaQuery.of(context).size.width - 60,
       height: 160,
@@ -300,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ],
     );
-
+    var suggestions = {"Test", "Mafalda", "Ruben", "Mafalda 2"};
     var searchBar = Padding(
       padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
       child: TextField(
@@ -326,6 +307,82 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+
+    searchBar = Padding(
+        padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
+        child: FutureBuilder(
+          future: GeneralAPI().getSearchTerms(),
+          builder: (BuildContext context, AsyncSnapshot<Set<String>> snapshot) {
+            Widget child;
+            child = TextField(
+              autocorrect: false,
+              enableSuggestions: false,
+              style: Styles.fonts.commentName,
+              decoration: InputDecoration(
+                hintText: 'What are you looking for?',
+                hintStyle: Styles.fonts.hintText,
+                fillColor: Colors.black,
+                filled: true,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                prefixIcon: Icon(Icons.search,
+                    size: 30.0, color: Styles.colors.lightBlue),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide:
+                      BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide:
+                      BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+                ),
+              ),
+            );
+            if (snapshot.hasData) {
+              child = GFSearchBar(
+                searchList: snapshot.data!.toList(),
+                searchQueryBuilder: (query, list) => list.where((item) {
+                  return item!
+                      .toString()
+                      .toLowerCase()
+                      .contains(query.toLowerCase());
+                }).toList(),
+                overlaySearchListItemBuilder: (dynamic item) => Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    item,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ),
+                onItemSelected: (dynamic item) {
+                  setState(() {
+                    print('$item');
+                  });
+                },
+                searchBoxInputDecoration: InputDecoration(
+                  hintText: 'What are you looking for?',
+                  hintStyle: Styles.fonts.hintText,
+                  fillColor: Colors.black,
+                  filled: true,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  prefixIcon: Icon(Icons.search,
+                      size: 30.0, color: Styles.colors.lightBlue),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+                  ),
+                ),
+              );
+            }
+            return child;
+          },
+        ));
 
     return SafeArea(
       child: Scaffold(
