@@ -11,6 +11,7 @@ import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
 import 'package:projeto_sti/screens/profileScreen.dart';
 import 'package:projeto_sti/screens/topImdbScreen.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:getwidget/getwidget.dart';
 
@@ -355,7 +356,37 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 onItemSelected: (dynamic item) {
                   setState(() {
-                    print('$item');
+                    for (var movie in movies) {
+                      if (movie.title == item) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MovieInfoScreen(movie: movie),
+                            ));
+                        return;
+                      }
+                    }
+                    for (var tvShow in tvShows) {
+                      if (tvShow.title == item) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TvShowInfoScreen(tvShow),
+                            ));
+                        return;
+                      }
+                    }
+                    // for (var person in actors_directors_writers) {
+                    //   if (person.name == item) {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => PersonInfoScreen(person),
+                    //         ));
+                    //     return;
+                    //   }
+                    // }
                   });
                 },
                 searchBoxInputDecoration: InputDecoration(
