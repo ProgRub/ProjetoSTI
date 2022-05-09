@@ -4,6 +4,7 @@ import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/screens/byGenreScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../models/genre.dart';
 
@@ -56,10 +57,15 @@ class _GenresState extends State<GenresScreen> {
         future: genresFuture,
         builder: (BuildContext context, AsyncSnapshot<List<Genre>> snapshot) {
           Widget child;
-          child = const SizedBox(
-            width: 60,
-            height: 60,
-            child: CircularProgressIndicator(),
+          child = SizedBox(
+            width: double.infinity,
+            height: 400,
+            child: Center(
+              child: Image.asset(
+                  "packages/projeto_sti/assets/images/film-popcorn.gif",
+                  width: 90,
+                  height: 90),
+            ),
           );
           if (snapshot.hasData) {
             genres = snapshot.data!;
@@ -82,11 +88,7 @@ class _GenresState extends State<GenresScreen> {
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot) {
                         Widget child;
-                        child = const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
-                        );
+                        child = const SkeletonAvatar();
                         if (snapshot.hasData) {
                           child = _buildGenreButton(index, snapshot.data!);
                         }
@@ -143,7 +145,7 @@ class _GenresState extends State<GenresScreen> {
           ),
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderRadius: const BorderRadius.all(const Radius.circular(15)),
           image: DecorationImage(
             image: image.image,
             fit: BoxFit.fill,

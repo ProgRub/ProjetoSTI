@@ -13,6 +13,7 @@ import 'package:projeto_sti/screens/topImdbScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../api/users.dart';
 import '../models/movie.dart';
@@ -61,6 +62,25 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var skeletonPosterList = ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      itemBuilder: (BuildContext context, int index) {
+        return const SkeletonItem(
+          child: SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+              width: 155,
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          width: 20.0,
+        );
+      },
+    );
+
     var topMovies = Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30.0,
@@ -73,11 +93,8 @@ class _MainScreenState extends State<MainScreen> {
               builder:
                   (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
                 Widget child;
-                child = const SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                );
+                child = skeletonPosterList;
+
                 if (snapshot.hasData) {
                   movies = snapshot.data!;
                   child = ListView.separated(
@@ -89,10 +106,12 @@ class _MainScreenState extends State<MainScreen> {
                             builder: (BuildContext context,
                                 AsyncSnapshot<Image> snapshot) {
                               Widget child;
-                              child = const SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: CircularProgressIndicator(),
+                              child = const SkeletonItem(
+                                child: SkeletonAvatar(
+                                  style: SkeletonAvatarStyle(
+                                    width: 155,
+                                  ),
+                                ),
                               );
                               if (snapshot.hasData) {
                                 child = GestureDetector(
@@ -132,11 +151,7 @@ class _MainScreenState extends State<MainScreen> {
               builder:
                   (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
                 Widget child;
-                child = const SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                );
+                child = skeletonPosterList;
                 if (snapshot.hasData) {
                   tvShows = snapshot.data!;
                   child = ListView.separated(
@@ -148,10 +163,12 @@ class _MainScreenState extends State<MainScreen> {
                             builder: (BuildContext context,
                                 AsyncSnapshot<Image> snapshot) {
                               Widget child;
-                              child = const SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: CircularProgressIndicator(),
+                              child = const SkeletonItem(
+                                child: SkeletonAvatar(
+                                  style: SkeletonAvatarStyle(
+                                    width: 155,
+                                  ),
+                                ),
                               );
                               if (snapshot.hasData) {
                                 child = snapshot.data!;

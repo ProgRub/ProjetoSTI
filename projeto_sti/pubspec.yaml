@@ -51,6 +51,7 @@ dependencies:
   simple_animations: ^4.0.1
   supercharged: ^2.1.1
   firebase_core: ^1.15.0
+  skeletons: ^0.0.3
 
 # dependency_overrides:
 #   firebase_storage_platform_interface: 4.0.14

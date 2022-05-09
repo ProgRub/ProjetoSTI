@@ -7,7 +7,7 @@ class TvShow {
   int seasons;
   double rating;
   List<String> genres;
-  String plot, years, title, poster, length, language, ageRating, wallpaper;
+  String plot, years, title, poster, runtime, language, ageRating, wallpaper;
   List<String> cast, directors, writers;
 
   TvShow({
@@ -21,7 +21,7 @@ class TvShow {
     required this.poster,
     required this.wallpaper,
     required this.cast,
-    required this.length,
+    required this.runtime,
     required this.language,
     required this.ageRating,
     required this.directors,
@@ -39,7 +39,7 @@ class TvShow {
         poster = apiResponse["Poster"],
         wallpaper = apiResponse["Wallpaper"],
         cast = apiResponse["Actors"].cast<String>(),
-        length = apiResponse["Runtime"],
+        runtime = apiResponse["Runtime"],
         language = apiResponse["Language"],
         ageRating = apiResponse["Rated"],
         directors = apiResponse["Director"].cast<String>(),
