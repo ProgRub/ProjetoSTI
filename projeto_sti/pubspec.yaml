@@ -52,6 +52,7 @@ dependencies:
   supercharged: ^2.1.1
   firebase_core: ^1.15.0
   skeletons: ^0.0.3
+  youtube_player_flutter: ^8.0.0
 
 # dependency_overrides:
 #   firebase_storage_platform_interface: 4.0.14
