@@ -9,6 +9,7 @@ import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/models/movie.dart';
 
 import 'package:like_button/like_button.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieInfoScreen extends StatefulWidget {
   final Movie movie;
@@ -18,13 +19,38 @@ class MovieInfoScreen extends StatefulWidget {
 }
 
 class _MovieInfoState extends State<MovieInfoScreen> {
+  late YoutubePlayerController _videoController;
+  bool playingTrailer = false;
+  late String trailerUrl;
+
   late List<GenreOval> genres;
   late bool watched = false;
   final Movie movie;
 
   _MovieInfoState(this.movie) {
+    trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
+    _videoController = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(trailerUrl)!,
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        loop: false,
+      ),
+    );
     genres = _favouriteGenres();
     super.initState();
+  }
+
+  @override
+  void deactivate() {
+    _videoController.pause();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
   }
 
   List<GenreOval> _favouriteGenres() {
@@ -85,7 +111,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   color: Styles.colors.purple,
                 ),
                 onPressed: () {
-                  print("PLAY TRAILER");
+                  setState(() {
+                    _videoController.seekTo(Duration.zero);
+                    playingTrailer = true;
+                    _videoController.play();
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
@@ -138,8 +168,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 },
                 child: Icon(Icons.check_circle,
                     size: 40.0,
-                    color:
-                        watched ? Styles.colors.watched : Styles.colors.grey),
+                    color: watched ? Styles.colors.watched : Colors.grey),
               ),
             ),
           ]),
@@ -465,7 +494,71 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              topSection,
+              Stack(
+                children: [
+                  playingTrailer
+                      ? Stack(
+                          children: [
+                            SizedBox(
+                              width: 400,
+                              height: 300,
+                              child: YoutubePlayer(
+                                controller: _videoController,
+                                showVideoProgressIndicator: true,
+                                progressColors: ProgressBarColors(
+                                    playedColor: Styles.colors.lightBlue,
+                                    handleColor: Styles.colors.lightBlue,
+                                    backgroundColor: Colors.white),
+                                onReady: () {},
+                                onEnded: (data) {
+                                  setState(() {
+                                    playingTrailer = false;
+                                    _videoController.pause();
+                                  });
+                                },
+                                topActions: <Widget>[
+                                  const SizedBox(width: 8.0),
+                                  Expanded(
+                                    child: Text(
+                                      movie.title + " - Trailer",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.0,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 47,
+                                    height: 47,
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xffF4F6FD),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          playingTrailer = false;
+                                          _videoController.pause();
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        color: Colors.black,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : topSection,
+                ],
+              ),
               genresSection,
               infoSection,
               _buildTitle("Plot"),

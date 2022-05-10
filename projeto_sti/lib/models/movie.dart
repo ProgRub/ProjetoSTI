@@ -7,7 +7,7 @@ class Movie {
   int year;
   double rating;
   List<String> genres;
-  String plot, title, poster, length, language, ageRating, wallpaper;
+  String plot, title, poster, length, language, ageRating, wallpaper, trailer;
   List<String> cast, directors, writers;
 
   Movie(
@@ -24,7 +24,8 @@ class Movie {
       required this.language,
       required this.ageRating,
       required this.directors,
-      required this.writers});
+      required this.writers,
+      required this.trailer});
 
   Movie.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
@@ -40,7 +41,8 @@ class Movie {
         length = apiResponse["Runtime"],
         ageRating = apiResponse["Rated"],
         poster = apiResponse["Poster"],
-        writers = apiResponse["Writer"].cast<String>();
+        writers = apiResponse["Writer"].cast<String>(),
+        trailer = apiResponse["Trailer"];
 
   Future<Image> getPoster() async {
     Reference ref =

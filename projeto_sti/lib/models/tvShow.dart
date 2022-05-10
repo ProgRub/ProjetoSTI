@@ -7,26 +7,34 @@ class TvShow {
   int seasons;
   double rating;
   List<String> genres;
-  String plot, years, title, poster, runtime, language, ageRating, wallpaper;
+  String plot,
+      years,
+      title,
+      poster,
+      runtime,
+      language,
+      ageRating,
+      wallpaper,
+      trailer;
   List<String> cast, directors, writers;
 
-  TvShow({
-    required this.id,
-    required this.years,
-    required this.seasons,
-    required this.rating,
-    required this.genres,
-    required this.plot,
-    required this.title,
-    required this.poster,
-    required this.wallpaper,
-    required this.cast,
-    required this.runtime,
-    required this.language,
-    required this.ageRating,
-    required this.directors,
-    required this.writers,
-  });
+  TvShow(
+      {required this.id,
+      required this.years,
+      required this.seasons,
+      required this.rating,
+      required this.genres,
+      required this.plot,
+      required this.title,
+      required this.poster,
+      required this.wallpaper,
+      required this.cast,
+      required this.runtime,
+      required this.language,
+      required this.ageRating,
+      required this.directors,
+      required this.writers,
+      required this.trailer});
 
   TvShow.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
@@ -43,7 +51,8 @@ class TvShow {
         language = apiResponse["Language"],
         ageRating = apiResponse["Rated"],
         directors = apiResponse["Director"].cast<String>(),
-        writers = apiResponse["Writer"].cast<String>();
+        writers = apiResponse["Writer"].cast<String>(),
+        trailer = apiResponse["Trailer"];
 
   Future<Image> getPoster() async {
     Reference ref =

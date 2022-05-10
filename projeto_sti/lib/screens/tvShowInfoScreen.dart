@@ -21,13 +21,14 @@ class TvShowInfoScreen extends StatefulWidget {
 class _TvShowInfoState extends State<TvShowInfoScreen> {
   late YoutubePlayerController _videoController;
   bool playingTrailer = false;
-  String trailerUrl = 'https://www.youtube.com/watch?v=HhesaQXLuRY';
+  late String trailerUrl;
 
   late List<GenreOval> genres;
   late bool watched = false;
   late TvShow tvShow;
 
   _TvShowInfoState(this.tvShow) {
+    trailerUrl = 'https://www.youtube.com/watch?v=' + tvShow.trailer;
     _videoController = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(trailerUrl)!,
       flags: const YoutubePlayerFlags(
@@ -174,8 +175,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                 },
                 child: Icon(Icons.check_circle,
                     size: 40.0,
-                    color:
-                        watched ? Styles.colors.watched : Styles.colors.grey),
+                    color: watched ? Styles.colors.watched : Colors.grey),
               ),
             ),
           ]),
