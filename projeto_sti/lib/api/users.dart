@@ -48,7 +48,7 @@ class UserAPI {
   Future<void> setLoggedInUser() async {
     var firstWhere = (await collection.get()).docs.firstWhere(
         (element) => element["authId"] == Authentication().loggedInUser!.uid);
-    Map<String, double> map = Map.from(firstWhere["genrePreferences"]);
+    Map<String, num> map = Map.from(firstWhere["genrePreferences"]);
     loggedInUser = User.fromDocSnapshotAndMap(firstWhere, map);
   }
 

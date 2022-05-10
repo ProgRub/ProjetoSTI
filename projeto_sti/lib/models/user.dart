@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class User {
   String id, name, gender, imageDownloadUrl, authId;
   int age;
-  Map<String, double> genrePreferences;
+  Map<String, num> genrePreferences;
 
   User(
       {required this.id,
@@ -34,7 +34,7 @@ class User {
 
   User.fromDocSnapshotAndMap(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot,
-      Map<String, double> genrePrefs)
+      Map<String, num> genrePrefs)
       : id = documentSnapshot.id,
         name = documentSnapshot["name"],
         gender = documentSnapshot["gender"],
