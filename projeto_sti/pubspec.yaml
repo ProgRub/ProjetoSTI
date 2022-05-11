@@ -100,6 +100,7 @@ flutter:
     - packages/projeto_sti/assets/images/profile_pic.jpg
     - packages/projeto_sti/assets/images/stranger_poster.jpg
     - packages/projeto_sti/assets/images/xmen.jpg
+    - packages/projeto_sti/assets/images/popcorn.png
     # - db/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

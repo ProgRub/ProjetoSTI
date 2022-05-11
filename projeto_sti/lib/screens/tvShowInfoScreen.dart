@@ -25,12 +25,15 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   late String trailerUrl;
 
   late List<GenreOval> genres;
-  late bool watched = false;
+  late bool watched;
   late TvShow tvShow;
 
-  late bool favourited = false;
+  late bool favourited;
 
-  _TvShowInfoState(this.tvShow) {
+  _TvShowInfoState(this.tvShow);
+
+  @override
+  void initState() {
     trailerUrl = 'https://www.youtube.com/watch?v=' + tvShow.trailer;
     favourited = UserAPI().loggedInUser!.favouriteTvShows.contains(tvShow.id);
     watched = UserAPI().loggedInUser!.watchedTvShows.contains(tvShow.id);
@@ -67,25 +70,30 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
-    if (!isLiked) {
-      favourited = isLiked;
+    if (!isLiked && !favourited) {
+      favourited = !favourited;
       await UserAPI().setFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
-    } else {
-      favourited = !isLiked;
+    } else if (isLiked && favourited) {
+      favourited = !favourited;
       await UserAPI()
           .removeFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
     }
+    setState(() {});
     return !isLiked;
   }
 
   Future<void> onWatchedButtonTapped() async {
     if (!watched) {
-      watched = !watched;
       await UserAPI().setWatchedTvShowOrMovie("tvShow", tvShow.id.toString());
+      setState(() {
+        watched = true;
+      });
     } else {
-      watched = !watched;
       await UserAPI()
           .removeWatchedTvShowOrMovie("tvShow", tvShow.id.toString());
+      setState(() {
+        watched = false;
+      });
     }
   }
 

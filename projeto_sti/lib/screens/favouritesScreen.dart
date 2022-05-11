@@ -30,6 +30,8 @@ class _FavouritesState extends State<FavouritesScreen> {
   initState() {
     moviesFuture = MoviesAPI().getUserFavouriteMovies();
     tvShowsFuture = TVShowsAPI().getUserFavouriteTvShows();
+    movies = <Movie>[];
+    tvShows = <TvShow>[];
     selectedCategory = 0;
     super.initState();
   }
@@ -101,7 +103,7 @@ class _FavouritesState extends State<FavouritesScreen> {
                     },
                   );
                 }
-                return child;
+                return movies.isEmpty ? noFavouritesMessage("movies") : child;
               },
             )));
 
@@ -159,7 +161,9 @@ class _FavouritesState extends State<FavouritesScreen> {
                     },
                   );
                 }
-                return child;
+                return tvShows.isEmpty
+                    ? noFavouritesMessage("tv shows")
+                    : child;
               },
             )));
     //Method to create a tab
@@ -246,6 +250,18 @@ class _FavouritesState extends State<FavouritesScreen> {
         ),
       ),
     );
+  }
+
+  Center noFavouritesMessage(String type) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Image.asset("packages/projeto_sti/assets/images/popcorn.png",
+            width: 80, height: 80),
+        Text("You don't have favourite $type!", style: Styles.fonts.label)
+      ],
+    ));
   }
 
   GestureDetector _buildPoster(int index, int type) {
