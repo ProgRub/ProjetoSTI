@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
@@ -27,8 +28,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   late bool watched = false;
   late TvShow tvShow;
 
+  late bool favourited = false;
+
   _TvShowInfoState(this.tvShow) {
     trailerUrl = 'https://www.youtube.com/watch?v=' + tvShow.trailer;
+    favourited = UserAPI().loggedInUser!.favouriteTvShows.contains(tvShow.id);
     _videoController = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(trailerUrl)!,
       flags: const YoutubePlayerFlags(
@@ -61,6 +65,18 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
     return list;
   }
 
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
+    if (!isLiked) {
+      favourited = isLiked;
+      await UserAPI().setFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
+    } else {
+      favourited = !isLiked;
+      await UserAPI()
+          .removeFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
+    }
+    return !isLiked;
+  }
+
   @override
   Widget build(BuildContext context) {
     var topSection = Stack(
@@ -88,11 +104,12 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            AppLogo(),
+          children: [
+            const AppLogo(),
             Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: LikeButton(
+                isLiked: favourited,
                 size: 40.0,
                 onTap: onLikeButtonTapped,
               ),
@@ -617,13 +634,4 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
 
 Color _randomColor() {
   return Colors.primaries[Random().nextInt(Colors.primaries.length)];
-}
-
-Future<bool> onLikeButtonTapped(bool isLiked) async {
-  if (!isLiked) {
-    print("LIKED");
-  } else {
-    print("DISLIKED");
-  }
-  return !isLiked;
 }

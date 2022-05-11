@@ -53,12 +53,8 @@ class UserAPI {
 
     await user.get().then((doc) {
       favourites =
-          doc.data()![type == "movie" ? "favouriteMovies" : "favouriteTvShow"];
+          doc.data()![type == "movie" ? "favouriteMovies" : "favouriteTvShows"];
     });
-
-    print(favourites);
-    print(type);
-    print(id);
 
     if (!favourites.contains(id)) {
       favourites.add(id);
@@ -66,11 +62,36 @@ class UserAPI {
       user.update({
         (type == "movie" ? "favouriteMovies" : "favouriteTvShows"): favourites
       });
-    } else {
-      print("ALREADY FAVOURITED");
     }
 
-    loggedInUser!.favouriteMovies = favourites;
+    if (type == "movie") {
+      loggedInUser!.favouriteMovies = favourites;
+    } else {
+      loggedInUser!.favouriteTvShows = favourites;
+    }
+  }
+
+  Future<void> removeFavouriteTvShowOrMovie(String type, String id) async {
+    var user = collection.doc(loggedInUser!.id);
+    List<dynamic> favourites = <String>[];
+
+    await user.get().then((doc) {
+      favourites =
+          doc.data()![type == "movie" ? "favouriteMovies" : "favouriteTvShows"];
+    });
+
+    if (favourites.contains(id)) {
+      favourites.remove(id);
+
+      user.update({
+        (type == "movie" ? "favouriteMovies" : "favouriteTvShows"): favourites
+      });
+    }
+    if (type == "movie") {
+      loggedInUser!.favouriteMovies = favourites;
+    } else {
+      loggedInUser!.favouriteTvShows = favourites;
+    }
   }
 
   Future<void> setLoggedInUser() async {

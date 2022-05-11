@@ -28,8 +28,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   late bool watched = false;
   final Movie movie;
 
+  late bool favourited = false;
+
   _MovieInfoState(this.movie) {
     trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
+    favourited = UserAPI().loggedInUser!.favouriteMovies.contains(movie.id);
     _videoController = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(trailerUrl)!,
       flags: const YoutubePlayerFlags(
@@ -64,9 +67,12 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
     if (!isLiked) {
+      favourited = isLiked;
       await UserAPI().setFavouriteTvShowOrMovie("movie", movie.id.toString());
     } else {
-      print("DISLIKED");
+      favourited = !isLiked;
+      await UserAPI()
+          .removeFavouriteTvShowOrMovie("movie", movie.id.toString());
     }
     return !isLiked;
   }
@@ -99,10 +105,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AppLogo(),
+            const AppLogo(),
             Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: LikeButton(
+                isLiked: favourited,
                 size: 40.0,
                 onTap: onLikeButtonTapped,
               ),
