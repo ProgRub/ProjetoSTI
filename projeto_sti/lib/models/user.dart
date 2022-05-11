@@ -4,6 +4,7 @@ class User {
   String id, name, gender, imageDownloadUrl, authId;
   int age;
   Map<String, num> genrePreferences;
+  var favouriteMovies, favouriteTvShows;
 
   User(
       {required this.id,
@@ -12,7 +13,9 @@ class User {
       required this.imageDownloadUrl,
       required this.authId,
       required this.age,
-      required this.genrePreferences});
+      required this.genrePreferences,
+      required this.favouriteMovies,
+      required this.favouriteTvShows});
 
   User.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
@@ -21,6 +24,8 @@ class User {
         age = apiResponse["age"],
         authId = apiResponse["authId"],
         genrePreferences = apiResponse["genrePreferences"],
+        favouriteMovies = apiResponse["favouriteMovies"],
+        favouriteTvShows = apiResponse["favouriteTvShows"],
         imageDownloadUrl = apiResponse["imageDownloadUrl"];
 
   User.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> documentSnapshot)
@@ -30,6 +35,8 @@ class User {
         age = documentSnapshot["age"],
         authId = documentSnapshot["authId"],
         imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
+        favouriteMovies = documentSnapshot["favouriteMovies"],
+        favouriteTvShows = documentSnapshot["favouriteTvShows"],
         genrePreferences = documentSnapshot["genrePreferences"];
 
   User.fromDocSnapshotAndMap(
@@ -41,5 +48,7 @@ class User {
         age = documentSnapshot["age"],
         authId = documentSnapshot["authId"],
         imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
+        favouriteMovies = documentSnapshot["favouriteMovies"],
+        favouriteTvShows = documentSnapshot["favouriteTvShows"],
         genrePreferences = genrePrefs;
 }

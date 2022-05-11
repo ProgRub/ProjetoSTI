@@ -152,12 +152,12 @@ class _ProfileState extends State<ProfileScreen> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Styles.colors.lightBlue,
-                            radius: 40.0,
+                            radius: 50.0,
                             child: const CircleAvatar(
                               backgroundColor: Colors.white,
                               backgroundImage: AssetImage(
                                   "packages/projeto_sti/assets/images/profile_pic.jpg"), //TESTING
-                              radius: 38.0,
+                              radius: 46.0,
                             ),
                           ),
                         ],

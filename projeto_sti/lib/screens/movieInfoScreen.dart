@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
@@ -61,6 +62,15 @@ class _MovieInfoState extends State<MovieInfoScreen> {
     return list;
   }
 
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
+    if (!isLiked) {
+      await UserAPI().setFavouriteTvShowOrMovie("movie", movie.id.toString());
+    } else {
+      print("DISLIKED");
+    }
+    return !isLiked;
+  }
+
   @override
   Widget build(BuildContext context) {
     var topSection = Stack(
@@ -88,7 +98,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             AppLogo(),
             Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -610,13 +620,4 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
 Color _randomColor() {
   return Colors.primaries[Random().nextInt(Colors.primaries.length)];
-}
-
-Future<bool> onLikeButtonTapped(bool isLiked) async {
-  if (!isLiked) {
-    print("LIKED");
-  } else {
-    print("DISLIKED");
-  }
-  return !isLiked;
 }

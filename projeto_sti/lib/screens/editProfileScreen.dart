@@ -84,18 +84,18 @@ class _EditProfileState extends State<EditProfileScreen> {
           children: [
             CircleAvatar(
               backgroundColor: Styles.colors.lightBlue,
-              radius: 42.0,
+              radius: 50.0,
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: imageFile == null
                     ? null
                     : Image.file(File(imageFile!.path)).image,
-                radius: 39.0,
+                radius: 46.0,
               ),
             ),
             CircleAvatar(
               backgroundColor: Styles.colors.darker,
-              radius: 39.0,
+              radius: 46.0,
             ),
             FaIcon(FontAwesomeIcons.userPen,
                 size: 26.0, color: Styles.colors.lightBlue),

@@ -138,7 +138,9 @@ class _UserInfoState extends State<UserInfoScreen> {
                                     age: int.parse(_age.text),
                                     imageDownloadUrl: "",
                                     authId: "",
-                                    genrePreferences: {}),
+                                    genrePreferences: {},
+                                    favouriteMovies: {},
+                                    favouriteTvShows: {}),
                                 imageFile!);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

@@ -28,14 +28,16 @@ class UserAPI {
       "authId": Authentication().loggedInUser!.uid,
       "imageDownloadUrl": await uploadProfilePicture(
           imageFile, Authentication().loggedInUser!.uid),
-      "genrePreferences": {}
+      "genrePreferences": {},
+      "favouriteMovies": {},
+      "favouriteTvShows": {}
     });
     setLoggedInUser();
   }
 
   Future<void> setUserPreferences(List<String> selectedGenres) async {
     var genres = await GenresAPI().getAllGenres();
-    Map<String, double> genrePreferences = {};
+    Map<String, num> genrePreferences = {};
     for (var genre in genres) {
       genrePreferences
           .addAll({genre.name: (selectedGenres.contains(genre.name)) ? 1 : 0});
@@ -43,6 +45,32 @@ class UserAPI {
     var user = collection.doc(loggedInUser!.id);
     user.update({"genrePreferences": genrePreferences});
     loggedInUser!.genrePreferences = genrePreferences;
+  }
+
+  Future<void> setFavouriteTvShowOrMovie(String type, String id) async {
+    var user = collection.doc(loggedInUser!.id);
+    List<dynamic> favourites = <String>[];
+
+    await user.get().then((doc) {
+      favourites =
+          doc.data()![type == "movie" ? "favouriteMovies" : "favouriteTvShow"];
+    });
+
+    print(favourites);
+    print(type);
+    print(id);
+
+    if (!favourites.contains(id)) {
+      favourites.add(id);
+
+      user.update({
+        (type == "movie" ? "favouriteMovies" : "favouriteTvShows"): favourites
+      });
+    } else {
+      print("ALREADY FAVOURITED");
+    }
+
+    loggedInUser!.favouriteMovies = favourites;
   }
 
   Future<void> setLoggedInUser() async {
