@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/models/movie.dart';
+import 'package:projeto_sti/models/tvShow.dart';
+import 'package:projeto_sti/screens/movieInfoScreen.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,10 +20,16 @@ class FavouritesScreen extends StatefulWidget {
 
 class _FavouritesState extends State<FavouritesScreen> {
   late int selectedCategory;
-  final List<String> categories = ["All", "Movies", "Tv Shows"];
+  final List<String> categories = ["Movies", "Tv Shows"];
+  late Future<List<Movie>> moviesFuture;
+  late Future<List<TvShow>> tvShowsFuture;
+  late List<Movie> movies;
+  late List<TvShow> tvShows;
 
   @override
   initState() {
+    moviesFuture = MoviesAPI().getUserFavouriteMovies();
+    tvShowsFuture = TVShowsAPI().getUserFavouriteTvShows();
     selectedCategory = 0;
     super.initState();
   }
@@ -35,57 +47,121 @@ class _FavouritesState extends State<FavouritesScreen> {
       ),
     );
 
-    var allGrid = Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 3 / 4,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
-        itemCount: 7,
-        itemBuilder: (BuildContext ctx, index) {
-          return _buildPoster(index, 0);
-        },
-      ),
-    );
-
     var moviesGrid = Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 3 / 4,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
-        itemCount: 5,
-        itemBuilder: (BuildContext ctx, index) {
-          return _buildPoster(index, 0);
-        },
-      ),
-    );
+        padding: const EdgeInsets.all(20.0),
+        child: SizedBox(
+            height: 230,
+            child: FutureBuilder(
+              future: moviesFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+                Widget child;
+                child = const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                );
+                if (snapshot.hasData) {
+                  movies = snapshot.data!;
+                  child = GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 4,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: movies.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FutureBuilder(
+                          future: movies[index].getPoster(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Image> snapshot) {
+                            Widget child;
+                            child = const SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            );
+                            if (snapshot.hasData) {
+                              child = GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MovieInfoScreen(
+                                              movie: movies[index]),
+                                        ));
+                                  },
+                                  child: snapshot.data!);
+                            }
+                            return child;
+                          });
+                    },
+                  );
+                }
+                return child;
+              },
+            )));
 
     var tvShowsGrid = Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 3 / 4,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
-        itemCount: 2,
-        itemBuilder: (BuildContext ctx, index) {
-          return _buildPoster(index, 1);
-        },
-      ),
-    );
-
+        padding: const EdgeInsets.all(20.0),
+        child: SizedBox(
+            height: 230,
+            child: FutureBuilder(
+              future: tvShowsFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+                Widget child;
+                child = const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                );
+                if (snapshot.hasData) {
+                  tvShows = snapshot.data!;
+                  child = GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 4,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: tvShows.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FutureBuilder(
+                          future: tvShows[index].getPoster(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Image> snapshot) {
+                            Widget child;
+                            child = const SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            );
+                            if (snapshot.hasData) {
+                              child = GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TvShowInfoScreen(tvShows[index]),
+                                        ));
+                                  },
+                                  child: snapshot.data!);
+                            }
+                            return child;
+                          });
+                    },
+                  );
+                }
+                return child;
+              },
+            )));
     //Method to create a tab
     GestureDetector createTab(index, context) {
       return GestureDetector(
@@ -102,7 +178,7 @@ class _FavouritesState extends State<FavouritesScreen> {
             Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 height: 6,
-                width: index * 30.0 + 40,
+                width: index * 30.0 + 60,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: index == selectedCategory
@@ -159,8 +235,8 @@ class _FavouritesState extends State<FavouritesScreen> {
               tabs,
               AnimatedCrossFade(
                 duration: const Duration(milliseconds: 200),
-                firstChild: allGrid,
-                secondChild: selectedCategory == 1 ? moviesGrid : tvShowsGrid,
+                firstChild: moviesGrid,
+                secondChild: tvShowsGrid,
                 crossFadeState: selectedCategory == 0
                     ? CrossFadeState.showFirst
                     : CrossFadeState.showSecond,

@@ -30,7 +30,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late int selectedCategory = 0;
-  late List<String> sections;
   String usersName = UserAPI().loggedInUser!.name;
   late final ScrollController _controller;
   bool visibleAppBar = false;
@@ -41,7 +40,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   initState() {
-    sections = ["All", "Movies", "Tv Shows"];
     super.initState();
     _controller = ScrollController();
     _controller.addListener(() {

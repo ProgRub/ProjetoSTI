@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/movie.dart';
 
 class MoviesAPI {
@@ -31,6 +32,17 @@ class MoviesAPI {
         in movies.docs.where((element) => element["Genre"].contains(genre))) {
       returnMovies.add(Movie.fromApi(movie));
       // print("Genre: " + returnMovies.last.title);
+    }
+    return returnMovies;
+  }
+
+  Future<List<Movie>> getUserFavouriteMovies() async {
+    var movies = await collection.get();
+    List<Movie> returnMovies = [];
+
+    for (var movie in movies.docs.where((element) =>
+        UserAPI().loggedInUser!.favouriteMovies.contains(element.id))) {
+      returnMovies.add(Movie.fromApi(movie));
     }
     return returnMovies;
   }

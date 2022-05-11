@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 
 class TVShowsAPI {
@@ -32,5 +33,16 @@ class TVShowsAPI {
       // print("Genre: " + returnTvShows.last.title);
     }
     return returnTvShows;
+  }
+
+  Future<List<TvShow>> getUserFavouriteTvShows() async {
+    var tvShows = await collection.get();
+    List<TvShow> returntvShows = [];
+
+    for (var tvShow in tvShows.docs.where((element) =>
+        UserAPI().loggedInUser!.favouriteTvShows.contains(element.id))) {
+      returntvShows.add(TvShow.fromApi(tvShow));
+    }
+    return returntvShows;
   }
 }
