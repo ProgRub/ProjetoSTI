@@ -6,6 +6,7 @@ import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/models/genre.dart';
 import 'package:projeto_sti/models/tvShow.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -167,16 +168,16 @@ class _ByGenreState extends State<ByGenreScreen> {
                             );
                             if (snapshot.hasData) {
                               child = snapshot.data!;
-                              // child = GestureDetector(
-                              //     onTap: () {
-                              //       Navigator.push(
-                              //           context,
-                              //           MaterialPageRoute(
-                              //             builder: (context) => MovieInfoScreen(
-                              //                 movie: tvShows[index]),
-                              //           ));
-                              //     },
-                              //     child: snapshot.data!);
+                              child = GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TvShowInfoScreen(
+                                             tvShows[index]),
+                                        ));
+                                  },
+                                  child: snapshot.data!);
                             }
                             return child;
                           });
