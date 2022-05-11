@@ -49,6 +49,15 @@ class UserAPI {
     loggedInUser!.genrePreferences = genrePreferences;
   }
 
+  List<String> getGenrePreferences() {
+    List<String> genres = <String>[];
+    loggedInUser!.genrePreferences.forEach((key, value) {
+      if (value == 1) genres.add(key);
+    });
+
+    return genres;
+  }
+
   Future<void> setFavouriteTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
     List<dynamic> favourites = <String>[];

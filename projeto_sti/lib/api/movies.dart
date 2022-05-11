@@ -46,4 +46,15 @@ class MoviesAPI {
     }
     return returnMovies;
   }
+
+  Future<List<Movie>> getUserWatchedMovies() async {
+    var movies = await collection.get();
+    List<Movie> returnMovies = [];
+
+    for (var movie in movies.docs.where((element) =>
+        UserAPI().loggedInUser!.watchedMovies.contains(element.id))) {
+      returnMovies.add(Movie.fromApi(movie));
+    }
+    return returnMovies;
+  }
 }

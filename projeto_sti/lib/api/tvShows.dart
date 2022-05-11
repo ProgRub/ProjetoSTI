@@ -45,4 +45,15 @@ class TVShowsAPI {
     }
     return returntvShows;
   }
+
+  Future<List<TvShow>> getUserWatchedTvShows() async {
+    var tvShows = await collection.get();
+    List<TvShow> returntvShows = [];
+
+    for (var tvShow in tvShows.docs.where((element) =>
+        UserAPI().loggedInUser!.watchedTvShows.contains(element.id))) {
+      returntvShows.add(TvShow.fromApi(tvShow));
+    }
+    return returntvShows;
+  }
 }

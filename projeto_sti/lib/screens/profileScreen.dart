@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/tvShows.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
+import 'package:projeto_sti/models/movie.dart';
+import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/editProfileScreen.dart';
+import 'package:projeto_sti/screens/movieInfoScreen.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -21,27 +28,171 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileState extends State<ProfileScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
-  late List<String> favouriteGenres;
   late List<GenreOval> genres;
+  String usersName = UserAPI().loggedInUser!.name;
+
+  late int numberFavourites;
+
+  late Future<List<Movie>> moviesFuture;
+  late Future<List<TvShow>> tvShowsFuture;
+  late List<Movie> movies;
+  late List<TvShow> tvShows;
 
   @override
   initState() {
-    sections = ["All", "Movies", "Tv Shows"];
-    favouriteGenres = ["Action", "Horror", "Drama"];
+    moviesFuture = MoviesAPI().getUserWatchedMovies();
+    tvShowsFuture = TVShowsAPI().getUserWatchedTvShows();
+    movies = <Movie>[];
+    tvShows = <TvShow>[];
+    sections = ["Movies", "Tv Shows"];
     genres = _favouriteGenres();
+    numberFavourites = 0;
     super.initState();
+  }
+
+  int _countNumberFavourites() {
+    return UserAPI().loggedInUser!.favouriteMovies.length +
+        UserAPI().loggedInUser!.favouriteTvShows.length;
   }
 
   List<GenreOval> _favouriteGenres() {
     List<GenreOval> list = <GenreOval>[];
-    for (var title in favouriteGenres) {
+    for (var title in UserAPI().getGenrePreferences()) {
       list.add(GenreOval(text: title, color: _randomColor()));
     }
     return list;
   }
 
+  Center noWatchedMessage(String type) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Image.asset("packages/projeto_sti/assets/images/popcorn.png",
+            width: 80, height: 80),
+        Text("You haven't watched any $type!", style: Styles.fonts.label)
+      ],
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    var moviesGrid = Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SizedBox(
+            height: 230,
+            child: FutureBuilder(
+              future: moviesFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+                Widget child;
+                child = const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                );
+                if (snapshot.hasData) {
+                  movies = snapshot.data!;
+                  child = GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 4,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: movies.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FutureBuilder(
+                          future: movies[index].getPoster(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Image> snapshot) {
+                            Widget child;
+                            child = const SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            );
+                            if (snapshot.hasData) {
+                              child = GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MovieInfoScreen(
+                                              movie: movies[index]),
+                                        ));
+                                  },
+                                  child: snapshot.data!);
+                            }
+                            return child;
+                          });
+                    },
+                  );
+                }
+                return movies.isEmpty ? noWatchedMessage("movie") : child;
+              },
+            )));
+
+    var tvShowsGrid = Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SizedBox(
+            height: 230,
+            child: FutureBuilder(
+              future: tvShowsFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+                Widget child;
+                child = const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                );
+                if (snapshot.hasData) {
+                  tvShows = snapshot.data!;
+                  child = GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 4,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: tvShows.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FutureBuilder(
+                          future: tvShows[index].getPoster(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Image> snapshot) {
+                            Widget child;
+                            child = const SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(),
+                            );
+                            if (snapshot.hasData) {
+                              child = GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TvShowInfoScreen(tvShows[index]),
+                                        ));
+                                  },
+                                  child: snapshot.data!);
+                            }
+                            return child;
+                          });
+                    },
+                  );
+                }
+                return tvShows.isEmpty ? noWatchedMessage("tv show") : child;
+              },
+            )));
+
     GestureDetector createTab(index, context) {
       return GestureDetector(
         child: Column(
@@ -77,18 +228,16 @@ class _ProfileState extends State<ProfileScreen> {
 
     SizedBox tabs = SizedBox(
       height: 70,
-      child: Center(
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: sections.length,
-          itemBuilder: (context, index) => createTab(index, context),
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 50,
-            );
-          },
-        ),
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: sections.length,
+        itemBuilder: (context, index) => createTab(index, context),
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(
+            width: 50,
+          );
+        },
       ),
     );
 
@@ -153,10 +302,10 @@ class _ProfileState extends State<ProfileScreen> {
                           CircleAvatar(
                             backgroundColor: Styles.colors.lightBlue,
                             radius: 50.0,
-                            child: const CircleAvatar(
+                            child: CircleAvatar(
                               backgroundColor: Colors.white,
-                              backgroundImage: AssetImage(
-                                  "packages/projeto_sti/assets/images/profile_pic.jpg"), //TESTING
+                              backgroundImage: NetworkImage(
+                                  UserAPI().loggedInUser!.imageDownloadUrl),
                               radius: 46.0,
                             ),
                           ),
@@ -166,15 +315,28 @@ class _ProfileState extends State<ProfileScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 50.0),
-                    child: Text("Susan Ceal", style: Styles.fonts.label),
+                    child: Text(usersName, style: Styles.fonts.label),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoSection("5", "Favourites"),
-                      _buildInfoSection("12", "Watched\n Movies"),
-                      _buildInfoSection("4", "Watched \nTv Shows"),
+                      _buildInfoSection(
+                          _countNumberFavourites().toString(), "Favourites"),
+                      _buildInfoSection(
+                          UserAPI()
+                              .loggedInUser!
+                              .watchedMovies
+                              .length
+                              .toString(),
+                          "Watched\n Movies"),
+                      _buildInfoSection(
+                          UserAPI()
+                              .loggedInUser!
+                              .watchedTvShows
+                              .length
+                              .toString(),
+                          "Watched \nTv Shows"),
                     ],
                   ),
                   _buildTextLabel("Favourite Genres", Styles.fonts.label),
@@ -185,20 +347,22 @@ class _ProfileState extends State<ProfileScreen> {
                     ],
                   ),
                   _buildTextLabel("Watched", Styles.fonts.label),
-                  tabs,
-                  GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 3 / 4,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20),
-                    itemCount: 3,
-                    itemBuilder: (BuildContext ctx, index) {
-                      return Poster(type: 0);
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        tabs,
+                      ],
+                    ),
+                  ),
+                  AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 200),
+                    firstChild: moviesGrid,
+                    secondChild: tvShowsGrid,
+                    crossFadeState: selectedCategory == 0
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
                   ),
                 ],
               ),
