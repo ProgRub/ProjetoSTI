@@ -33,6 +33,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   _TvShowInfoState(this.tvShow) {
     trailerUrl = 'https://www.youtube.com/watch?v=' + tvShow.trailer;
     favourited = UserAPI().loggedInUser!.favouriteTvShows.contains(tvShow.id);
+    watched = UserAPI().loggedInUser!.watchedTvShows.contains(tvShow.id);
     _videoController = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(trailerUrl)!,
       flags: const YoutubePlayerFlags(
@@ -75,6 +76,17 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
           .removeFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
     }
     return !isLiked;
+  }
+
+  Future<void> onWatchedButtonTapped() async {
+    if (!watched) {
+      watched = !watched;
+      await UserAPI().setWatchedTvShowOrMovie("tvShow", tvShow.id.toString());
+    } else {
+      watched = !watched;
+      await UserAPI()
+          .removeWatchedTvShowOrMovie("tvShow", tvShow.id.toString());
+    }
   }
 
   @override
@@ -182,17 +194,17 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
+              child: IconButton(
+                icon: Icon(Icons.check_circle,
+                    size: 40.0,
+                    color: watched ? Styles.colors.watched : Colors.grey),
+                onPressed: () {
                   setState(
                     () {
-                      watched = !watched;
+                      onWatchedButtonTapped();
                     },
                   );
                 },
-                child: Icon(Icons.check_circle,
-                    size: 40.0,
-                    color: watched ? Styles.colors.watched : Colors.grey),
               ),
             ),
           ]),

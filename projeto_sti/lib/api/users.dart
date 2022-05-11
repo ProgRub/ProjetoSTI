@@ -30,7 +30,9 @@ class UserAPI {
           imageFile, Authentication().loggedInUser!.uid),
       "genrePreferences": {},
       "favouriteMovies": {},
-      "favouriteTvShows": {}
+      "favouriteTvShows": {},
+      "watchedMovies": {},
+      "watchedTvShows": {}
     });
     setLoggedInUser();
   }
@@ -91,6 +93,51 @@ class UserAPI {
       loggedInUser!.favouriteMovies = favourites;
     } else {
       loggedInUser!.favouriteTvShows = favourites;
+    }
+  }
+
+  Future<void> setWatchedTvShowOrMovie(String type, String id) async {
+    var user = collection.doc(loggedInUser!.id);
+    List<dynamic> watched = <String>[];
+
+    await user.get().then((doc) {
+      watched =
+          doc.data()![type == "movie" ? "watchedMovies" : "watchedTvShows"];
+    });
+
+    if (!watched.contains(id)) {
+      watched.add(id);
+
+      user.update(
+          {(type == "movie" ? "watchedMovies" : "watchedTvShows"): watched});
+    }
+
+    if (type == "movie") {
+      loggedInUser!.watchedMovies = watched;
+    } else {
+      loggedInUser!.watchedTvShows = watched;
+    }
+  }
+
+  Future<void> removeWatchedTvShowOrMovie(String type, String id) async {
+    var user = collection.doc(loggedInUser!.id);
+    List<dynamic> watched = <String>[];
+
+    await user.get().then((doc) {
+      watched =
+          doc.data()![type == "movie" ? "watchedMovies" : "watchedTvShows"];
+    });
+
+    if (watched.contains(id)) {
+      watched.remove(id);
+
+      user.update(
+          {(type == "movie" ? "watchedMovies" : "watchedTvShows"): watched});
+    }
+    if (type == "movie") {
+      loggedInUser!.watchedMovies = watched;
+    } else {
+      loggedInUser!.watchedTvShows = watched;
     }
   }
 

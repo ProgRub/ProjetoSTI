@@ -140,7 +140,9 @@ class _UserInfoState extends State<UserInfoScreen> {
                                     authId: "",
                                     genrePreferences: {},
                                     favouriteMovies: {},
-                                    favouriteTvShows: {}),
+                                    favouriteTvShows: {},
+                                    watchedMovies: {},
+                                    watchedTvShows: {}),
                                 imageFile!);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

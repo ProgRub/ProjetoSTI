@@ -4,7 +4,7 @@ class User {
   String id, name, gender, imageDownloadUrl, authId;
   int age;
   Map<String, num> genrePreferences;
-  var favouriteMovies, favouriteTvShows;
+  var favouriteMovies, favouriteTvShows, watchedMovies, watchedTvShows;
 
   User(
       {required this.id,
@@ -15,7 +15,9 @@ class User {
       required this.age,
       required this.genrePreferences,
       required this.favouriteMovies,
-      required this.favouriteTvShows});
+      required this.favouriteTvShows,
+      required this.watchedMovies,
+      required this.watchedTvShows});
 
   User.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
@@ -26,7 +28,9 @@ class User {
         genrePreferences = apiResponse["genrePreferences"],
         favouriteMovies = apiResponse["favouriteMovies"],
         favouriteTvShows = apiResponse["favouriteTvShows"],
-        imageDownloadUrl = apiResponse["imageDownloadUrl"];
+        imageDownloadUrl = apiResponse["imageDownloadUrl"],
+        watchedMovies = apiResponse["watchedMovies"],
+        watchedTvShows = apiResponse["watchedTvShows"];
 
   User.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> documentSnapshot)
       : id = documentSnapshot.id,
@@ -37,7 +41,9 @@ class User {
         imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
         favouriteMovies = documentSnapshot["favouriteMovies"],
         favouriteTvShows = documentSnapshot["favouriteTvShows"],
-        genrePreferences = documentSnapshot["genrePreferences"];
+        genrePreferences = documentSnapshot["genrePreferences"],
+        watchedMovies = documentSnapshot["watchedMovies"],
+        watchedTvShows = documentSnapshot["watchedTvShows"];
 
   User.fromDocSnapshotAndMap(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot,
@@ -50,5 +56,7 @@ class User {
         imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
         favouriteMovies = documentSnapshot["favouriteMovies"],
         favouriteTvShows = documentSnapshot["favouriteTvShows"],
+        watchedMovies = documentSnapshot["watchedMovies"],
+        watchedTvShows = documentSnapshot["watchedTvShows"],
         genrePreferences = genrePrefs;
 }
