@@ -57,136 +57,113 @@ class _ByGenreState extends State<ByGenreScreen> {
 
     var moviesGrid = Padding(
         padding: const EdgeInsets.all(20.0),
-        child: SizedBox(
-            height: 230,
-            child: FutureBuilder(
-              future: moviesFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-                Widget child;
-                child = const SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                );
-                if (snapshot.hasData) {
-                  movies = snapshot.data!;
-                  child = GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 3 / 4,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20),
-                    itemCount: movies.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FutureBuilder(
-                          future: movies[index].getPoster(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Image> snapshot) {
-                            Widget child;
-                            child = const SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: CircularProgressIndicator(),
-                            );
-                            if (snapshot.hasData) {
-                              child = GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MovieInfoScreen(
-                                              movie: movies[index]),
-                                        ));
-                                  },
-                                  child: snapshot.data!);
-                            }
-                            return child;
-                          });
-                    },
-                  );
-                }
-                return child;
-              },
-            )));
-    // var moviesGrid = Padding(
-    //   padding: const EdgeInsets.all(20.0),
-    //   child: GridView.builder(
-    //     physics: const NeverScrollableScrollPhysics(),
-    //     shrinkWrap: true,
-    //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-    //         maxCrossAxisExtent: 200,
-    //         childAspectRatio: 3 / 4,
-    //         crossAxisSpacing: 20,
-    //         mainAxisSpacing: 20),
-    //     itemCount: 5,
-    //     itemBuilder: (BuildContext ctx, index) {
-    //       return _buildPoster(index, 0);
-    //     },
-    //   ),
-    // );
+        child: FutureBuilder(
+          future: moviesFuture,
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            Widget child;
+            child = const SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            );
+            if (snapshot.hasData) {
+              movies = snapshot.data!;
+              child = GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 4,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
+                itemCount: movies.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FutureBuilder(
+                      future: movies[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        );
+                        if (snapshot.hasData) {
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          MovieInfoScreen(movie: movies[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      });
+                },
+              );
+            }
+            return child;
+          },
+        ));
 
     var tvShowsGrid = Padding(
         padding: const EdgeInsets.all(20.0),
-        child: SizedBox(
-            height: 230,
-            child: FutureBuilder(
-              future: tvShowsFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
-                Widget child;
-                child = const SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                );
-                if (snapshot.hasData) {
-                  tvShows = snapshot.data!;
-                  child = GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 3 / 4,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20),
-                    itemCount: tvShows.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FutureBuilder(
-                          future: tvShows[index].getPoster(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Image> snapshot) {
-                            Widget child;
-                            child = const SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: CircularProgressIndicator(),
-                            );
-                            if (snapshot.hasData) {
-                              child = snapshot.data!;
-                              child = GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TvShowInfoScreen(
-                                             tvShows[index]),
-                                        ));
-                                  },
-                                  child: snapshot.data!);
-                            }
-                            return child;
-                          });
-                    },
-                  );
-                }
-                return child;
-              },
-            )));
+        child: FutureBuilder(
+          future: tvShowsFuture,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+            Widget child;
+            child = const SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            );
+            if (snapshot.hasData) {
+              tvShows = snapshot.data!;
+              child = GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 4,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
+                itemCount: tvShows.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FutureBuilder(
+                      future: tvShows[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        );
+                        if (snapshot.hasData) {
+                          child = snapshot.data!;
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          TvShowInfoScreen(tvShows[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      });
+                },
+              );
+            }
+            return child;
+          },
+        ));
 
     //Method to create a tab
     GestureDetector createTab(index, context) {
