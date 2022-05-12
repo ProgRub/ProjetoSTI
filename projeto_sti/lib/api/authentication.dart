@@ -18,13 +18,14 @@ class Authentication {
   User? loggedInUser;
 
   /// To sign user out.
-  void signOut() async {
+  void logout() async {
     // bool someoneSignedIn = false;
-    final User? user = await auth.currentUser;
+    final User? user = auth.currentUser;
     if (user == null) {
       return;
     }
     await auth.signOut();
+    loggedInUser = null;
     // final String uid = user.uid;
   }
 
