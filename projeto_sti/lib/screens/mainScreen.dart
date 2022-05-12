@@ -33,13 +33,15 @@ class _MainScreenState extends State<MainScreen> {
   String usersName = UserAPI().loggedInUser!.name;
   late final ScrollController _controller;
   bool visibleAppBar = false;
-  final Future<List<Movie>> moviesFuture = MoviesAPI().getAllMovies();
+  late Future<List<Movie>> moviesFuture;
   List<Movie> movies = [];
-  final Future<List<TvShow>> tvShowsFuture = TVShowsAPI().getAllTvShows();
+  late Future<List<TvShow>> tvShowsFuture;
   List<TvShow> tvShows = [];
 
   @override
   initState() {
+    moviesFuture = MoviesAPI().getAllMovies();
+    tvShowsFuture = TVShowsAPI().getAllTvShows();
     super.initState();
     _controller = ScrollController();
     _controller.addListener(() {
@@ -82,120 +84,122 @@ class _MainScreenState extends State<MainScreen> {
     );
 
     var topMovies = Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 20.0,
-        ),
-        child: SizedBox(
-            height: 230,
-            child: FutureBuilder(
-              future: moviesFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-                Widget child;
-                child = skeletonPosterList;
-
-                if (snapshot.hasData) {
-                  movies = snapshot.data!;
-                  child = ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: movies.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return FutureBuilder(
-                            future: movies[index].getPoster(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<Image> snapshot) {
-                              Widget child;
-                              child = const SkeletonItem(
-                                child: SkeletonAvatar(
-                                  style: SkeletonAvatarStyle(
-                                    width: 155,
-                                  ),
-                                ),
-                              );
-                              if (snapshot.hasData) {
-                                child = GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MovieInfoScreen(
-                                                    movie: movies[index]),
-                                          ));
-                                    },
-                                    child: snapshot.data!);
-                              }
-                              return child;
-                            });
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          width: 20.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 230,
+        child: FutureBuilder(
+          future: moviesFuture,
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            Widget child;
+            child = skeletonPosterList;
+            if (snapshot.hasData) {
+              movies = snapshot.data!;
+              child = ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: movies.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FutureBuilder(
+                      future: movies[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot2) {
+                        Widget child;
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
                         );
+                        if (snapshot2.hasData) {
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          MovieInfoScreen(movie: movies[index]),
+                                    ));
+                              },
+                              child: snapshot2.data!);
+                        }
+                        return child;
                       });
-                }
-                return child;
-              },
-            )));
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    width: 20.0,
+                  );
+                },
+              );
+            }
+            return child;
+          },
+        ),
+      ),
+    );
 
     var topTvShows = Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 20.0,
-        ),
-        child: SizedBox(
-            height: 230,
-            child: FutureBuilder(
-              future: tvShowsFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
-                Widget child;
-                child = skeletonPosterList;
-                if (snapshot.hasData) {
-                  tvShows = snapshot.data!;
-                  child = ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: tvShows.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return FutureBuilder(
-                            future: tvShows[index].getPoster(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<Image> snapshot) {
-                              Widget child;
-                              child = const SkeletonItem(
-                                child: SkeletonAvatar(
-                                  style: SkeletonAvatarStyle(
-                                    width: 155,
-                                  ),
-                                ),
-                              );
-                              if (snapshot.hasData) {
-                                child = snapshot.data!;
-                                child = GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TvShowInfoScreen(
-                                                    tvShows[index]),
-                                          ));
-                                    },
-                                    child: snapshot.data!);
-                              }
-                              return child;
-                            });
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          width: 20.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 230,
+        child: FutureBuilder(
+          future: tvShowsFuture,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+            Widget child;
+            child = skeletonPosterList;
+            if (snapshot.hasData) {
+              tvShows = snapshot.data!;
+              child = ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tvShows.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FutureBuilder(
+                      future: tvShows[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
                         );
-                      });
-                }
-                return child;
-              },
-            )));
+                        if (snapshot.hasData) {
+                          child = snapshot.data!;
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          TvShowInfoScreen(tvShows[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 20.0,
+                    );
+                  });
+            }
+            return child;
+          },
+        ),
+      ),
+    );
 
     var recommendationSection = Container(
       width: MediaQuery.of(context).size.width - 60,

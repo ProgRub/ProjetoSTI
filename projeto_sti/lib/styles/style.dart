@@ -11,7 +11,7 @@ class _Colors {
   final purple = const Color.fromRGBO(187, 134, 252, 1);
   final button = const Color.fromRGBO(55, 0, 179, 1);
   final grey = Colors.white.withOpacity(0.25);
-  final darker = Colors.black.withOpacity(0.25);
+  final darker = Colors.black.withOpacity(0.40);
   final error = const Color.fromARGB(255, 101, 5, 0);
   final errorText = const Color.fromARGB(255, 245, 140, 133);
   final successText = const Color.fromARGB(255, 173, 247, 176);

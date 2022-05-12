@@ -61,7 +61,7 @@ class UserAPI {
 
   Future<void> setFavouriteTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<String> favourites = <String>[];
+    List<dynamic> favourites = <String>[];
 
     await user.get().then((doc) {
       favourites =
@@ -85,7 +85,7 @@ class UserAPI {
 
   Future<void> removeFavouriteTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<String> favourites = <String>[];
+    List<dynamic> favourites = <String>[];
 
     await user.get().then((doc) {
       favourites =
@@ -108,7 +108,7 @@ class UserAPI {
 
   Future<void> setWatchedTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<String> watched = <String>[];
+    List<dynamic> watched = <String>[];
 
     await user.get().then((doc) {
       watched = doc[type == "movie" ? "watchedMovies" : "watchedTvShows"];
@@ -130,7 +130,7 @@ class UserAPI {
 
   Future<void> removeWatchedTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<String> watched = <String>[];
+    List<dynamic> watched = <String>[];
 
     await user.get().then((doc) {
       watched = doc[type == "movie" ? "watchedMovies" : "watchedTvShows"];

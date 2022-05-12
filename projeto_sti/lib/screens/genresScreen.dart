@@ -37,22 +37,6 @@ class _GenresState extends State<GenresScreen> {
       ),
     );
 
-    // var genresGrid = Padding(
-    //   padding: const EdgeInsets.all(20.0),
-    //   child: GridView.builder(
-    //     physics: const NeverScrollableScrollPhysics(),
-    //     shrinkWrap: true,
-    //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-    //         maxCrossAxisExtent: 200,
-    //         childAspectRatio: 3 / 2,
-    //         crossAxisSpacing: 20,
-    //         mainAxisSpacing: 20),
-    //     itemCount: genres.length,
-    //     itemBuilder: (BuildContext ctx, index) {
-    //       return _buildGenreButton(index);
-    //     },
-    //   ),
-    // );
     var genresGrid = FutureBuilder(
         future: genresFuture,
         builder: (BuildContext context, AsyncSnapshot<List<Genre>> snapshot) {
@@ -145,7 +129,7 @@ class _GenresState extends State<GenresScreen> {
           ),
         ),
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(const Radius.circular(15)),
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
           image: DecorationImage(
             image: image.image,
             fit: BoxFit.fill,

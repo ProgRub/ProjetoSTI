@@ -9,6 +9,7 @@ import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../models/movie.dart';
 import 'movieInfoScreen.dart';
@@ -56,7 +57,7 @@ class _ByGenreState extends State<ByGenreScreen> {
     );
 
     var moviesGrid = Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: FutureBuilder(
           future: moviesFuture,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
@@ -71,11 +72,11 @@ class _ByGenreState extends State<ByGenreScreen> {
               child = GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 4,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 7 / 10,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 15,
+                    crossAxisCount: 2),
                 itemCount: movies.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FutureBuilder(
@@ -83,10 +84,12 @@ class _ByGenreState extends State<ByGenreScreen> {
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot) {
                         Widget child;
-                        child = const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
                         );
                         if (snapshot.hasData) {
                           child = GestureDetector(
@@ -110,60 +113,63 @@ class _ByGenreState extends State<ByGenreScreen> {
         ));
 
     var tvShowsGrid = Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: FutureBuilder(
-          future: tvShowsFuture,
-          builder:
-              (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
-            Widget child;
-            child = const SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: FutureBuilder(
+        future: tvShowsFuture,
+        builder: (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+          Widget child;
+          child = const SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          );
+          if (snapshot.hasData) {
+            tvShows = snapshot.data!;
+            child = GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 8 / 10,
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 15,
+                  crossAxisCount: 2),
+              itemCount: tvShows.length,
+              itemBuilder: (BuildContext context, int index) {
+                return FutureBuilder(
+                  future: tvShows[index].getPoster(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                    Widget child;
+                    child = const SkeletonItem(
+                      child: SkeletonAvatar(
+                        style: SkeletonAvatarStyle(
+                          width: 155,
+                        ),
+                      ),
+                    );
+                    if (snapshot.hasData) {
+                      child = snapshot.data!;
+                      child = GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TvShowInfoScreen(tvShows[index]),
+                                ));
+                          },
+                          child: snapshot.data!);
+                    }
+                    return child;
+                  },
+                );
+              },
             );
-            if (snapshot.hasData) {
-              tvShows = snapshot.data!;
-              child = GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 4,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20),
-                itemCount: tvShows.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return FutureBuilder(
-                      future: tvShows[index].getPoster(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<Image> snapshot) {
-                        Widget child;
-                        child = const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
-                        );
-                        if (snapshot.hasData) {
-                          child = snapshot.data!;
-                          child = GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          TvShowInfoScreen(tvShows[index]),
-                                    ));
-                              },
-                              child: snapshot.data!);
-                        }
-                        return child;
-                      });
-                },
-              );
-            }
-            return child;
-          },
-        ));
+          }
+          return child;
+        },
+      ),
+    );
 
     //Method to create a tab
     GestureDetector createTab(index, context) {
