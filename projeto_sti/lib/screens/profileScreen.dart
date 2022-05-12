@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/api/users.dart';
@@ -17,6 +18,8 @@ import 'package:projeto_sti/styles/style.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
+
+import 'loginScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -273,8 +276,11 @@ class _ProfileState extends State<ProfileScreen> {
                   ])),
               _buildQuarterCircle(82, Styles.colors.blurred),
               GestureDetector(
-                onTap: () =>
-                    showPopupMessage(context, "error", "Logout"), //PARA TESTAR
+                onTap: () {
+                  Authentication().logout();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) => const LoginScreen()));
+                }, //PARA TESTAR
                 child: Stack(children: [
                   _buildQuarterCircle(80, Colors.white),
                   Padding(

@@ -283,34 +283,8 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ],
     );
-    var suggestions = {"Test", "Mafalda", "Ruben", "Mafalda 2"};
-    var searchBar = Padding(
-      padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
-      child: TextField(
-        autocorrect: false,
-        enableSuggestions: false,
-        style: Styles.fonts.commentName,
-        decoration: InputDecoration(
-          hintText: 'What are you looking for?',
-          hintStyle: Styles.fonts.hintText,
-          fillColor: Colors.black,
-          filled: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-          prefixIcon:
-              Icon(Icons.search, size: 30.0, color: Styles.colors.lightBlue),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide(color: Styles.colors.lightBlue, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide(color: Styles.colors.lightBlue, width: 2.0),
-          ),
-        ),
-      ),
-    );
 
-    searchBar = Padding(
+    var searchBar = Padding(
         padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
         child: FutureBuilder(
           future: GeneralAPI().getSearchTerms(),

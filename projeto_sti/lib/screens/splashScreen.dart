@@ -21,7 +21,9 @@ class _SplashState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Authentication().auth.idTokenChanges().listen((User? user) async {
+    final subscription = Authentication().auth.idTokenChanges().listen(null);
+    subscription.onData((User? user) async {
+      // Update onData after listening.
       if (user == null) {
         print('User is currently signed out!');
         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -33,6 +35,7 @@ class _SplashState extends State<SplashScreen> {
             builder: (BuildContext context) => const MainScreen()));
         print('User is signed in!');
       }
+      subscription.cancel();
     });
   }
 

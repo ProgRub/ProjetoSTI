@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/genres.dart';
+import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
+import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletons/skeletons.dart';
+
+import '../models/genre.dart';
+import '../models/movie.dart';
 
 class TopImdbScreen extends StatefulWidget {
   const TopImdbScreen({Key? key}) : super(key: key);
@@ -16,31 +25,43 @@ class _TopImdbState extends State<TopImdbScreen> {
   late int selectedCategory;
   final List<String> categories = ["Movies", "Tv Shows"];
   String filterValue = "All";
-  List<String> filters = [
-    "Action",
-    "Comedy",
-    "Sci-Fi",
-    "Horror",
-    "Romance",
-    "Thriller",
-    "Drama",
-    "Mystery",
-    "Crime",
-    "Animation",
-    "Adventure",
-    "Fantasy",
-  ];
+  Future<List<Genre>> genresFuture = GenresAPI().getAllGenres();
+  Future<List<Movie>> moviesFuture = MoviesAPI().getAllMovies();
+  Future<List<TvShow>> tvShowsFuture = TVShowsAPI().getAllTvShows();
+  List<Genre> genres = [];
+  List<Movie> movies = [];
+  List<TvShow> tvShows = [];
+  List<String> filters = [];
 
   @override
   initState() {
-    filters.sort((a, b) => a.compareTo(b)); //ordena alfabeticamente
-    filters.insert(0, "All");
     selectedCategory = 0;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var skeletonPosterList = ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return const SkeletonItem(
+          child: SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+              width: 155,
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          width: 20.0,
+        );
+      },
+    );
+
     var pageTitle = Padding(
       padding: const EdgeInsets.only(top: 20.0, left: 30.0, bottom: 20.0),
       child: Align(
@@ -119,26 +140,51 @@ class _TopImdbState extends State<TopImdbScreen> {
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(10)),
             child: Center(
-              child: DropdownButton<String>(
-                focusColor: Colors.transparent,
-                value: filterValue,
-                isDense: true,
-                style: Styles.fonts.plot,
-                onChanged: (String? newFilter) {
-                  setState(() {
-                    filterValue = newFilter!;
-                  });
-                },
-                icon: const Icon(Icons.arrow_drop_down,
-                    color: Colors.transparent),
-                iconSize: 0,
-                underline: const SizedBox(),
-                items: filters.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+              child: FutureBuilder(
+                future: genresFuture,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Genre>> snapshot) {
+                  if (snapshot.hasData && filters.isEmpty) {
+                    var genres = snapshot.data!;
+                    for (var genre in genres) {
+                      filters.add(genre.name);
+                    }
+                    filters.sort(
+                        (a, b) => a.compareTo(b)); //ordena alfabeticamente
+                    filters.insert(0, "All");
+                  }
+                  return DropdownButton<String>(
+                    focusColor: Colors.transparent,
+                    value: filterValue,
+                    isDense: true,
+                    style: Styles.fonts.plot,
+                    onChanged: (String? newFilter) {
+                      setState(() {
+                        filterValue = newFilter!;
+                        if (filterValue == "All") {
+                          moviesFuture = MoviesAPI().getAllMovies();
+                          tvShowsFuture = TVShowsAPI().getAllTvShows();
+                        } else {
+                          moviesFuture =
+                              MoviesAPI().getMoviesOfGenre(filterValue);
+                          tvShowsFuture =
+                              TVShowsAPI().getTvShowsOfGenre(filterValue);
+                        }
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_drop_down,
+                        color: Colors.transparent),
+                    iconSize: 0,
+                    underline: const SizedBox(),
+                    items:
+                        filters.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
+                },
               ),
             ),
           ),
@@ -146,36 +192,104 @@ class _TopImdbState extends State<TopImdbScreen> {
       ),
     );
 
-    var moviesList = Column(
-      children: [
-        ListView.separated(
-          itemCount: 10,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return _buildMovieRow(index + 1, "Joker", "9.6", 0);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(height: 30.0);
-          },
-        ),
-      ],
-    );
+    var moviesList = FutureBuilder(
+      future: moviesFuture,
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+        Widget child;
+        child = const SizedBox(
+          width: 60,
+          height: 60,
+          child: CircularProgressIndicator(),
+        );
 
-    var tvShowsList = Column(
-      children: [
-        ListView.separated(
-          itemCount: 7,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return _buildMovieRow(index + 1, "Stranger T...", "9.5", 1);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(height: 30.0);
-          },
-        ),
-      ],
+        if (snapshot.hasData) {
+          movies = snapshot.data!;
+          movies.sort((a, b) => b.rating.compareTo(a
+              .rating)); //ordena por rating, b compareTo a para ordem descendente
+          child = ListView.separated(
+              scrollDirection: Axis.vertical,
+              itemCount: movies.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return FutureBuilder(
+                    future: movies[index].getPoster(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                      Widget child;
+                      child = const SkeletonItem(
+                        child: SkeletonAvatar(
+                          style: SkeletonAvatarStyle(
+                            width: 155,
+                          ),
+                        ),
+                      );
+                      if (snapshot.hasData) {
+                        var movie = movies[index];
+                        child = _buildMovieRow(index, movie.title, movie.rating,
+                            snapshot.data!, 0);
+                      }
+                      return child;
+                    });
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  width: 30.0,
+                );
+              });
+        }
+        return child;
+      },
+    );
+    var tvShowsList = FutureBuilder(
+      future: tvShowsFuture,
+      builder: (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+        Widget child;
+        child = const SizedBox(
+          width: 60,
+          height: 60,
+          child: CircularProgressIndicator(),
+        );
+
+        if (snapshot.hasData) {
+          tvShows = snapshot.data!;
+          tvShows.sort((a, b) => b.rating.compareTo(a
+              .rating)); //ordena por rating, b compareTo a para ordem descendente
+          tvShows.reversed;
+          child = ListView.separated(
+              scrollDirection: Axis.vertical,
+              itemCount: tvShows.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return FutureBuilder(
+                    future: tvShows[index].getPoster(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                      Widget child;
+                      child = const SkeletonItem(
+                        child: SkeletonAvatar(
+                          style: SkeletonAvatarStyle(
+                            width: 155,
+                          ),
+                        ),
+                      );
+                      if (snapshot.hasData) {
+                        var tvShow = tvShows[index];
+                        child = _buildMovieRow(index, tvShow.title,
+                            tvShow.rating, snapshot.data!, 1);
+                      }
+                      return child;
+                    });
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  width: 30.0,
+                );
+              });
+        }
+        return child;
+      },
     );
 
     return SafeArea(
@@ -214,16 +328,19 @@ class _TopImdbState extends State<TopImdbScreen> {
   }
 
   GestureDetector _buildMovieRow(
-      int index, String title, String rating, int type) {
+      int index, String title, num rating, Image poster, int type) {
+    var place = index + 1;
     return GestureDetector(
       onTap: () {
-        print("TAPPED MOVIE - $title");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const MovieInfoScreen(),
-        //   ),
-        // );
+        print(title);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => type == 0
+                ? MovieInfoScreen(movie: movies[index])
+                : TvShowInfoScreen(tvShows[index]),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -238,24 +355,20 @@ class _TopImdbState extends State<TopImdbScreen> {
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
-                      image: type == 0
-                          ? const AssetImage(
-                              "packages/projeto_sti/assets/images/joker_poster.jpg")
-                          : const AssetImage(
-                              "packages/projeto_sti/assets/images/stranger_poster.jpg"),
+                      image: poster.image,
                       fit: BoxFit.fill,
                     ),
                   ),
                 ),
                 const SizedBox(width: 40.0),
                 Text(
-                  "#$index - $title",
+                  "#$place - $title",
                   style: Styles.fonts.label,
                 ),
               ],
             ),
             Row(children: [
-              Text(rating, style: Styles.fonts.rating),
+              Text(rating.toString(), style: Styles.fonts.rating),
               const SizedBox(width: 5.0),
               const Icon(
                 Icons.star,
