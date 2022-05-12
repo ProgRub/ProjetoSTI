@@ -8,22 +8,6 @@ import 'package:projeto_sti/api/users.dart';
 class Authentication {
   Authentication._privateConstructor();
 
-  Future<bool> checkSavedSession() async {
-    var boolean = false;
-    auth.idTokenChanges().listen((User? user) async {
-      print("CheckSession");
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        loggedInUser = user;
-        await UserAPI().setLoggedInUser();
-        print('User is signed in!');
-        boolean = true;
-      }
-    });
-    return boolean;
-  }
-
   static final Authentication _instance = Authentication._privateConstructor();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -85,7 +69,6 @@ class Authentication {
           .user;
       if (user != null) {
         loggedInUser = user;
-        // await UserAPI().setLoggedInUser();
       } else {
         print("ERROR");
       }
