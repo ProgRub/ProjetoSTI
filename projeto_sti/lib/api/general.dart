@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
@@ -27,6 +29,9 @@ class GeneralAPI {
       results.addAll(tvShow.cast);
       results.addAll(tvShow.writers);
     }
-    return results;
+    Set<String> sortedSet =
+        SplayTreeSet.from(results, (a, b) => a.compareTo(b));
+
+    return sortedSet;
   }
 }

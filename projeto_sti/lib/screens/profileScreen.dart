@@ -82,119 +82,112 @@ class _ProfileState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var moviesGrid = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: SizedBox(
-            height: 230,
-            child: FutureBuilder(
-              future: moviesFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-                Widget child;
-                child = const SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                );
-                if (snapshot.hasData) {
-                  movies = snapshot.data!;
-                  child = GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 7 / 10,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 15,
-                            crossAxisCount: 2),
-                    itemCount: movies.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FutureBuilder(
-                          future: movies[index].getPoster(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Image> snapshot) {
-                            Widget child;
-                            child = const SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: CircularProgressIndicator(),
-                            );
-                            if (snapshot.hasData) {
-                              child = GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MovieInfoScreen(
-                                              movie: movies[index]),
-                                        ));
-                                  },
-                                  child: snapshot.data!);
-                            }
-                            return child;
-                          });
-                    },
-                  );
-                }
-                return movies.isEmpty ? noWatchedMessage("movie") : child;
-              },
-            )));
+        child: FutureBuilder(
+          future: moviesFuture,
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            Widget child;
+            child = const SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            );
+            if (snapshot.hasData) {
+              movies = snapshot.data!;
+              child = GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 7 / 10,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 15,
+                    crossAxisCount: 2),
+                itemCount: movies.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FutureBuilder(
+                      future: movies[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        );
+                        if (snapshot.hasData) {
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          MovieInfoScreen(movie: movies[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      });
+                },
+              );
+            }
+            return movies.isEmpty ? noWatchedMessage("movie") : child;
+          },
+        ));
 
     var tvShowsGrid = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: SizedBox(
-            height: 230,
-            child: FutureBuilder(
-              future: tvShowsFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
-                Widget child;
-                child = const SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                );
-                if (snapshot.hasData) {
-                  tvShows = snapshot.data!;
-                  child = GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 8 / 10,
-                            crossAxisSpacing: 0,
-                            mainAxisSpacing: 15,
-                            crossAxisCount: 2),
-                    itemCount: tvShows.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FutureBuilder(
-                          future: tvShows[index].getPoster(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Image> snapshot) {
-                            Widget child;
-                            child = const SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: CircularProgressIndicator(),
-                            );
-                            if (snapshot.hasData) {
-                              child = GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              TvShowInfoScreen(tvShows[index]),
-                                        ));
-                                  },
-                                  child: snapshot.data!);
-                            }
-                            return child;
-                          });
-                    },
-                  );
-                }
-                return tvShows.isEmpty ? noWatchedMessage("tv show") : child;
-              },
-            )));
+        child: FutureBuilder(
+          future: tvShowsFuture,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
+            Widget child;
+            child = const SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            );
+            if (snapshot.hasData) {
+              tvShows = snapshot.data!;
+              child = GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 8 / 10,
+                    crossAxisSpacing: 0,
+                    mainAxisSpacing: 15,
+                    crossAxisCount: 2),
+                itemCount: tvShows.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FutureBuilder(
+                      future: tvShows[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        );
+                        if (snapshot.hasData) {
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          TvShowInfoScreen(tvShows[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      });
+                },
+              );
+            }
+            return tvShows.isEmpty ? noWatchedMessage("tv show") : child;
+          },
+        ));
 
     GestureDetector createTab(index, context) {
       return GestureDetector(

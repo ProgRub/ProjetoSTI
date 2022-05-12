@@ -284,8 +284,19 @@ class _MainScreenState extends State<MainScreen> {
       ],
     );
 
+    String _checkType(String value) {
+      for (var movie in movies) {
+        if (movie.title == value) return "Movie";
+      }
+      for (var tvShow in tvShows) {
+        if (tvShow.title == value) return "Tv Show";
+      }
+
+      return "Person";
+    }
+
     var searchBar = Padding(
-        padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
+        padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
         child: FutureBuilder(
           future: GeneralAPI().getSearchTerms(),
           builder: (BuildContext context, AsyncSnapshot<Set<String>> snapshot) {
@@ -297,7 +308,7 @@ class _MainScreenState extends State<MainScreen> {
               decoration: InputDecoration(
                 hintText: 'What are you looking for?',
                 hintStyle: Styles.fonts.hintText,
-                fillColor: Colors.black,
+                fillColor: Colors.white,
                 filled: true,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                 prefixIcon: Icon(Icons.search,
@@ -324,10 +335,17 @@ class _MainScreenState extends State<MainScreen> {
                       .contains(query.toLowerCase());
                 }).toList(),
                 overlaySearchListItemBuilder: (dynamic item) => Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    item,
-                    style: const TextStyle(fontSize: 18),
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: Colors.black,
+                    child: ListTile(
+                      title: Text(item, style: Styles.fonts.commentName),
+                      trailing:
+                          Text(_checkType(item), style: Styles.fonts.comment),
+                    ),
                   ),
                 ),
                 onItemSelected: (dynamic item) {

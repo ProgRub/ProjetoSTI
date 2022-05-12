@@ -50,7 +50,7 @@ class _FavouritesState extends State<FavouritesScreen> {
     );
 
     var moviesGrid = Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: FutureBuilder(
           future: moviesFuture,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
@@ -65,11 +65,11 @@ class _FavouritesState extends State<FavouritesScreen> {
               child = GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 4,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 7 / 10,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 15,
+                    crossAxisCount: 2),
                 itemCount: movies.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FutureBuilder(
@@ -104,7 +104,7 @@ class _FavouritesState extends State<FavouritesScreen> {
         ));
 
     var tvShowsGrid = Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: FutureBuilder(
           future: tvShowsFuture,
           builder:
@@ -120,11 +120,11 @@ class _FavouritesState extends State<FavouritesScreen> {
               child = GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 4,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 7 / 10,
+                    crossAxisSpacing: 0,
+                    mainAxisSpacing: 15,
+                    crossAxisCount: 2),
                 itemCount: tvShows.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FutureBuilder(
