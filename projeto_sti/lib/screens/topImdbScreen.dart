@@ -191,8 +191,6 @@ class _TopImdbState extends State<TopImdbScreen> {
         ],
       ),
     );
-// Column(
-//       children: [
 
     var moviesList = FutureBuilder(
       future: moviesFuture,
@@ -243,10 +241,6 @@ class _TopImdbState extends State<TopImdbScreen> {
         return child;
       },
     );
-    //   ],
-    // );
-// Column(
-//       children: [
     var tvShowsList = FutureBuilder(
       future: tvShowsFuture,
       builder: (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
@@ -297,25 +291,6 @@ class _TopImdbState extends State<TopImdbScreen> {
         return child;
       },
     );
-    //   ],
-    // );
-
-    // var tvShowsList = Column(
-    //   children: [
-    //     ListView.separated(
-    //       itemCount: 7,
-    //       shrinkWrap: true,
-    //       physics: const NeverScrollableScrollPhysics(),
-    //       itemBuilder: (BuildContext context, int index) {
-    //         return _buildMovieRow(
-    //             index, tvShow.title, tvShow.rating, snapshot.data!, 1);
-    //       },
-    //       separatorBuilder: (BuildContext context, int index) {
-    //         return const SizedBox(height: 30.0);
-    //       },
-    //     ),
-    //   ],
-    // );
 
     return SafeArea(
       child: Scaffold(
