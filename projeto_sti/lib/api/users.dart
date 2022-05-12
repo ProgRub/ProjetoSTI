@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projeto_sti/api/authentication.dart';
@@ -18,9 +19,9 @@ class UserAPI {
   CollectionReference<Map<String, dynamic>> collection =
       FirebaseFirestore.instance.collection('users');
 
-  User? loggedInUser;
+  UserModel? loggedInUser;
 
-  Future<void> addUser(User user, XFile imageFile) async {
+  Future<void> addUser(UserModel user, XFile imageFile) async {
     var signingUpUser = await collection.add({
       "age": user.age,
       "gender": user.gender,
@@ -29,10 +30,10 @@ class UserAPI {
       "imageDownloadUrl": await uploadProfilePicture(
           imageFile, Authentication().loggedInUser!.uid),
       "genrePreferences": {},
-      "favouriteMovies": {},
-      "favouriteTvShows": {},
-      "watchedMovies": {},
-      "watchedTvShows": {}
+      "favouriteMovies": [],
+      "favouriteTvShows": [],
+      "watchedMovies": [],
+      "watchedTvShows": []
     });
     setLoggedInUser();
   }
@@ -60,11 +61,11 @@ class UserAPI {
 
   Future<void> setFavouriteTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<dynamic> favourites = <String>[];
+    List<String> favourites = <String>[];
 
     await user.get().then((doc) {
       favourites =
-          doc.data()![type == "movie" ? "favouriteMovies" : "favouriteTvShows"];
+          doc[type == "movie" ? "favouriteMovies" : "favouriteTvShows"];
     });
 
     if (!favourites.contains(id)) {
@@ -84,11 +85,11 @@ class UserAPI {
 
   Future<void> removeFavouriteTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<dynamic> favourites = <String>[];
+    List<String> favourites = <String>[];
 
     await user.get().then((doc) {
       favourites =
-          doc.data()![type == "movie" ? "favouriteMovies" : "favouriteTvShows"];
+          doc[type == "movie" ? "favouriteMovies" : "favouriteTvShows"];
     });
 
     if (favourites.contains(id)) {
@@ -107,11 +108,10 @@ class UserAPI {
 
   Future<void> setWatchedTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<dynamic> watched = <String>[];
+    List<String> watched = <String>[];
 
     await user.get().then((doc) {
-      watched =
-          doc.data()![type == "movie" ? "watchedMovies" : "watchedTvShows"];
+      watched = doc[type == "movie" ? "watchedMovies" : "watchedTvShows"];
     });
 
     if (!watched.contains(id)) {
@@ -130,11 +130,10 @@ class UserAPI {
 
   Future<void> removeWatchedTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
-    List<dynamic> watched = <String>[];
+    List<String> watched = <String>[];
 
     await user.get().then((doc) {
-      watched =
-          doc.data()![type == "movie" ? "watchedMovies" : "watchedTvShows"];
+      watched = doc[type == "movie" ? "watchedMovies" : "watchedTvShows"];
     });
 
     if (watched.contains(id)) {
@@ -151,10 +150,28 @@ class UserAPI {
   }
 
   Future<void> setLoggedInUser() async {
-    var firstWhere = (await collection.get()).docs.firstWhere(
-        (element) => element["authId"] == Authentication().loggedInUser!.uid);
-    Map<String, num> map = Map.from(firstWhere["genrePreferences"]);
-    loggedInUser = User.fromDocSnapshotAndMap(firstWhere, map);
+    var docs = (await collection.get()); //.firstWhere(
+    //(element) => element["authId"] == Authentication().loggedInUser!.uid)
+    QueryDocumentSnapshot<Map<String, dynamic>>? user;
+    for (var element in docs.docs) {
+      if (element["authId"] == Authentication().loggedInUser!.uid) {
+        user = element;
+        break;
+      }
+    }
+    Map<String, num> map = Map.from(user!["genrePreferences"]);
+    loggedInUser = UserModel(
+        id: user.id,
+        name: user["name"],
+        gender: user["gender"],
+        imageDownloadUrl: user["imageDownloadUrl"],
+        authId: user["authId"],
+        age: user["age"],
+        genrePreferences: map,
+        favouriteMovies: user["favouriteMovies"],
+        favouriteTvShows: user["favouriteTvShows"],
+        watchedMovies: user["watchedMovies"],
+        watchedTvShows: user["watchedTvShows"]);
   }
 
   Future<String> uploadProfilePicture(XFile imageFile, String filename) async {

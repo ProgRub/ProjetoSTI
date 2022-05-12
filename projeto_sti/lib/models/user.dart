@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class UserModel {
   String id, name, gender, imageDownloadUrl, authId;
   int age;
   Map<String, num> genrePreferences;
-  var favouriteMovies, favouriteTvShows, watchedMovies, watchedTvShows;
+  List<dynamic> favouriteMovies,
+      favouriteTvShows,
+      watchedMovies,
+      watchedTvShows;
 
-  User(
+  UserModel(
       {required this.id,
       required this.name,
       required this.gender,
@@ -19,20 +22,21 @@ class User {
       required this.watchedMovies,
       required this.watchedTvShows});
 
-  User.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
+  UserModel.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
         name = apiResponse["name"],
         gender = apiResponse["gender"],
         age = apiResponse["age"],
         authId = apiResponse["authId"],
         genrePreferences = apiResponse["genrePreferences"],
+        imageDownloadUrl = apiResponse["imageDownloadUrl"],
         favouriteMovies = apiResponse["favouriteMovies"],
         favouriteTvShows = apiResponse["favouriteTvShows"],
-        imageDownloadUrl = apiResponse["imageDownloadUrl"],
         watchedMovies = apiResponse["watchedMovies"],
         watchedTvShows = apiResponse["watchedTvShows"];
 
-  User.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> documentSnapshot)
+  UserModel.fromDocSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot)
       : id = documentSnapshot.id,
         name = documentSnapshot["name"],
         gender = documentSnapshot["gender"],
@@ -45,7 +49,7 @@ class User {
         watchedMovies = documentSnapshot["watchedMovies"],
         watchedTvShows = documentSnapshot["watchedTvShows"];
 
-  User.fromDocSnapshotAndMap(
+  UserModel.fromDocSnapshotAndMap(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot,
       Map<String, num> genrePrefs)
       : id = documentSnapshot.id,
@@ -54,9 +58,9 @@ class User {
         age = documentSnapshot["age"],
         authId = documentSnapshot["authId"],
         imageDownloadUrl = documentSnapshot["imageDownloadUrl"],
-        favouriteMovies = documentSnapshot["favouriteMovies"],
-        favouriteTvShows = documentSnapshot["favouriteTvShows"],
-        watchedMovies = documentSnapshot["watchedMovies"],
-        watchedTvShows = documentSnapshot["watchedTvShows"],
+        favouriteMovies = documentSnapshot["favouriteMovies"].values,
+        favouriteTvShows = documentSnapshot["favouriteTvShows"].values,
+        watchedMovies = documentSnapshot["watchedMovies"].values,
+        watchedTvShows = documentSnapshot["watchedTvShows"].values,
         genrePreferences = genrePrefs;
 }

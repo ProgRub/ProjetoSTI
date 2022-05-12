@@ -131,7 +131,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                                 context, "error", "Upload your photo!");
                           } else {
                             UserAPI().addUser(
-                                User(
+                                UserModel(
                                     id: "",
                                     name: _name.text,
                                     gender: _gender.toString(),
@@ -139,10 +139,10 @@ class _UserInfoState extends State<UserInfoScreen> {
                                     imageDownloadUrl: "",
                                     authId: "",
                                     genrePreferences: {},
-                                    favouriteMovies: {},
-                                    favouriteTvShows: {},
-                                    watchedMovies: {},
-                                    watchedTvShows: {}),
+                                    favouriteMovies: [],
+                                    favouriteTvShows: [],
+                                    watchedMovies: [],
+                                    watchedTvShows: []),
                                 imageFile!);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

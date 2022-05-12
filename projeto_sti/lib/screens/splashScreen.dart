@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/users.dart';
@@ -19,16 +20,19 @@ class SplashScreen extends StatefulWidget {
 class _SplashState extends State<SplashScreen> {
   @override
   void initState() {
-    var auth = Authentication();
     super.initState();
-    Timer(const Duration(seconds: 2), () {
-      if (auth.loggedInUser == null) {
+    Authentication().auth.idTokenChanges().listen((User? user) async {
+      if (user == null) {
+        print('User is currently signed out!');
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => const LoginScreen()));
-        return;
+      } else {
+        Authentication().loggedInUser = user;
+        await UserAPI().setLoggedInUser();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => const MainScreen()));
+        print('User is signed in!');
       }
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => const MainScreen()));
     });
   }
 

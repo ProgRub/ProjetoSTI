@@ -6,22 +6,27 @@ import 'package:projeto_sti/api/users.dart';
 // import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class Authentication {
-  Authentication._privateConstructor() {
-    _auth.idTokenChanges().listen((User? user) {
-      print("HERE");
+  Authentication._privateConstructor();
+
+  Future<bool> checkSavedSession() async {
+    var boolean = false;
+    auth.idTokenChanges().listen((User? user) async {
+      print("CheckSession");
       if (user == null) {
-        // print('User is currently signed out!');
+        print('User is currently signed out!');
       } else {
         loggedInUser = user;
-        UserAPI().setLoggedInUser();
-        // print('User is signed in!');
+        await UserAPI().setLoggedInUser();
+        print('User is signed in!');
+        boolean = true;
       }
     });
+    return boolean;
   }
 
   static final Authentication _instance = Authentication._privateConstructor();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   factory Authentication() {
     return _instance;
   }
@@ -31,11 +36,11 @@ class Authentication {
   /// To sign user out.
   void signOut() async {
     // bool someoneSignedIn = false;
-    final User? user = await _auth.currentUser;
+    final User? user = await auth.currentUser;
     if (user == null) {
       return;
     }
-    await _auth.signOut();
+    await auth.signOut();
     // final String uid = user.uid;
   }
 
@@ -73,7 +78,7 @@ class Authentication {
       throw SignUpException("passwords-dont-match");
     }
     try {
-      final User? user = (await _auth.createUserWithEmailAndPassword(
+      final User? user = (await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       ))
@@ -114,7 +119,7 @@ class Authentication {
       throw LoginException("empty-password");
     }
     try {
-      final User? user = (await _auth.signInWithEmailAndPassword(
+      final User? user = (await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       ))
