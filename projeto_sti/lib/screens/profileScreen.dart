@@ -11,6 +11,7 @@ import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
 import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
+import 'package:projeto_sti/models/user.dart';
 import 'package:projeto_sti/screens/editProfileScreen.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
@@ -19,6 +20,8 @@ import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 
+import '../api/genres.dart';
+import '../models/genre.dart';
 import 'loginScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,7 +35,7 @@ class _ProfileState extends State<ProfileScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
   late List<GenreOval> genres;
-  String usersName = UserAPI().loggedInUser!.name;
+  UserModel user = UserAPI().loggedInUser!;
 
   late int numberFavourites;
 
@@ -273,7 +276,7 @@ class _ProfileState extends State<ProfileScreen> {
                   Authentication().logout();
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (BuildContext context) => const LoginScreen()));
-                }, //PARA TESTAR
+                },
                 child: Stack(children: [
                   _buildQuarterCircle(80, Colors.white),
                   Padding(
@@ -314,7 +317,7 @@ class _ProfileState extends State<ProfileScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 50.0),
-                    child: Text(usersName, style: Styles.fonts.label),
+                    child: Text(user.name, style: Styles.fonts.label),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -339,12 +342,31 @@ class _ProfileState extends State<ProfileScreen> {
                     ],
                   ),
                   _buildTextLabel("Favourite Genres", Styles.fonts.label),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ...genres,
-                    ],
-                  ),
+                  FutureBuilder(
+                      future: GenresAPI().getGenresByName(user.getTopGenres(3)),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Genre>> snapshot) {
+                        List<GenreOval> list = <GenreOval>[];
+                        if (snapshot.hasData) {
+                          for (var genre in snapshot.data!) {
+                            list.add(GenreOval(
+                                text: genre.name, color: genre.color));
+                          }
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 30.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: list,
+                          ),
+                        );
+                      }),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     ...genres,
+                  //   ],
+                  // ),
                   _buildTextLabel("Watched", Styles.fonts.label),
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0),

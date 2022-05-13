@@ -15,7 +15,7 @@ class GenreOval extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: 90,
+      width: 100,
       height: 30,
       decoration: BoxDecoration(
           color: Styles.colors.genre,
