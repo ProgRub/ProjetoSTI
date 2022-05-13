@@ -259,18 +259,25 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await authentication.login(_email.text, _password.text);
       var chosenGenres = UserAPI().loggedInUser!.genrePreferences.isNotEmpty;
-      showPopupMessage(context, "success", "Successfully logged in!");
-      Timer(
-        const Duration(seconds: 3),
-        () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => (chosenGenres
-                ? const MainScreen()
-                : const ChooseGenresScreen()),
-          ),
+      // showPopupMessage(context, "success", "Successfully logged in!");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              (chosenGenres ? const MainScreen() : const ChooseGenresScreen()),
         ),
       );
+      // Timer(
+      //   const Duration(seconds: 3),
+      //   () => Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => (chosenGenres
+      //           ? const MainScreen()
+      //           : const ChooseGenresScreen()),
+      //     ),
+      //   ),
+      // );
     } on LoginException catch (e) {
       String message = "";
       switch (e.code) {

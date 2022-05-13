@@ -63,4 +63,22 @@ class UserModel {
         watchedMovies = documentSnapshot["watchedMovies"].values,
         watchedTvShows = documentSnapshot["watchedTvShows"].values,
         genrePreferences = genrePrefs;
+
+  List<String> getTopGenres(int amount) {
+    List<String> topGenres = [];
+    topGenres = genrePreferences.keys.take(amount).toList();
+    for (var genre in genrePreferences.keys.skip(amount)) {
+      var lower = topGenres.firstWhere((element) {
+        // print("Top: $element: $genrePreferences[element]!");
+        // print("Comparing: $genre: $genrePreferences[genre]!");
+        return genrePreferences[element]! < genrePreferences[genre]!;
+      }, orElse: () => "");
+      // print(lower);
+      if (lower.isNotEmpty) {
+        topGenres.remove(lower);
+        topGenres.add(genre);
+      }
+    }
+    return topGenres;
+  }
 }

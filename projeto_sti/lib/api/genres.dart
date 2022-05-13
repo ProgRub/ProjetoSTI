@@ -20,6 +20,7 @@ class GenresAPI {
     await getNewGenresFromMoviesAndTvShows();
     List<Genre> genres = [];
     var genresApi = await collection.get();
+    print(Color.fromARGB(255, 0, 255, 247).value);
     for (var genre in genresApi.docs) {
       genres.add(Genre.fromApi(genre));
       collection.doc(genre.id).update({"Image": genres.last.name + ".jpg"});
@@ -55,7 +56,7 @@ class GenresAPI {
   }
 
   Future<void> addGenreIfNotInDB(String name) async {
-    var genres = await firebase.collection('genres').get();
+    var genres = await collection.get();
     var genreNamesInDB = [];
     for (var genre in genres.docs) {
       genreNamesInDB.add(genre['name']);
@@ -65,6 +66,16 @@ class GenresAPI {
   }
 
   Future<void> addGenre(String name, {Color color = Colors.white}) async {
-    firebase.collection('genres').add({'name': name, 'color': color.value});
+    collection.add({'name': name, 'color': color.value});
+  }
+
+  Future<List<Genre>> getGenresByName(List<String> names) async {
+    var genres = await collection.get();
+    List<Genre> genresList = [];
+    for (var genre in names) {
+      genresList.add(Genre.fromApi(
+          genres.docs.firstWhere((element) => element["name"] == genre)));
+    }
+    return genresList;
   }
 }

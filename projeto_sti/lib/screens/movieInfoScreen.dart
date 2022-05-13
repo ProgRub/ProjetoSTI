@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/genres.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
@@ -11,6 +12,8 @@ import 'package:projeto_sti/models/movie.dart';
 
 import 'package:like_button/like_button.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../models/genre.dart';
 
 class MovieInfoScreen extends StatefulWidget {
   final Movie movie;
@@ -24,7 +27,6 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   bool playingTrailer = false;
   late String trailerUrl;
 
-  late List<GenreOval> genres;
   late bool watched;
   final Movie movie;
 
@@ -45,7 +47,6 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         loop: false,
       ),
     );
-    genres = _favouriteGenres();
     super.initState();
   }
 
@@ -59,14 +60,6 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   void dispose() {
     _videoController.dispose();
     super.dispose();
-  }
-
-  List<GenreOval> _favouriteGenres() {
-    List<GenreOval> list = <GenreOval>[];
-    for (var title in movie.genres) {
-      list.add(GenreOval(text: title, color: _randomColor()));
-    }
-    return list;
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
@@ -302,16 +295,23 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
       ),
     );
-
-    var genresSection = Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ...genres,
-        ],
-      ),
-    );
+    var genresSection = FutureBuilder(
+        future: GenresAPI().getGenresByName(movie.genres),
+        builder: (BuildContext context, AsyncSnapshot<List<Genre>> snapshot) {
+          List<GenreOval> list = <GenreOval>[];
+          if (snapshot.hasData) {
+            for (var genre in snapshot.data!) {
+              list.add(GenreOval(genre: genre));
+            }
+          }
+          return Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: list,
+            ),
+          );
+        });
 
     var infoSection = Padding(
       padding: const EdgeInsets.only(top: 30.0),
