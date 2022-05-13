@@ -295,7 +295,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
           List<GenreOval> list = <GenreOval>[];
           if (snapshot.hasData) {
             for (var genre in snapshot.data!) {
-              list.add(GenreOval(text: genre.name, color: genre.color));
+              list.add(GenreOval(genre: genre));
             }
           }
           return Padding(

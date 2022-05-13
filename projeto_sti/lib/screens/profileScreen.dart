@@ -34,7 +34,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileState extends State<ProfileScreen> {
   late int selectedCategory = 0;
   late List<String> sections;
-  late List<GenreOval> genres;
   UserModel user = UserAPI().loggedInUser!;
 
   late int numberFavourites;
@@ -51,7 +50,6 @@ class _ProfileState extends State<ProfileScreen> {
     movies = <Movie>[];
     tvShows = <TvShow>[];
     sections = ["Movies", "Tv Shows"];
-    genres = _favouriteGenres();
     numberFavourites = 0;
     super.initState();
   }
@@ -59,14 +57,6 @@ class _ProfileState extends State<ProfileScreen> {
   int _countNumberFavourites() {
     return UserAPI().loggedInUser!.favouriteMovies.length +
         UserAPI().loggedInUser!.favouriteTvShows.length;
-  }
-
-  List<GenreOval> _favouriteGenres() {
-    List<GenreOval> list = <GenreOval>[];
-    for (var title in UserAPI().getGenrePreferences()) {
-      list.add(GenreOval(text: title, color: _randomColor()));
-    }
-    return list;
   }
 
   Center noWatchedMessage(String type) {
@@ -349,8 +339,7 @@ class _ProfileState extends State<ProfileScreen> {
                         List<GenreOval> list = <GenreOval>[];
                         if (snapshot.hasData) {
                           for (var genre in snapshot.data!) {
-                            list.add(GenreOval(
-                                text: genre.name, color: genre.color));
+                            list.add(GenreOval(genre: genre));
                           }
                         }
                         return Padding(

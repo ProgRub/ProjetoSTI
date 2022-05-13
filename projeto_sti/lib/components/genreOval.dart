@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/screens/byGenreScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
-class GenreOval extends StatelessWidget {
-  final String text;
-  final Color color;
+import '../models/genre.dart';
 
-  const GenreOval({
-    required this.text,
-    Key? key,
-    required this.color,
-  }) : super(key: key);
+class GenreOval extends StatelessWidget {
+  final Genre genre;
+
+  const GenreOval({Key? key, required this.genre}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +19,18 @@ class GenreOval extends StatelessWidget {
           color: Styles.colors.genre,
           border: Border.all(
             width: 2.0,
-            color: color,
+            color: genre.color,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(20))),
-      child: Text(text, style: Styles.fonts.genre),
+      child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ByGenreScreen(genre: genre),
+                ));
+          },
+          child: Text(genre.name, style: Styles.fonts.genre)),
     );
   }
 }
