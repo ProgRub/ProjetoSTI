@@ -15,23 +15,36 @@ class GeneralAPI {
     return _instance;
   }
 
-  Future<Set<String>> getSearchTerms() async {
-    Set<String> results = {};
+  Future<Set<Object?>> getSearchTerms() async {
+    Set<Object?> results = {};
     var movies = await MoviesAPI().getAllMovies();
     var tvShows = await TVShowsAPI().getAllTvShows();
+    int index = 0;
+    print(movies.length);
+    print(tvShows.length);
     for (var movie in movies) {
-      results.add(movie.title);
-      results.addAll(movie.cast);
-      results.addAll(movie.directors);
+      index++;
+      print(movie.title);
+      results.add(movie);
+      // results.add(movie.title);
+      // results.addAll(movie.cast);
+      // results.addAll(movie.directors);
     }
-    for (var tvShow in tvShows) {
-      results.add(tvShow.title);
-      results.addAll(tvShow.cast);
-      results.addAll(tvShow.writers);
-    }
-    Set<String> sortedSet =
-        SplayTreeSet.from(results, (a, b) => a.compareTo(b));
+    print(index);
+    index = 0;
 
-    return sortedSet;
+    for (var tvShow in tvShows) {
+      index++;
+      print(tvShow.title);
+      results.add(tvShow);
+      // results.add(tvShow.title);
+      // results.addAll(tvShow.cast);
+      // results.addAll(tvShow.writers);
+    }
+    print(index);
+    // Set<String> sortedSet =
+    //     SplayTreeSet.from(results, (a, b) => a.compareTo(b));
+
+    return results;
   }
 }

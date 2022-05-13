@@ -129,8 +129,8 @@ class _ByGenreState extends State<ByGenreScreen> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 8 / 10,
-                  crossAxisSpacing: 0,
+                  childAspectRatio: 7 / 10,
+                  crossAxisSpacing: 10,
                   mainAxisSpacing: 15,
                   crossAxisCount: 2),
               itemCount: tvShows.length,

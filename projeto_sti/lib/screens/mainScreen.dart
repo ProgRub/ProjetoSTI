@@ -284,13 +284,9 @@ class _MainScreenState extends State<MainScreen> {
       ],
     );
 
-    String _checkType(String value) {
-      for (var movie in movies) {
-        if (movie.title == value) return "Movie";
-      }
-      for (var tvShow in tvShows) {
-        if (tvShow.title == value) return "Tv Show";
-      }
+    String _checkType(dynamic value) {
+      if (value.runtimeType == Movie) return "Movie";
+      if (value.runtimeType == TvShow) return "Tv Show";
 
       return "Person";
     }
@@ -299,7 +295,8 @@ class _MainScreenState extends State<MainScreen> {
         padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
         child: FutureBuilder(
           future: GeneralAPI().getSearchTerms(),
-          builder: (BuildContext context, AsyncSnapshot<Set<String>> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<Set<Object?>> snapshot) {
             Widget child;
             child = TextField(
               autocorrect: false,
@@ -308,7 +305,7 @@ class _MainScreenState extends State<MainScreen> {
               decoration: InputDecoration(
                 hintText: 'What are you looking for?',
                 hintStyle: Styles.fonts.hintText,
-                fillColor: Colors.white,
+                fillColor: Colors.black,
                 filled: true,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                 prefixIcon: Icon(Icons.search,
@@ -329,25 +326,61 @@ class _MainScreenState extends State<MainScreen> {
               child = GFSearchBar(
                 searchList: snapshot.data!.toList(),
                 searchQueryBuilder: (query, list) => list.where((item) {
-                  return item!
-                      .toString()
-                      .toLowerCase()
-                      .contains(query.toLowerCase());
+                  if (item!.runtimeType == Movie) {
+                    Movie movie = item as Movie;
+                    return movie.title
+                        .toString()
+                        .toLowerCase()
+                        .contains(query.toLowerCase());
+                  } else {
+                    TvShow tvShow = item as TvShow;
+                    return tvShow.title
+                        .toString()
+                        .toLowerCase()
+                        .contains(query.toLowerCase());
+                  }
+
+                  // } else if (item.runtimeType == TvShow) {
+                  //   TvShow tvShow = item as TvShow;
+                  //   return tvShow.title
+                  //       .toString()
+                  //       .toLowerCase()
+                  //       .contains(query.toLowerCase());
+                  // }
+
+                  // return item!
+                  //     .toString()
+                  //     .toLowerCase()
+                  //     .contains(query.toLowerCase());
                 }).toList(),
-                overlaySearchListItemBuilder: (dynamic item) => Container(
-                  height: 60,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Colors.black,
-                    child: ListTile(
-                      title: Text(item, style: Styles.fonts.commentName),
-                      trailing:
-                          Text(_checkType(item), style: Styles.fonts.comment),
+                overlaySearchListItemBuilder: (dynamic item) {
+                  String title, year, actors;
+                  if (item!.runtimeType == Movie) {
+                    Movie movie = item as Movie;
+                    title = movie.title;
+                    year = movie.year.toString();
+                    actors = movie.cast.join(", ");
+                  } else {
+                    TvShow tvShow = item as TvShow;
+                    title = tvShow.title;
+                    year = tvShow.years;
+                    actors = tvShow.cast.join(", ");
+                  }
+                  return Container(
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
                     ),
-                  ),
-                ),
+                    child: Card(
+                      color: Colors.black,
+                      child: ListTile(
+                        title: Text(title, style: Styles.fonts.commentName),
+                        trailing:
+                            Text(_checkType(item), style: Styles.fonts.comment),
+                      ),
+                    ),
+                  );
+                },
                 onItemSelected: (dynamic item) {
                   setState(() {
                     for (var movie in movies) {

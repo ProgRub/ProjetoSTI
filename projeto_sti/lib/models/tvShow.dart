@@ -58,7 +58,7 @@ class TvShow {
     Reference ref =
         FirebaseStorage.instance.ref().child("tvShowPosters/" + poster);
     String url = (await ref.getDownloadURL()).toString();
-    return Image.network(url);
+    return Image.network(url, width: 150, height: 220, fit: BoxFit.fill);
   }
 
   Future<Image> getWallpaper(double height,

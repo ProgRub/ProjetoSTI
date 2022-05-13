@@ -66,22 +66,25 @@ class _ProfileState extends State<ProfileScreen> {
     return list;
   }
 
-  Center noWatchedMessage(String type) {
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image.asset("packages/projeto_sti/assets/images/popcorn.png",
-            width: 80, height: 80),
-        Text("You haven't watched any $type!", style: Styles.fonts.label)
-      ],
-    ));
+  SizedBox noWatchedMessage(String type) {
+    return SizedBox(
+      height: 200,
+      child: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset("packages/projeto_sti/assets/images/popcorn.png",
+              width: 80, height: 80),
+          Text("You haven't watched any $type!", style: Styles.fonts.label)
+        ],
+      )),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     var moviesGrid = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
         child: FutureBuilder(
           future: moviesFuture,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
@@ -135,7 +138,7 @@ class _ProfileState extends State<ProfileScreen> {
         ));
 
     var tvShowsGrid = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
         child: FutureBuilder(
           future: tvShowsFuture,
           builder:
@@ -152,8 +155,8 @@ class _ProfileState extends State<ProfileScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 8 / 10,
-                    crossAxisSpacing: 0,
+                    childAspectRatio: 7 / 10,
+                    crossAxisSpacing: 10,
                     mainAxisSpacing: 15,
                     crossAxisCount: 2),
                 itemCount: tvShows.length,

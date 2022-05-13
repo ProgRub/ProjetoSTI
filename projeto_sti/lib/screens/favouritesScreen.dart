@@ -104,7 +104,7 @@ class _FavouritesState extends State<FavouritesScreen> {
         ));
 
     var tvShowsGrid = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: FutureBuilder(
           future: tvShowsFuture,
           builder:
@@ -122,7 +122,7 @@ class _FavouritesState extends State<FavouritesScreen> {
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 7 / 10,
-                    crossAxisSpacing: 0,
+                    crossAxisSpacing: 10,
                     mainAxisSpacing: 15,
                     crossAxisCount: 2),
                 itemCount: tvShows.length,
