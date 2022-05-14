@@ -59,6 +59,31 @@ class UserAPI {
     return genres;
   }
 
+  Future<void> updateUserPreferences(
+      {int? age, String? name, XFile? imageFile, String? email}) async {
+    var user = collection.doc(loggedInUser!.id);
+    if (age != null) {
+      loggedInUser!.age = age;
+      user.update({"age": age});
+    }
+
+    if (name != null) {
+      loggedInUser!.name = name;
+      user.update({"name": name});
+    }
+
+    if (imageFile != null) {
+      var image = await uploadProfilePicture(
+          imageFile, Authentication().loggedInUser!.uid);
+      loggedInUser!.imageDownloadUrl = image;
+      user.update({"imageDownloadUrl": image});
+    }
+
+    if (email != null) {
+      Authentication().auth.currentUser!.updateEmail(email);
+    }
+  }
+
   Future<void> setFavouriteTvShowOrMovie(String type, String id) async {
     var user = collection.doc(loggedInUser!.id);
     List<dynamic> favourites = <String>[];

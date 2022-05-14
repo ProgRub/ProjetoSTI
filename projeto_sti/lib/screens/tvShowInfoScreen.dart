@@ -142,7 +142,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 150.0),
+          padding: const EdgeInsets.only(top: 140.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -173,11 +173,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 225.0),
+          padding: const EdgeInsets.only(top: 210.0),
           child: Center(child: Text(tvShow.title, style: Styles.fonts.title)),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 235.0),
+          padding: const EdgeInsets.only(top: 240.0),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             const Padding(
@@ -185,11 +185,16 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
               child:
                   Icon(Icons.share_outlined, size: 40.0, color: Colors.white),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
+            Container(
+              padding: const EdgeInsets.all(3.0),
+              decoration: BoxDecoration(
+                color: Styles.colors.darker,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
               child: Row(children: [
                 Text(
-                  tvShow.seasons.toString() + " Seasons  |",
+                  tvShow.seasons.toString() +
+                      (tvShow.seasons == 1 ? " Season  |" : " Seasons  |"),
                   style: Styles.fonts.rating,
                 ),
                 const SizedBox(

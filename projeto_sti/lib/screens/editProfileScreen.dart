@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/authentication.dart';
+import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/inputField.dart';
@@ -34,9 +36,9 @@ class _EditProfileState extends State<EditProfileScreen> {
 
   @override
   initState() {
-    _name.text = "Susan Ceal";
-    _email.text = "susan.ceal@gmail.com";
-    _age.text = "18";
+    _name.text = UserAPI().loggedInUser!.name;
+    _email.text = Authentication().loggedInUser!.email.toString();
+    _age.text = UserAPI().loggedInUser!.age.toString();
     super.initState();
   }
 
@@ -88,7 +90,7 @@ class _EditProfileState extends State<EditProfileScreen> {
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: imageFile == null
-                    ? null
+                    ? NetworkImage(UserAPI().loggedInUser!.imageDownloadUrl)
                     : Image.file(File(imageFile!.path)).image,
                 radius: 46.0,
               ),
@@ -149,9 +151,7 @@ class _EditProfileState extends State<EditProfileScreen> {
           primary: Styles.colors.purple,
           minimumSize: const Size(300, 40),
         ),
-        onPressed: () {
-          if (_userEditFormKey.currentState!.validate()) {}
-        },
+        onPressed: () {},
         child: Text(
           'Change Password',
           style: Styles.fonts.button,
@@ -188,7 +188,20 @@ class _EditProfileState extends State<EditProfileScreen> {
           minimumSize: const Size(300, 50),
         ),
         onPressed: () {
-          if (_userEditFormKey.currentState!.validate()) {}
+          if (_userEditFormKey.currentState!.validate()) {
+            bool changedAge =
+                _age.text != UserAPI().loggedInUser!.age.toString();
+            bool changedEmail =
+                _email.text != Authentication().loggedInUser!.email.toString();
+            bool changedName = _name.text != UserAPI().loggedInUser!.name;
+            bool changedPhoto = imageFile != null;
+
+            UserAPI().updateUserPreferences(
+                age: changedAge ? int.parse(_age.text) : null,
+                name: changedName ? _name.text : null,
+                email: changedEmail ? _email.text : null,
+                imageFile: changedPhoto ? imageFile : null);
+          }
         },
         child: Text(
           'Save Changes',

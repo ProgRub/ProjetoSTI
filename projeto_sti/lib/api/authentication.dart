@@ -29,6 +29,10 @@ class Authentication {
     // final String uid = user.uid;
   }
 
+  Future<void> deleteUser() {
+    return loggedInUser!.delete();
+  }
+
   /// To register user.
   ///
   /// A [SignUpException] maybe thrown with the following error code:
