@@ -16,6 +16,8 @@ import 'package:projeto_sti/validators.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
 
+import 'editPasswordScreen.dart';
+
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
 
@@ -34,8 +36,11 @@ class _EditProfileState extends State<EditProfileScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _age = TextEditingController();
 
+  late String newPassword;
+
   @override
   initState() {
+    newPassword = "";
     _name.text = UserAPI().loggedInUser!.name;
     _email.text = Authentication().loggedInUser!.email.toString();
     _age.text = UserAPI().loggedInUser!.age.toString();
@@ -151,7 +156,7 @@ class _EditProfileState extends State<EditProfileScreen> {
           primary: Styles.colors.purple,
           minimumSize: const Size(300, 40),
         ),
-        onPressed: () {},
+        onPressed: () => _getPasswordChanged(context),
         child: Text(
           'Change Password',
           style: Styles.fonts.button,
@@ -195,12 +200,14 @@ class _EditProfileState extends State<EditProfileScreen> {
                 _email.text != Authentication().loggedInUser!.email.toString();
             bool changedName = _name.text != UserAPI().loggedInUser!.name;
             bool changedPhoto = imageFile != null;
+            bool changedPassword = newPassword.isNotEmpty;
 
             UserAPI().updateUserPreferences(
                 age: changedAge ? int.parse(_age.text) : null,
                 name: changedName ? _name.text : null,
                 email: changedEmail ? _email.text : null,
-                imageFile: changedPhoto ? imageFile : null);
+                imageFile: changedPhoto ? imageFile : null,
+                password: changedPassword ? newPassword : null);
           }
         },
         child: Text(
@@ -261,7 +268,7 @@ class _EditProfileState extends State<EditProfileScreen> {
     );
   }
 
-  _navigateAndDisplayChange(BuildContext context) async {
+  Future _navigateAndDisplayChange(BuildContext context) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => InputScreen(text: _name.text)),
@@ -270,6 +277,19 @@ class _EditProfileState extends State<EditProfileScreen> {
     setState(
       () {
         _name.text = result;
+      },
+    );
+  }
+
+  Future _getPasswordChanged(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
+    );
+
+    setState(
+      () {
+        newPassword = result;
       },
     );
   }

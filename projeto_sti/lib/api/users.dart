@@ -60,27 +60,39 @@ class UserAPI {
   }
 
   Future<void> updateUserPreferences(
-      {int? age, String? name, XFile? imageFile, String? email}) async {
+      {int? age,
+      String? name,
+      XFile? imageFile,
+      String? email,
+      String? password}) async {
     var user = collection.doc(loggedInUser!.id);
+    Map<String, Object> changes = {};
+
     if (age != null) {
       loggedInUser!.age = age;
-      user.update({"age": age});
+      changes["age"] = age;
     }
 
     if (name != null) {
       loggedInUser!.name = name;
-      user.update({"name": name});
+      changes["name"] = name;
     }
 
     if (imageFile != null) {
       var image = await uploadProfilePicture(
           imageFile, Authentication().loggedInUser!.uid);
       loggedInUser!.imageDownloadUrl = image;
-      user.update({"imageDownloadUrl": image});
+      changes["imageDownloadUrl"] = image;
     }
 
+    await user.update(changes);
+
     if (email != null) {
-      Authentication().auth.currentUser!.updateEmail(email);
+      await Authentication().auth.currentUser!.updateEmail(email);
+    }
+
+    if (password != null) {
+      await Authentication().auth.currentUser!.updatePassword(password);
     }
   }
 
