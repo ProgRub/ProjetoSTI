@@ -10,6 +10,7 @@ import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:like_button/like_button.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -184,10 +185,17 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
           padding: const EdgeInsets.only(top: 240.0),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 30.0),
-              child:
-                  Icon(Icons.share_outlined, size: 40.0, color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0),
+              child: GestureDetector(
+                  onTap: () {
+                    Share.share(
+                        "You're going to love this tv show! Read more about " +
+                            tvShow.title +
+                            " on POPCORN!");
+                  },
+                  child: const Icon(Icons.share_outlined,
+                      size: 40.0, color: Colors.white)),
             ),
             Container(
               padding: const EdgeInsets.all(3.0),
