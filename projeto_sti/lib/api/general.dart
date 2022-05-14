@@ -38,7 +38,6 @@ class GeneralAPI {
       // results.addAll(tvShow.cast);
       // results.addAll(tvShow.writers);
     }
-
     // Set<String> sortedSet =
     //     SplayTreeSet.from(results, (a, b) => a.compareTo(b));
 
