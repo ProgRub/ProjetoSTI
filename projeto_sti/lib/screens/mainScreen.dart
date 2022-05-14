@@ -38,10 +38,14 @@ class _MainScreenState extends State<MainScreen> {
   late Future<List<TvShow>> tvShowsFuture;
   List<TvShow> tvShows = [];
 
+  late Map<String, Future<Image>> posters;
+
   @override
   initState() {
     moviesFuture = MoviesAPI().getAllMovies();
     tvShowsFuture = TVShowsAPI().getAllTvShows();
+    posters = {};
+
     super.initState();
     _controller = ScrollController();
     _controller.addListener(() {
@@ -354,30 +358,71 @@ class _MainScreenState extends State<MainScreen> {
                   //     .contains(query.toLowerCase());
                 }).toList(),
                 overlaySearchListItemBuilder: (dynamic item) {
-                  String title, year, actors;
+                  String id, title, year, actors;
                   if (item!.runtimeType == Movie) {
                     Movie movie = item as Movie;
+                    id = movie.id;
                     title = movie.title;
                     year = movie.year.toString();
                     actors = movie.cast.join(", ");
+                    posters[movie.id] = movie.getPoster();
                   } else {
                     TvShow tvShow = item as TvShow;
+                    id = tvShow.id;
                     title = tvShow.title;
-                    year = tvShow.years;
+                    if (tvShow.years.contains("–")) {
+                      year = tvShow.years.split("–")[0];
+                    } else {
+                      year = tvShow.years;
+                    }
+
                     actors = tvShow.cast.join(", ");
+                    posters[tvShow.id] = tvShow.getPoster();
                   }
                   return Container(
-                    height: 60,
                     decoration: const BoxDecoration(
                       color: Colors.black,
                     ),
-                    child: Card(
-                      color: Colors.black,
-                      child: ListTile(
-                        title: Text(title, style: Styles.fonts.commentName),
-                        trailing:
-                            Text(_checkType(item), style: Styles.fonts.comment),
-                      ),
+                    child: Column(
+                      children: [
+                        Container(height: 1, color: Styles.colors.lightBlue),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Card(
+                            color: Colors.black,
+                            child: ListTile(
+                              leading: FutureBuilder(
+                                future: posters[id],
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<Image> snapshot) {
+                                  Widget child;
+                                  child = const SkeletonItem(
+                                    child: SkeletonAvatar(
+                                      style: SkeletonAvatarStyle(
+                                        width: 40,
+                                        height: 100,
+                                      ),
+                                    ),
+                                  );
+                                  if (snapshot.hasData) {
+                                    child = SizedBox(
+                                        width: 40,
+                                        height: 100,
+                                        child: snapshot.data!);
+                                  }
+                                  return child;
+                                },
+                              ),
+                              title: Text("$title ($year)",
+                                  style: Styles.fonts.commentName),
+                              subtitle:
+                                  Text(actors, style: Styles.fonts.comment),
+                              trailing: Text(_checkType(item),
+                                  style: Styles.fonts.comment),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },

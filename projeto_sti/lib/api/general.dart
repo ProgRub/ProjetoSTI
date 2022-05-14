@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 
@@ -19,29 +20,25 @@ class GeneralAPI {
     Set<Object?> results = {};
     var movies = await MoviesAPI().getAllMovies();
     var tvShows = await TVShowsAPI().getAllTvShows();
-    int index = 0;
-    print(movies.length);
-    print(tvShows.length);
+
+    Map<String, Future<Image>> posters = {};
+
     for (var movie in movies) {
-      index++;
-      print(movie.title);
       results.add(movie);
+      posters[movie.id] = movie.getPoster();
       // results.add(movie.title);
       // results.addAll(movie.cast);
       // results.addAll(movie.directors);
     }
-    print(index);
-    index = 0;
 
     for (var tvShow in tvShows) {
-      index++;
-      print(tvShow.title);
       results.add(tvShow);
+      posters[tvShow.id] = tvShow.getPoster();
       // results.add(tvShow.title);
       // results.addAll(tvShow.cast);
       // results.addAll(tvShow.writers);
     }
-    print(index);
+
     // Set<String> sortedSet =
     //     SplayTreeSet.from(results, (a, b) => a.compareTo(b));
 

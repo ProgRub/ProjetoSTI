@@ -63,31 +63,43 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   }
 
   Future<bool> onLikeButtonTapped(bool isLiked) async {
+    var snackBar;
     if (!isLiked && !favourited) {
       favourited = !favourited;
+      snackBar =
+          SnackBar(content: Text(tvShow.title + " added to Favourites."));
       await UserAPI().setFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
     } else if (isLiked && favourited) {
       favourited = !favourited;
+      snackBar =
+          SnackBar(content: Text(tvShow.title + " removed from Favourites."));
       await UserAPI()
           .removeFavouriteTvShowOrMovie("tvShow", tvShow.id.toString());
     }
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
     setState(() {});
     return !isLiked;
   }
 
   Future<void> onWatchedButtonTapped() async {
+    var snackBar;
     if (!watched) {
+      snackBar =
+          SnackBar(content: Text(tvShow.title + " added to Watched Tv Shows."));
       await UserAPI().setWatchedTvShowOrMovie("tvShow", tvShow.id.toString());
       setState(() {
         watched = true;
       });
     } else {
+      snackBar = SnackBar(
+          content: Text(tvShow.title + " removed from Watched Tv Shows."));
       await UserAPI()
           .removeWatchedTvShowOrMovie("tvShow", tvShow.id.toString());
       setState(() {
         watched = false;
       });
     }
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

@@ -343,40 +343,38 @@ class _TopImdbState extends State<TopImdbScreen> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 60,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      image: poster.image,
-                      fit: BoxFit.fill,
-                    ),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: SizedBox(
+          height: 70,
+          child: Card(
+            elevation: 0,
+            color: Styles.colors.background,
+            child: ListTile(
+              leading: Container(
+                width: 40,
+                height: 70,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: poster.image,
+                    fit: BoxFit.fill,
                   ),
                 ),
-                const SizedBox(width: 40.0),
-                Text(
-                  "#$place - $title",
-                  style: Styles.fonts.label,
-                ),
-              ],
+              ),
+              title: Text("#$place - $title", style: Styles.fonts.commentName),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(rating.toString(), style: Styles.fonts.comment),
+                  const SizedBox(width: 5.0),
+                  const Icon(
+                    Icons.star,
+                    size: 18.0,
+                    color: Colors.yellow,
+                  ),
+                ],
+              ),
             ),
-            Row(children: [
-              Text(rating.toString(), style: Styles.fonts.rating),
-              const SizedBox(width: 5.0),
-              const Icon(
-                Icons.star,
-                size: 25.0,
-                color: Colors.yellow,
-              )
-            ])
-          ],
+          ),
         ),
       ),
     );
