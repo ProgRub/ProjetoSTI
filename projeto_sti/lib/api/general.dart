@@ -19,29 +19,29 @@ class GeneralAPI {
     Set<Object?> results = {};
     var movies = await MoviesAPI().getAllMovies();
     var tvShows = await TVShowsAPI().getAllTvShows();
-    int index = 0;
-    print(movies.length);
-    print(tvShows.length);
+    // int index = 0;
+    // print(movies.length);
+    // print(tvShows.length);
     for (var movie in movies) {
-      index++;
-      print(movie.title);
+      // index++;
+      // print(movie.title);
       results.add(movie);
       // results.add(movie.title);
       // results.addAll(movie.cast);
       // results.addAll(movie.directors);
     }
-    print(index);
-    index = 0;
+    // print(index);
+    // index = 0;
 
     for (var tvShow in tvShows) {
-      index++;
-      print(tvShow.title);
+      // index++;
+      // print(tvShow.title);
       results.add(tvShow);
       // results.add(tvShow.title);
       // results.addAll(tvShow.cast);
       // results.addAll(tvShow.writers);
     }
-    print(index);
+    // print(index);
     // Set<String> sortedSet =
     //     SplayTreeSet.from(results, (a, b) => a.compareTo(b));
 

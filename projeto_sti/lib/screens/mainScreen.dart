@@ -383,25 +383,31 @@ class _MainScreenState extends State<MainScreen> {
                 },
                 onItemSelected: (dynamic item) {
                   setState(() {
-                    for (var movie in movies) {
-                      if (movie.title == item) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  MovieInfoScreen(movie: movie),
-                            ));
-                        return;
+                    if (item.runtimeType == Movie) {
+                      Movie selected = item as Movie;
+                      for (var movie in movies) {
+                        if (movie.title == selected.title) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MovieInfoScreen(movie: movie),
+                              ));
+                          return;
+                        }
                       }
                     }
-                    for (var tvShow in tvShows) {
-                      if (tvShow.title == item) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TvShowInfoScreen(tvShow),
-                            ));
-                        return;
+                    if (item.runtimeType == TvShow) {
+                      TvShow selected = item as TvShow;
+                      for (var tvShow in tvShows) {
+                        if (tvShow.title == selected.title) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TvShowInfoScreen(tvShow),
+                              ));
+                          return;
+                        }
                       }
                     }
                     // for (var person in actors_directors_writers) {
