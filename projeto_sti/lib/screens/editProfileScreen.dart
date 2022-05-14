@@ -7,7 +7,9 @@ import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/inputScreen.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
+import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/screens/profileScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
@@ -17,6 +19,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
 
 import 'editPasswordScreen.dart';
+import 'loginScreen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -37,10 +40,12 @@ class _EditProfileState extends State<EditProfileScreen> {
   final TextEditingController _age = TextEditingController();
 
   late String newPassword;
+  late List<String> newGenrePreferences;
 
   @override
   initState() {
     newPassword = "";
+    newGenrePreferences = [];
     _name.text = UserAPI().loggedInUser!.name;
     _email.text = Authentication().loggedInUser!.email.toString();
     _age.text = UserAPI().loggedInUser!.age.toString();
@@ -174,7 +179,9 @@ class _EditProfileState extends State<EditProfileScreen> {
           primary: Styles.colors.greenButton,
           minimumSize: const Size(300, 40),
         ),
-        onPressed: () {},
+        onPressed: () {
+          _getNewGenrePreferences(context);
+        },
         child: Text(
           'Favourite Genres',
           style: Styles.fonts.button,
@@ -201,13 +208,26 @@ class _EditProfileState extends State<EditProfileScreen> {
             bool changedName = _name.text != UserAPI().loggedInUser!.name;
             bool changedPhoto = imageFile != null;
             bool changedPassword = newPassword.isNotEmpty;
+            bool changedGenrePreferences = newGenrePreferences.isNotEmpty;
 
             UserAPI().updateUserPreferences(
                 age: changedAge ? int.parse(_age.text) : null,
                 name: changedName ? _name.text : null,
                 email: changedEmail ? _email.text : null,
                 imageFile: changedPhoto ? imageFile : null,
-                password: changedPassword ? newPassword : null);
+                password: changedPassword ? newPassword : null,
+                selectedGenres:
+                    changedGenrePreferences ? newGenrePreferences : null);
+
+            showPopupMessageWithFunction(
+                context, "success", "Your changes have been saved!", () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+            });
           }
         },
         child: Text(
@@ -220,7 +240,18 @@ class _EditProfileState extends State<EditProfileScreen> {
     var deleteAccButton = Padding(
       padding: const EdgeInsets.only(right: 60, left: 60, bottom: 30.0),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          showPopupMessageWithFunction(
+              context, "error", "Are you sure you want to delete your account?",
+              () {
+            Authentication().deleteUser();
+            UserAPI().deleteUser();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          });
+        },
         child: Text(
           "Delete Account",
           style: Styles.fonts.reset,
@@ -290,6 +321,19 @@ class _EditProfileState extends State<EditProfileScreen> {
     setState(
       () {
         newPassword = result;
+      },
+    );
+  }
+
+  Future _getNewGenrePreferences(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChooseGenresScreen()),
+    );
+
+    setState(
+      () {
+        newGenrePreferences = result;
       },
     );
   }

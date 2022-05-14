@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projeto_sti/api/authentication.dart';
@@ -38,6 +35,15 @@ class UserAPI {
     setLoggedInUser();
   }
 
+  Future<void> deleteUser() async {
+    await collection.doc(loggedInUser!.id).delete();
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("userPictures/" + Authentication().loggedInUser!.uid);
+    await ref.delete();
+    loggedInUser = null;
+  }
+
   Future<void> setUserPreferences(List<String> selectedGenres) async {
     var genres = await GenresAPI().getAllGenres();
     Map<String, num> genrePreferences = {};
@@ -52,6 +58,8 @@ class UserAPI {
 
   List<String> getGenrePreferences() {
     List<String> genres = <String>[];
+    if (loggedInUser == null) return [];
+
     loggedInUser!.genrePreferences.forEach((key, value) {
       if (value == 1) genres.add(key);
     });
@@ -64,7 +72,8 @@ class UserAPI {
       String? name,
       XFile? imageFile,
       String? email,
-      String? password}) async {
+      String? password,
+      List<String>? selectedGenres}) async {
     var user = collection.doc(loggedInUser!.id);
     Map<String, Object> changes = {};
 
@@ -86,6 +95,8 @@ class UserAPI {
     }
 
     await user.update(changes);
+
+    if (selectedGenres != null) setUserPreferences(selectedGenres);
 
     if (email != null) {
       await Authentication().auth.currentUser!.updateEmail(email);

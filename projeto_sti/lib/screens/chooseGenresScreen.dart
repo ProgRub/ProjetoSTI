@@ -4,11 +4,9 @@ import 'package:projeto_sti/api/genres.dart';
 import 'package:bubble_chart/bubble_chart.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
-import 'package:projeto_sti/models/user.dart';
 import 'package:projeto_sti/screens/mainScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import '../components/appLogo.dart';
-import 'dart:io' show Platform;
 
 import '../models/genre.dart';
 
@@ -24,8 +22,13 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   List<String> selectedGenres = [];
   final Future<List<Genre>> genresFuture = GenresAPI().getAllGenres();
   List<Genre> genres = [];
+  late bool changingPreferences;
+  List<String> alreadySelected = [];
+
   @override
   void initState() {
+    alreadySelected = UserAPI().getGenrePreferences();
+    changingPreferences = alreadySelected.isNotEmpty;
     super.initState();
   }
 
@@ -151,6 +154,11 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                               node.options?.onTap = () => setState(() {
                                     clickedGenre(node);
                                   });
+
+                              if (alreadySelected.contains(element.name)) {
+                                clickedGenre(node);
+                              }
+
                               childrenNodes.add(node);
                             }
                           }
@@ -186,14 +194,18 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                           "You have to choose at least 3 genres!");
                       return;
                     } else {
-                      UserAPI().setUserPreferences(selectedGenres);
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const MainScreen()));
+                      if (!changingPreferences) {
+                        UserAPI().setUserPreferences(selectedGenres);
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const MainScreen()));
+                      } else {
+                        Navigator.of(context).pop(selectedGenres);
+                      }
                     }
                   },
                   child: Text(
-                    "Let's start!",
+                    changingPreferences ? "Done" : "Let's start!",
                     style: Styles.fonts.button,
                   ),
                 ),
