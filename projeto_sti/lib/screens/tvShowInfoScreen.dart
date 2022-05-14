@@ -10,10 +10,14 @@ import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:like_button/like_button.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../api/genres.dart';
+import '../api/movies.dart';
+import '../api/tvShows.dart';
 import '../models/genre.dart';
+import 'movieInfoScreen.dart';
 
 class TvShowInfoScreen extends StatefulWidget {
   late TvShow tvShow;
@@ -521,6 +525,26 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
         ),
       ],
     );
+
+    var skeletonPosterList = ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      itemBuilder: (BuildContext context, int index) {
+        return const SkeletonItem(
+          child: SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+              width: 155,
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          width: 20.0,
+        );
+      },
+    );
+
     var moreLikeThisSection = Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 30.0,
@@ -528,16 +552,58 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
       ),
       child: SizedBox(
         height: 230,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return Poster(type: 1);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20.0,
-            );
+        child: FutureBuilder(
+          future: _getSimilarPrograms(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+            Widget child;
+            child = skeletonPosterList;
+            if (snapshot.hasData) {
+              var programs = snapshot.data!;
+              child = ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: programs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FutureBuilder(
+                      future: programs[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
+                        );
+                        if (snapshot.hasData) {
+                          child = snapshot.data!;
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => programs[index]
+                                                  .runtimeType ==
+                                              TvShow
+                                          ? TvShowInfoScreen(programs[index])
+                                          : MovieInfoScreen(
+                                              movie: programs[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 20.0,
+                    );
+                  });
+            }
+            return child;
           },
         ),
       ),
@@ -663,8 +729,10 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
       ),
     );
   }
-}
 
-Color _randomColor() {
-  return Colors.primaries[Random().nextInt(Colors.primaries.length)];
+  Future<List<dynamic>> _getSimilarPrograms() async {
+    var likeMovies = await MoviesAPI().getMoviesLikeTvShow(tvShow);
+    var likeShows = await TVShowsAPI().getTvShowsLikeTvShow(tvShow);
+    return [...likeMovies, ...likeShows];
+  }
 }

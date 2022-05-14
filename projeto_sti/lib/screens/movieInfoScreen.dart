@@ -2,18 +2,23 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/genres.dart';
+import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/models/movie.dart';
 
 import 'package:like_button/like_button.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../models/genre.dart';
+import '../models/tvShow.dart';
 
 class MovieInfoScreen extends StatefulWidget {
   final Movie movie;
@@ -36,6 +41,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
   @override
   void initState() {
+    MoviesAPI().getMoviesLikeMovie(movie);
     trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
     favourited = UserAPI().loggedInUser!.favouriteMovies.contains(movie.id);
     watched = UserAPI().loggedInUser!.watchedMovies.contains(movie.id);
@@ -515,6 +521,26 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
       ],
     );
+
+    var skeletonPosterList = ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      itemBuilder: (BuildContext context, int index) {
+        return const SkeletonItem(
+          child: SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+              width: 155,
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          width: 20.0,
+        );
+      },
+    );
+
     var moreLikeThisSection = Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 30.0,
@@ -522,16 +548,58 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       ),
       child: SizedBox(
         height: 230,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return Poster(type: 1);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20.0,
-            );
+        child: FutureBuilder(
+          future: _getSimilarPrograms(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+            Widget child;
+            child = skeletonPosterList;
+            if (snapshot.hasData) {
+              var programs = snapshot.data!;
+              child = ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: programs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FutureBuilder(
+                      future: programs[index].getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot) {
+                        Widget child;
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
+                        );
+                        if (snapshot.hasData) {
+                          child = snapshot.data!;
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => programs[index]
+                                                  .runtimeType ==
+                                              TvShow
+                                          ? TvShowInfoScreen(programs[index])
+                                          : MovieInfoScreen(
+                                              movie: programs[index]),
+                                    ));
+                              },
+                              child: snapshot.data!);
+                        }
+                        return child;
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 20.0,
+                    );
+                  });
+            }
+            return child;
           },
         ),
       ),
@@ -657,8 +725,10 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       ),
     );
   }
-}
 
-Color _randomColor() {
-  return Colors.primaries[Random().nextInt(Colors.primaries.length)];
+  Future<List<dynamic>> _getSimilarPrograms() async {
+    var likeMovies = await MoviesAPI().getMoviesLikeMovie(movie);
+    var likeShows = await TVShowsAPI().getTvShowsLikeMovie(movie);
+    return [...likeMovies, ...likeShows];
+  }
 }

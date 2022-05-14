@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/movie.dart';
+import 'package:projeto_sti/models/tvShow.dart';
 
 class MoviesAPI {
   MoviesAPI._privateConstructor();
@@ -11,6 +12,8 @@ class MoviesAPI {
 
   CollectionReference<Map<String, dynamic>> collection =
       FirebaseFirestore.instance.collection('movies');
+
+  static const SIMILARITY_THRESHOLD = 0.6;
 
   factory MoviesAPI() {
     return _instance;
@@ -54,6 +57,37 @@ class MoviesAPI {
     for (var movie in movies.docs.where((element) =>
         UserAPI().loggedInUser!.watchedMovies.contains(element.id))) {
       returnMovies.add(Movie.fromApi(movie));
+    }
+    return returnMovies;
+  }
+
+  Future<List<dynamic>> getMoviesLikeMovie(Movie movie) async {
+    var movies = await collection.get();
+    List<Movie> returnMovies = [];
+    var movieGenres = movie.genres.toSet();
+    for (var movieLike in movies.docs) {
+      if (movieLike.id == movie.id) continue;
+      Set genresMovieLike = (movieLike["Genre"]).toSet();
+      if (genresMovieLike.intersection(movieGenres).length /
+              genresMovieLike.length >=
+          SIMILARITY_THRESHOLD) {
+        returnMovies.add(Movie.fromApi(movieLike));
+      }
+    }
+    return returnMovies;
+  }
+
+  Future<List<dynamic>> getMoviesLikeTvShow(TvShow show) async {
+    var movies = await collection.get();
+    List<Movie> returnMovies = [];
+    var movieGenres = show.genres.toSet();
+    for (var movieLike in movies.docs) {
+      Set genresMovieLike = (movieLike["Genre"]).toSet();
+      if (genresMovieLike.intersection(movieGenres).length /
+              genresMovieLike.length >=
+          SIMILARITY_THRESHOLD) {
+        returnMovies.add(Movie.fromApi(movieLike));
+      }
     }
     return returnMovies;
   }
