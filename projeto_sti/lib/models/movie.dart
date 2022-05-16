@@ -8,7 +8,7 @@ class Movie {
   double rating;
   List<String> genres;
   String plot, title, poster, length, language, ageRating, wallpaper, trailer;
-  List<String> cast, directors, writers;
+  List<String> cast, directors, writers, videos;
 
   Movie(
       {required this.id,
@@ -25,6 +25,7 @@ class Movie {
       required this.ageRating,
       required this.directors,
       required this.writers,
+      required this.videos,
       required this.trailer});
 
   Movie.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
@@ -42,6 +43,7 @@ class Movie {
         ageRating = apiResponse["Rated"],
         poster = apiResponse["Poster"],
         writers = apiResponse["Writer"].cast<String>(),
+        videos = apiResponse["Videos"].cast<String>(),
         trailer = apiResponse["Trailer"];
 
   Future<Image> getPoster() async {
@@ -72,8 +74,7 @@ class Movie {
       }
     });
 
-    print(listImages.toList().toString());
-
     return listImages;
   }
+  
 }
