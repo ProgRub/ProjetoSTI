@@ -13,6 +13,7 @@ import 'package:projeto_sti/models/movie.dart';
 import 'package:like_button/like_button.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../models/genre.dart';
@@ -40,8 +41,8 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
   late bool clickedImage;
   late Image clickedPhoto;
-  // late Future<List<Image>> futureVideos;
-  // late List<Image> movieVideos = [];
+
+  late List<String> movieVideos;
 
   _MovieInfoState(this.movie);
 
@@ -50,6 +51,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
     clickedImage = false;
     MoviesAPI().getMoviesLikeMovie(movie);
     futurePhotos = movie.getPhotos();
+    movieVideos = movie.videos;
     trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
     favourited = UserAPI().loggedInUser!.favouriteMovies.contains(movie.id);
     watched = UserAPI().loggedInUser!.watchedMovies.contains(movie.id);
@@ -266,7 +268,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         height: 130,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: movieVideos.length,
           itemBuilder: (BuildContext context, int index) {
             return Stack(
               children: [
@@ -278,9 +280,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                       color: Styles.colors.purple,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    image: const DecorationImage(
-                      image: AssetImage(
-                          "packages/projeto_sti/assets/images/joker_image.png"),
+                    image: DecorationImage(
+                      image: Image.network('https://img.youtube.com/vi/' +
+                              movieVideos[index] +
+                              '/0.jpg')
+                          .image,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -294,8 +298,12 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                         size: 35.0,
                         color: Styles.colors.purple,
                       ),
-                      onPressed: () {
-                        print("PLAY VIDEO");
+                      onPressed: () async {
+                        if (!await launchUrl(Uri.parse(
+                            'https://www.youtube.com/watch?v=' +
+                                movieVideos[index]))) {
+                          //ERROR MESSAGE
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
