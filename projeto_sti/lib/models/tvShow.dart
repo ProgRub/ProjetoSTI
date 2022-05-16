@@ -6,7 +6,7 @@ class TvShow {
   String id;
   int seasons;
   double rating;
-  List<String> genres;
+  List<String> genres, videos;
   String plot,
       years,
       title,
@@ -34,6 +34,7 @@ class TvShow {
       required this.ageRating,
       required this.directors,
       required this.writers,
+      required this.videos,
       required this.trailer});
 
   TvShow.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
@@ -50,6 +51,7 @@ class TvShow {
         runtime = apiResponse["Runtime"],
         language = apiResponse["Language"],
         ageRating = apiResponse["Rated"],
+        videos = apiResponse["Videos"].cast<String>(),
         directors = apiResponse["Director"].cast<String>(),
         writers = apiResponse["Writer"].cast<String>(),
         trailer = apiResponse["Trailer"];
@@ -68,5 +70,23 @@ class TvShow {
         .child("tvShowWallpapers/Wallpaper " + wallpaper);
     String url = (await ref.getDownloadURL()).toString();
     return Image.network(url, width: width, height: height, fit: BoxFit.cover);
+  }
+
+  Future<List<String>> getPhotos() async {
+    List<String> listImages = [];
+    Reference ref = FirebaseStorage.instance.ref().child("tvShowPhotos/");
+
+    await ref.listAll().then((result) async {
+      for (var photo in result.items.where((element) =>
+          (title.contains(":") &&
+              title.length >= 5 &&
+              (element.fullPath.contains(title.substring(0, 4)))) ||
+          element.fullPath.contains(title))) {
+        String url = (await photo.getDownloadURL()).toString();
+        listImages.add(url);
+      }
+    });
+
+    return listImages;
   }
 }

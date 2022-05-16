@@ -12,6 +12,7 @@ import 'package:projeto_sti/styles/style.dart';
 import 'package:like_button/like_button.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:skeletons/skeletons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../api/genres.dart';
@@ -37,10 +38,21 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
 
   late bool favourited;
 
+  late Future<List<String>> futurePhotos;
+  late List<String> tvShowPhotos = [];
+
+  late bool clickedImage;
+  late Image clickedPhoto;
+
+  late List<String> tvShowVideos;
+
   _TvShowInfoState(this.tvShow);
 
   @override
   void initState() {
+    clickedImage = false;
+    tvShowVideos = tvShow.videos;
+
     trailerUrl = 'https://www.youtube.com/watch?v=' + tvShow.trailer;
     favourited = UserAPI().loggedInUser!.favouriteTvShows.contains(tvShow.id);
     watched = UserAPI().loggedInUser!.watchedTvShows.contains(tvShow.id);
@@ -53,6 +65,10 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
       ),
     );
     super.initState();
+    tvShow.getPhotos().then((result) {
+      tvShowPhotos = result;
+      setState(() {});
+    });
   }
 
   @override
@@ -263,7 +279,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
         height: 130,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: tvShowVideos.length,
           itemBuilder: (BuildContext context, int index) {
             return Stack(
               children: [
@@ -271,13 +287,16 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   width: 220,
                   height: 130,
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     border: Border.all(
                       color: Styles.colors.purple,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(15)),
-                    image: const DecorationImage(
-                      image: AssetImage(
-                          "packages/projeto_sti/assets/images/joker_image.png"),
+                    image: DecorationImage(
+                      image: Image.network('https://img.youtube.com/vi/' +
+                              tvShowVideos[index] +
+                              '/0.jpg')
+                          .image,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -291,8 +310,12 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                         size: 35.0,
                         color: Styles.colors.purple,
                       ),
-                      onPressed: () {
-                        print("PLAY VIDEO");
+                      onPressed: () async {
+                        if (!await launchUrl(Uri.parse(
+                            'https://www.youtube.com/watch?v=' +
+                                tvShowVideos[index]))) {
+                          //ERROR MESSAGE
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
@@ -355,31 +378,37 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
         vertical: 20.0,
       ),
       child: SizedBox(
-        height: 160,
+        height: 140,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: tvShowPhotos.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              width: 220,
-              height: 160,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Styles.colors.lightBlue,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                image: const DecorationImage(
-                  image: AssetImage(
-                      "packages/projeto_sti/assets/images/joker_image.png"),
-                  fit: BoxFit.fill,
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  clickedImage = true;
+                  clickedPhoto = Image.network(tvShowPhotos[index]);
+                });
+              },
+              child: Container(
+                width: 220,
+                height: 140,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Styles.colors.lightBlue,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  image: DecorationImage(
+                    image: Image.network(tvShowPhotos[index]).image,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20.0,
-            );
+            return const SizedBox(width: 20.0);
           },
         ),
       ),
@@ -627,92 +656,114 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 3),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
                 children: [
-                  playingTrailer
-                      ? Stack(
-                          children: [
-                            SizedBox(
-                              width: 400,
-                              height: 300,
-                              child: YoutubePlayer(
-                                controller: _videoController,
-                                showVideoProgressIndicator: true,
-                                progressColors: ProgressBarColors(
-                                    playedColor: Styles.colors.lightBlue,
-                                    handleColor: Styles.colors.lightBlue,
-                                    backgroundColor: Colors.white),
-                                onReady: () {},
-                                onEnded: (data) {
-                                  setState(() {
-                                    playingTrailer = false;
-                                    _videoController.pause();
-                                  });
-                                },
-                                topActions: <Widget>[
-                                  const SizedBox(width: 8.0),
-                                  Expanded(
-                                    child: Text(
-                                      tvShow.title + " - Trailer",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
+                  Stack(
+                    children: [
+                      playingTrailer
+                          ? Stack(
+                              children: [
+                                SizedBox(
+                                  width: 400,
+                                  height: 300,
+                                  child: YoutubePlayer(
+                                    controller: _videoController,
+                                    showVideoProgressIndicator: true,
+                                    progressColors: ProgressBarColors(
+                                        playedColor: Styles.colors.lightBlue,
+                                        handleColor: Styles.colors.lightBlue,
+                                        backgroundColor: Colors.white),
+                                    onReady: () {},
+                                    onEnded: (data) {
+                                      setState(() {
+                                        playingTrailer = false;
+                                        _videoController.pause();
+                                      });
+                                    },
+                                    topActions: <Widget>[
+                                      const SizedBox(width: 8.0),
+                                      Expanded(
+                                        child: Text(
+                                          tvShow.title + " - Trailer",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18.0,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 47,
-                                    height: 47,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xffF4F6FD),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          playingTrailer = false;
-                                          _videoController.pause();
-                                        });
-                                      },
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: Colors.black,
-                                        size: 20,
+                                      Container(
+                                        width: 47,
+                                        height: 47,
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xffF4F6FD),
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              playingTrailer = false;
+                                              _videoController.pause();
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : topSection,
+                                ),
+                              ],
+                            )
+                          : topSection,
+                    ],
+                  ),
+                  genresSection,
+                  infoSection,
+                  _buildTitle("Plot"),
+                  plotSection,
+                  _buildTitle("Videos"),
+                  videosSection,
+                  _buildTitle("Photos"),
+                  photosSection,
+                  _buildTitle("Cast"),
+                  castSection,
+                  _buildTitle("Writers"),
+                  directorSection,
+                  _buildTitle("Comments"),
+                  commentsSection,
+                  _buildTitle("More like " + tvShow.title),
+                  moreLikeThisSection,
                 ],
               ),
-              genresSection,
-              infoSection,
-              _buildTitle("Plot"),
-              plotSection,
-              _buildTitle("Videos"),
-              videosSection,
-              _buildTitle("Photos"),
-              photosSection,
-              _buildTitle("Cast"),
-              castSection,
-              _buildTitle("Writers"),
-              directorSection,
-              _buildTitle("Comments"),
-              commentsSection,
-              _buildTitle("More like " + tvShow.title),
-              moreLikeThisSection,
-            ],
-          ),
+            ),
+            clickedImage
+                ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        clickedImage = false;
+                      });
+                    },
+                    child: SizedBox.expand(
+                      child: Container(
+                        color: Styles.colors.backgroundDarker,
+                        child: Image(
+                          fit: BoxFit.fitWidth,
+                          image: clickedPhoto.image,
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
+          ],
         ),
       ),
     );

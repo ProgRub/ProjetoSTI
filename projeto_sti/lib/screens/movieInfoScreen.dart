@@ -335,6 +335,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
       ),
     );
+
     var genresSection = FutureBuilder(
         future: GenresAPI().getGenresByName(movie.genres),
         builder: (BuildContext context, AsyncSnapshot<List<Genre>> snapshot) {

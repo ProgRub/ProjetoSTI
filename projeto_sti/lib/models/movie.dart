@@ -67,14 +67,15 @@ class Movie {
     Reference ref = FirebaseStorage.instance.ref().child("moviePhotos/");
 
     await ref.listAll().then((result) async {
-      for (var photo in result.items
-          .where((element) => element.fullPath.contains("Game"))) {
+      for (var photo in result.items.where((element) =>
+          (title.contains(":") &&
+              title.length >= 5 &&
+              (element.fullPath.contains(title.substring(0, 4)))) ||
+          element.fullPath.contains(title))) {
         String url = (await photo.getDownloadURL()).toString();
         listImages.add(url);
       }
     });
-
-    print(listImages.toString());
 
     return listImages;
   }
