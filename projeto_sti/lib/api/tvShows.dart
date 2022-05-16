@@ -25,6 +25,11 @@ class TVShowsAPI {
       tvShows.add(TvShow.fromApi(show));
       // print("Wallpaper " + tvShows.last.title);
     }
+    for (var actor in tvShows.last.cast) {
+      print(
+          'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=' +
+              actor.replaceAll(" ", "%20"));
+    }
     return tvShows;
   }
 

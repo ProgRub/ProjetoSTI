@@ -18,7 +18,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../api/persons.dart';
 import '../models/genre.dart';
+import '../models/person.dart';
 import '../models/tvShow.dart';
 
 class MovieInfoScreen extends StatefulWidget {
@@ -423,6 +425,77 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         ),
       ),
     );
+
+    if (movie.id == "1f566420-ca07-11ec-9fe3-ddb0abdadb3f") {
+      castSection = Padding(
+        padding: const EdgeInsets.only(
+          top: 30.0,
+          left: 20.0,
+          right: 20.0,
+        ),
+        child: SizedBox(
+          height: 150,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: movie.cast.length,
+            itemBuilder: (BuildContext context, int index) {
+              return FutureBuilder(
+                  future: PersonsAPI().getPersonByID(movie.cast[index]),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Person> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    var actor = snapshot.data!;
+                    return Column(
+                      children: [
+                        Stack(
+                          children: [
+                            FutureBuilder(
+                                future: snapshot.data!.getPhoto(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<Image> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return CircleAvatar(
+                                    radius: 52.0,
+                                    backgroundColor: Styles.colors.button,
+                                    child: CircleAvatar(
+                                      radius: 50.0,
+                                      backgroundImage: snapshot.data!.image,
+                                    ),
+                                  );
+                                }),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 13.0),
+                          child: Text(actor.name,
+                              style: Styles.fonts.plot,
+                              textAlign: TextAlign.center),
+                        ),
+                      ],
+                    );
+                  });
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                width: 20.0,
+              );
+            },
+          ),
+        ),
+      );
+    }
 
     var directorSection = Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 40.0),
