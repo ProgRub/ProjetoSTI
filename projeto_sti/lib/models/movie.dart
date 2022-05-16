@@ -59,4 +59,21 @@ class Movie {
     String url = (await ref.getDownloadURL()).toString();
     return Image.network(url, width: width, height: height, fit: BoxFit.cover);
   }
+
+  Future<List<Image>> getPhotos() async {
+    List<Image> listImages = [];
+    Reference ref = FirebaseStorage.instance.ref().child("moviePhotos/");
+
+    ref.listAll().then((result) async {
+      for (var photo in result.items
+          .where((element) => element.fullPath.contains("Game"))) {
+        String url = (await photo.getDownloadURL()).toString();
+        listImages.add(Image.network(url));
+      }
+    });
+
+    print(listImages.toList().toString());
+
+    return listImages;
+  }
 }
