@@ -38,7 +38,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   late Future<List<Image>> futurePhotos;
   late List<Image> moviePhotos = [];
 
-  late String clickedImage;
+  late bool clickedImage;
   late Image clickedPhoto;
   // late Future<List<Image>> futureVideos;
   // late List<Image> movieVideos = [];
@@ -47,7 +47,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
   @override
   void initState() {
-    clickedImage = "0";
+    clickedImage = false;
     MoviesAPI().getMoviesLikeMovie(movie);
     futurePhotos = movie.getPhotos();
     trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
@@ -390,7 +390,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          clickedImage = moviePhotos[index].height.toString();
+                          clickedImage = true;
                           clickedPhoto = moviePhotos[index];
                         });
                       },
@@ -733,11 +733,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 ],
               ),
             ),
-            clickedImage != "0"
+            clickedImage
                 ? GestureDetector(
                     onTap: () {
                       setState(() {
-                        clickedImage = "0";
+                        clickedImage = false;
                       });
                     },
                     child: SizedBox.expand(
