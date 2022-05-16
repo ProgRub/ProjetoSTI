@@ -62,19 +62,20 @@ class Movie {
     return Image.network(url, width: width, height: height, fit: BoxFit.cover);
   }
 
-  Future<List<Image>> getPhotos() async {
-    List<Image> listImages = [];
+  Future<List<String>> getPhotos() async {
+    List<String> listImages = [];
     Reference ref = FirebaseStorage.instance.ref().child("moviePhotos/");
 
-    ref.listAll().then((result) async {
+    await ref.listAll().then((result) async {
       for (var photo in result.items
           .where((element) => element.fullPath.contains("Game"))) {
         String url = (await photo.getDownloadURL()).toString();
-        listImages.add(Image.network(url));
+        listImages.add(url);
       }
     });
 
+    print(listImages.toString());
+
     return listImages;
   }
-  
 }

@@ -38,8 +38,8 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
   late bool favourited;
 
-  late Future<List<Image>> futurePhotos;
-  late List<Image> moviePhotos = [];
+  late Future<List<String>> futurePhotos;
+  late List<String> moviePhotos = [];
 
   late bool clickedImage;
   late Image clickedPhoto;
@@ -52,7 +52,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   void initState() {
     clickedImage = false;
     MoviesAPI().getMoviesLikeMovie(movie);
-    futurePhotos = movie.getPhotos();
+
     movieVideos = movie.videos;
     trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
     favourited = UserAPI().loggedInUser!.favouriteMovies.contains(movie.id);
@@ -66,6 +66,10 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       ),
     );
     super.initState();
+    movie.getPhotos().then((result) {
+      moviePhotos = result;
+      setState(() {});
+    });
   }
 
   @override
@@ -278,6 +282,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   width: 220,
                   height: 130,
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     border: Border.all(
                       color: Styles.colors.purple,
                     ),
@@ -381,55 +386,46 @@ class _MovieInfoState extends State<MovieInfoScreen> {
     );
 
     var photosSection = Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 20.0,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 140,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: moviePhotos.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  clickedImage = true;
+                  clickedPhoto = Image.network(moviePhotos[index]);
+                });
+              },
+              child: Container(
+                width: 220,
+                height: 140,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Styles.colors.lightBlue,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  image: DecorationImage(
+                    image: Image.network(moviePhotos[index]).image,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(width: 20.0);
+          },
         ),
-        child: SizedBox(
-          height: 140,
-          child: FutureBuilder(
-            future: futurePhotos,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              Widget child = skeletonPosterList;
-              if (snapshot.hasData) {
-                moviePhotos = snapshot.data;
-                child = ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: moviePhotos.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          clickedImage = true;
-                          clickedPhoto = moviePhotos[index];
-                        });
-                      },
-                      child: Container(
-                        width: 220,
-                        height: 140,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Styles.colors.lightBlue,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(15)),
-                          image: DecorationImage(
-                            image: moviePhotos[index].image,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(width: 20.0);
-                  },
-                );
-              }
-              return child;
-            },
-          ),
-        ));
+      ),
+    );
 
     var castSection = Padding(
       padding: const EdgeInsets.only(
@@ -446,11 +442,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             return Column(
               children: [
                 Stack(
-                  children: [
+                  children: const [
                     CircleAvatar(
                       radius: 52.0,
-                      backgroundColor: Styles.colors.button,
-                      child: const CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
                         radius: 50.0,
                         backgroundImage: AssetImage(
                             "packages/projeto_sti/assets/images/joaquin_phoenix.jpg"),
