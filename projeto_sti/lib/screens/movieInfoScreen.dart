@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:projeto_sti/api/movies.dart';
@@ -8,7 +6,6 @@ import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
-import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/models/movie.dart';
@@ -38,11 +35,21 @@ class _MovieInfoState extends State<MovieInfoScreen> {
 
   late bool favourited;
 
+  late Future<List<Image>> futurePhotos;
+  late List<Image> moviePhotos = [];
+
+  late String clickedImage;
+  late Image clickedPhoto;
+  // late Future<List<Image>> futureVideos;
+  // late List<Image> movieVideos = [];
+
   _MovieInfoState(this.movie);
 
   @override
   void initState() {
+    clickedImage = "0";
     MoviesAPI().getMoviesLikeMovie(movie);
+    futurePhotos = movie.getPhotos();
     trailerUrl = 'https://www.youtube.com/watch?v=' + movie.trailer;
     favourited = UserAPI().loggedInUser!.favouriteMovies.contains(movie.id);
     watched = UserAPI().loggedInUser!.watchedMovies.contains(movie.id);
@@ -344,41 +351,75 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       ),
     );
 
-    var photosSection = Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30.0,
-        vertical: 20.0,
-      ),
-      child: SizedBox(
-        height: 160,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              width: 220,
-              height: 160,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Styles.colors.lightBlue,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                image: const DecorationImage(
-                  image: AssetImage(
-                      "packages/projeto_sti/assets/images/joker_image.png"),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20.0,
-            );
-          },
-        ),
-      ),
+    var skeletonPosterList = ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      itemBuilder: (BuildContext context, int index) {
+        return const SkeletonItem(
+          child: SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+              width: 155,
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          width: 20.0,
+        );
+      },
     );
+
+    var photosSection = Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30.0,
+          vertical: 20.0,
+        ),
+        child: SizedBox(
+          height: 140,
+          child: FutureBuilder(
+            future: futurePhotos,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              Widget child = skeletonPosterList;
+              if (snapshot.hasData) {
+                moviePhotos = snapshot.data;
+                child = ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: moviePhotos.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          clickedImage = moviePhotos[index].height.toString();
+                          clickedPhoto = moviePhotos[index];
+                        });
+                      },
+                      child: Container(
+                        width: 220,
+                        height: 140,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Styles.colors.lightBlue,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(15)),
+                          image: DecorationImage(
+                            image: moviePhotos[index].image,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(width: 20.0);
+                  },
+                );
+              }
+              return child;
+            },
+          ),
+        ));
 
     var castSection = Padding(
       padding: const EdgeInsets.only(
@@ -534,25 +575,6 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       ],
     );
 
-    var skeletonPosterList = ListView.separated(
-      scrollDirection: Axis.horizontal,
-      itemCount: 6,
-      itemBuilder: (BuildContext context, int index) {
-        return const SkeletonItem(
-          child: SkeletonAvatar(
-            style: SkeletonAvatarStyle(
-              width: 155,
-            ),
-          ),
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const SizedBox(
-          width: 20.0,
-        );
-      },
-    );
-
     var moreLikeThisSection = Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 30.0,
@@ -622,92 +644,114 @@ class _MovieInfoState extends State<MovieInfoScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 3),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
                 children: [
-                  playingTrailer
-                      ? Stack(
-                          children: [
-                            SizedBox(
-                              width: 400,
-                              height: 300,
-                              child: YoutubePlayer(
-                                controller: _videoController,
-                                showVideoProgressIndicator: true,
-                                progressColors: ProgressBarColors(
-                                    playedColor: Styles.colors.lightBlue,
-                                    handleColor: Styles.colors.lightBlue,
-                                    backgroundColor: Colors.white),
-                                onReady: () {},
-                                onEnded: (data) {
-                                  setState(() {
-                                    playingTrailer = false;
-                                    _videoController.pause();
-                                  });
-                                },
-                                topActions: <Widget>[
-                                  const SizedBox(width: 8.0),
-                                  Expanded(
-                                    child: Text(
-                                      movie.title + " - Trailer",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
+                  Stack(
+                    children: [
+                      playingTrailer
+                          ? Stack(
+                              children: [
+                                SizedBox(
+                                  width: 400,
+                                  height: 300,
+                                  child: YoutubePlayer(
+                                    controller: _videoController,
+                                    showVideoProgressIndicator: true,
+                                    progressColors: ProgressBarColors(
+                                        playedColor: Styles.colors.lightBlue,
+                                        handleColor: Styles.colors.lightBlue,
+                                        backgroundColor: Colors.white),
+                                    onReady: () {},
+                                    onEnded: (data) {
+                                      setState(() {
+                                        playingTrailer = false;
+                                        _videoController.pause();
+                                      });
+                                    },
+                                    topActions: <Widget>[
+                                      const SizedBox(width: 8.0),
+                                      Expanded(
+                                        child: Text(
+                                          movie.title + " - Trailer",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18.0,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 47,
-                                    height: 47,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xffF4F6FD),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          playingTrailer = false;
-                                          _videoController.pause();
-                                        });
-                                      },
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: Colors.black,
-                                        size: 20,
+                                      Container(
+                                        width: 47,
+                                        height: 47,
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xffF4F6FD),
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              playingTrailer = false;
+                                              _videoController.pause();
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : topSection,
+                                ),
+                              ],
+                            )
+                          : topSection,
+                    ],
+                  ),
+                  genresSection,
+                  infoSection,
+                  _buildTitle("Plot"),
+                  plotSection,
+                  _buildTitle("Videos"),
+                  videosSection,
+                  _buildTitle("Photos"),
+                  photosSection,
+                  _buildTitle("Cast"),
+                  castSection,
+                  _buildTitle("Director"),
+                  directorSection,
+                  _buildTitle("Comments"),
+                  commentsSection,
+                  _buildTitle("More like " + movie.title),
+                  moreLikeThisSection,
                 ],
               ),
-              genresSection,
-              infoSection,
-              _buildTitle("Plot"),
-              plotSection,
-              _buildTitle("Videos"),
-              videosSection,
-              _buildTitle("Photos"),
-              photosSection,
-              _buildTitle("Cast"),
-              castSection,
-              _buildTitle("Director"),
-              directorSection,
-              _buildTitle("Comments"),
-              commentsSection,
-              _buildTitle("More like " + movie.title),
-              moreLikeThisSection,
-            ],
-          ),
+            ),
+            clickedImage != "0"
+                ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        clickedImage = "0";
+                      });
+                    },
+                    child: SizedBox.expand(
+                      child: Container(
+                        color: Styles.colors.backgroundDarker,
+                        child: Image(
+                          fit: BoxFit.fitWidth,
+                          image: clickedPhoto.image,
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
+          ],
         ),
       ),
     );
