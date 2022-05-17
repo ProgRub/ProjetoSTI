@@ -32,8 +32,30 @@ const actorInformations = async (name) => {
     const result=text.split(/\r?\n/);
     const wins = result.filter(function (element) { return element.includes("{{won|"); });
     const noms = result.filter(function (element) { return element.includes("{{nom|"); });
-    console.log("WINS: "+wins[wins.length-1].split("{{")[1].split("}}")[0].split("|")[1]);
-    console.log("NOMINATIONS: "+noms[noms.length-1].split("{{")[1].split("}}")[0].split("|")[1]);
+    // console.log(wins);
+    // console.log(noms);
+    const lastWins = wins[wins.length - 1];
+    const lastNoms = noms[noms.length - 1];
+    if(lastWins.includes("colspan")){
+      console.log("WINS: "+lastWins.split("{{")[1].split("}}")[0].split("|")[1]);
+    }else{
+      var numberOfWins=0;
+      for (let index = 0; index < 5; index++) {
+        numberOfWins += parseInt(wins[index].split("{{")[1].split("}}")[0].split("|")[1]);        
+      }
+      console.log("WINS: "+numberOfWins);
+    }
+    if(lastNoms.includes("colspan")){
+      console.log("NOMINATIONS: "+lastNoms.split("{{")[1].split("}}")[0].split("|")[1]);
+    }else{
+      var numberOfNoms=0;
+      for (let index = 0; index < 5; index++) {
+        numberOfNoms += parseInt(noms[index].split("{{")[1].split("}}")[0].split("|")[1]);        
+      }
+      console.log("NOMINATIONS: "+numberOfNoms);
+    }
+    // console.log("WINS: "+lastWins.split("{{")[1].split("}}")[0].split("|")[1]);
+    // console.log("NOMINATIONS: "+lastNoms.split("{{")[1].split("}}")[0].split("|")[1]);
   });
   console.log();
   request(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=${name.replace(" ", "%20")}`, (err, res, body) => {
