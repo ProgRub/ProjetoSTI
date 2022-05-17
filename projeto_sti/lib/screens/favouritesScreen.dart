@@ -245,22 +245,18 @@ class _FavouritesState extends State<FavouritesScreen> {
 
   Center noFavouritesMessage(String type) {
     return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 50.0),
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image.asset("packages/projeto_sti/assets/images/popcorn.png",
-            width: 80, height: 80),
-        Text("You don't have favourite $type!", style: Styles.fonts.label)
-      ],
-    ));
-  }
-
-  GestureDetector _buildPoster(int index, int type) {
-    return GestureDetector(
-      onTap: () {
-        print("POSTER CLICKED");
-      },
-      child: Poster(type: type),
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset("packages/projeto_sti/assets/images/popcorn.png",
+                width: 80, height: 80),
+            const SizedBox(height: 20.0),
+            Text("You don't have favourite $type!", style: Styles.fonts.label)
+          ],
+        ),
+      ),
     );
   }
 }

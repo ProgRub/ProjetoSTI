@@ -6,8 +6,6 @@ import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
-import 'package:projeto_sti/components/popupMessage.dart';
-import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
 import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
@@ -61,14 +59,19 @@ class _ProfileState extends State<ProfileScreen> {
 
   Center noWatchedMessage(String type) {
     return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image.asset("packages/projeto_sti/assets/images/popcorn.png",
-            width: 80, height: 80),
-        Text("You haven't watched any $type!", style: Styles.fonts.label)
-      ],
-    ));
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset("packages/projeto_sti/assets/images/popcorn.png",
+                width: 80, height: 80),
+            const SizedBox(height: 20.0),
+            Text("You don't have favourite $type!", style: Styles.fonts.label)
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -342,12 +345,9 @@ class _ProfileState extends State<ProfileScreen> {
                             list.add(GenreOval(genre: genre));
                           }
                         }
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 30.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: list,
-                          ),
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: list,
                         );
                       }),
                   // Row(
@@ -381,10 +381,6 @@ class _ProfileState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-
-  Color _randomColor() {
-    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
   }
 
   Padding _buildTextLabel(String text, TextStyle style) {
