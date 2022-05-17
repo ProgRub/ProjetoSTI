@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class Person {
   String id;
-  String name, summary, type, photo;
+  String name, summary, type, photo, born;
   num awardWins, awardNominations;
 
   Person(
@@ -14,6 +14,7 @@ class Person {
       required this.photo,
       required this.type,
       required this.awardWins,
+      required this.born,
       required this.awardNominations});
 
   Person.fromApi(DocumentSnapshot<Map<String, dynamic>> apiResponse)
@@ -22,6 +23,7 @@ class Person {
         summary = apiResponse["summary"],
         type = apiResponse["type"],
         photo = apiResponse["photo"],
+        born = apiResponse["born"],
         awardWins = apiResponse["awardWins"],
         awardNominations = apiResponse["awardNoms"];
 

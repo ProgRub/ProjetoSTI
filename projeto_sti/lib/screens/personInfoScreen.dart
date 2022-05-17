@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +23,7 @@ class PersonInfoScreen extends StatefulWidget {
 class _PersonInfoState extends State<PersonInfoScreen> {
   late int selectedCategory;
   final List<String> categories = ["Movies", "Tv Shows"];
-  var artist;
+  late Person artist;
   late Future<List<Movie>> moviesFuture;
   late Future<List<TvShow>> tvShowsFuture;
   late List<Movie> movies;
@@ -31,6 +32,7 @@ class _PersonInfoState extends State<PersonInfoScreen> {
   _PersonInfoState(this.artist) {
     // moviesFuture = MoviesAPI().getMoviesOfGenre(genre.name);
     // tvShowsFuture = TVShowsAPI().getTvShowsOfGenre(genre.name);
+    artist = artist;
     selectedCategory = 0;
     super.initState();
   }
@@ -46,8 +48,7 @@ class _PersonInfoState extends State<PersonInfoScreen> {
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
-          //widget.artist.name,
-          artist,
+          artist.name,
           style: Styles.fonts.title,
         ),
       ),
@@ -240,87 +241,104 @@ class _PersonInfoState extends State<PersonInfoScreen> {
                 alignment: Alignment.topLeft,
               ),
               genreTitle,
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: 180,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Stack(
                         children: [
-                          Row(
-                            children: [
-                              Text("Born: ", style: Styles.fonts.label),
-                              Text("June 5, 1975", style: Styles.fonts.comment)
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: RichText(
-                                  textAlign: TextAlign.justify,
-                                  text: TextSpan(
-                                    text: "Bio: ",
-                                    style: Styles.fonts.label,
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text:
-                                            "Angelina Jolie born Angelina Jolie Voight (later Angelina Jolie Pitt) is an American actress, filmmaker, and humanitarian. The recipient of numerous accolades, including an Academy Award and three Golden Globe Awards, she has been named Hollywood's highest-paid actress multiple times.",
-                                        style: Styles.fonts.comment,
+                          FutureBuilder(
+                            future: artist.getPhoto(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<Image> snapshot) {
+                              if (snapshot.hasData) {
+                                return Center(
+                                  child: CircleAvatar(
+                                    backgroundColor: Styles.colors.lightBlue,
+                                    radius: 70.0,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: snapshot.data!.image,
+                                      radius: 66.0,
+                                      child: CircleAvatar(
+                                        backgroundColor: Styles.colors.darker,
+                                        radius: 66.0,
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
+                                );
+                              } else {
+                                return Container();
+                              }
+                            },
                           ),
                         ],
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          Text("Born: ", style: Styles.fonts.label),
+                          Text(artist.born, style: Styles.fonts.comment)
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text("Awards: ", style: Styles.fonts.label),
+                          Text(artist.awardWins.toString(),
+                              style: Styles.fonts.comment),
+                          const SizedBox(width: 5),
+                          const FaIcon(FontAwesomeIcons.trophy,
+                              size: 15.0, color: Colors.yellow),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text("Nominations: ", style: Styles.fonts.label),
+                          Text(artist.awardNominations.toString(),
+                              style: Styles.fonts.comment),
+                          const SizedBox(width: 5),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Stack(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CircleAvatar(
-                              backgroundColor: Styles.colors.lightBlue,
-                              radius: 70.0,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                backgroundImage: const NetworkImage(
-                                    'https://lorena.r7.com/public/assets/img/galeria-imagens/Angelina.jpeg'),
-                                radius: 66.0,
-                                child: CircleAvatar(
-                                  backgroundColor: Styles.colors.darker,
-                                  radius: 66.0,
+                            Expanded(
+                              child: RichText(
+                                textAlign: TextAlign.justify,
+                                text: TextSpan(
+                                  text: "Bio: ",
+                                  style: Styles.fonts.label,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: artist.summary,
+                                      style: Styles.fonts.comment,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          children: [
-                            Text("Awards: ", style: Styles.fonts.label),
-                            Text("12", style: Styles.fonts.comment),
-                            const SizedBox(width: 5),
-                            const FaIcon(FontAwesomeIcons.trophy,
-                                size: 15.0, color: Colors.yellow),
+                            )
                           ],
                         ),
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
-              _buildTextLabel("Actor/Actress",
+              _buildTextLabel(artist.type,
                   Styles.fonts.title), //AJUSTAR DE ACORDO COM O GENERO
               tabs,
               _buildTextLabel("Director", Styles.fonts.title),

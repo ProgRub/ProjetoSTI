@@ -6,6 +6,7 @@ import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
+import 'package:projeto_sti/screens/personInfoScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/models/movie.dart';
@@ -497,39 +498,49 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                       );
                     }
                     var actor = snapshot.data!;
-                    return Column(
-                      children: [
-                        Stack(
-                          children: [
-                            FutureBuilder(
-                                future: snapshot.data!.getPhoto(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<Image> snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return const SizedBox(
-                                      width: 60,
-                                      height: 60,
-                                      child: CircularProgressIndicator(),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PersonInfoScreen(artist: actor),
+                            ));
+                      },
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              FutureBuilder(
+                                  future: snapshot.data!.getPhoto(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<Image> snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const SizedBox(
+                                        width: 60,
+                                        height: 60,
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                    return CircleAvatar(
+                                      radius: 52.0,
+                                      backgroundColor: Styles.colors.button,
+                                      child: CircleAvatar(
+                                        radius: 50.0,
+                                        backgroundImage: snapshot.data!.image,
+                                      ),
                                     );
-                                  }
-                                  return CircleAvatar(
-                                    radius: 52.0,
-                                    backgroundColor: Styles.colors.button,
-                                    child: CircleAvatar(
-                                      radius: 50.0,
-                                      backgroundImage: snapshot.data!.image,
-                                    ),
-                                  );
-                                }),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 13.0),
-                          child: Text(actor.name,
-                              style: Styles.fonts.plot,
-                              textAlign: TextAlign.center),
-                        ),
-                      ],
+                                  }),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 13.0),
+                            child: Text(actor.name,
+                                style: Styles.fonts.plot,
+                                textAlign: TextAlign.center),
+                          ),
+                        ],
+                      ),
                     );
                   });
             },

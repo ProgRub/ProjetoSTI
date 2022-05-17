@@ -5,9 +5,11 @@ import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
+import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
+import 'package:projeto_sti/screens/personInfoScreen.dart';
 import 'package:projeto_sti/screens/profileScreen.dart';
 import 'package:projeto_sti/screens/topImdbScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
@@ -39,6 +41,8 @@ class _MainScreenState extends State<MainScreen> {
   List<TvShow> tvShows = [];
 
   late Map<String, Future<Image>> posters;
+
+  List<Person> people = [];
 
   @override
   initState() {
@@ -292,7 +296,7 @@ class _MainScreenState extends State<MainScreen> {
       if (value.runtimeType == Movie) return "Movie";
       if (value.runtimeType == TvShow) return "Tv Show";
 
-      return "Person";
+      return (value as Person).type;
     }
 
     var searchBar = Padding(
@@ -302,30 +306,7 @@ class _MainScreenState extends State<MainScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<Set<Object?>> snapshot) {
             Widget child;
-            child = TextField(
-              autocorrect: false,
-              enableSuggestions: false,
-              style: Styles.fonts.commentName,
-              decoration: InputDecoration(
-                hintText: 'What are you looking for?',
-                hintStyle: Styles.fonts.hintText,
-                fillColor: Colors.black,
-                filled: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-                prefixIcon: Icon(Icons.search,
-                    size: 30.0, color: Styles.colors.lightBlue),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide:
-                      BorderSide(color: Styles.colors.lightBlue, width: 2.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide:
-                      BorderSide(color: Styles.colors.lightBlue, width: 2.0),
-                ),
-              ),
-            );
+            child = Container();
             if (snapshot.hasData) {
               child = GFSearchBar(
                 searchList: snapshot.data!.toList(),
@@ -336,9 +317,15 @@ class _MainScreenState extends State<MainScreen> {
                         .toString()
                         .toLowerCase()
                         .contains(query.toLowerCase());
-                  } else {
+                  } else if (item.runtimeType == TvShow) {
                     TvShow tvShow = item as TvShow;
                     return tvShow.title
+                        .toString()
+                        .toLowerCase()
+                        .contains(query.toLowerCase());
+                  } else {
+                    Person person = item as Person;
+                    return person.name
                         .toString()
                         .toLowerCase()
                         .contains(query.toLowerCase());
@@ -358,7 +345,12 @@ class _MainScreenState extends State<MainScreen> {
                   //     .contains(query.toLowerCase());
                 }).toList(),
                 overlaySearchListItemBuilder: (dynamic item) {
-                  String id, title, year, actors;
+                  String id;
+                  String title = "";
+                  String actors = "";
+                  String name = "";
+                  String type = "";
+                  String year = "";
                   if (item!.runtimeType == Movie) {
                     Movie movie = item as Movie;
                     id = movie.id;
@@ -366,7 +358,7 @@ class _MainScreenState extends State<MainScreen> {
                     year = movie.year.toString();
                     actors = movie.cast.join(", ");
                     posters[movie.id] = movie.getPoster();
-                  } else {
+                  } else if (item!.runtimeType == TvShow) {
                     TvShow tvShow = item as TvShow;
                     id = tvShow.id;
                     title = tvShow.title;
@@ -378,7 +370,15 @@ class _MainScreenState extends State<MainScreen> {
 
                     actors = tvShow.cast.join(", ");
                     posters[tvShow.id] = tvShow.getPoster();
+                  } else {
+                    Person person = item as Person;
+                    people.add(person);
+                    id = person.id;
+                    name = person.name;
+                    type = person.type;
+                    posters[person.id] = person.getPhoto();
                   }
+
                   return Container(
                     decoration: const BoxDecoration(
                       color: Colors.black,
@@ -413,10 +413,14 @@ class _MainScreenState extends State<MainScreen> {
                                   return child;
                                 },
                               ),
-                              title: Text("$title ($year)",
-                                  style: Styles.fonts.commentName),
-                              subtitle:
-                                  Text(actors, style: Styles.fonts.comment),
+                              title: (title.isNotEmpty
+                                  ? Text("$title ($year)",
+                                      style: Styles.fonts.commentName)
+                                  : Text(name,
+                                      style: Styles.fonts.commentName)),
+                              subtitle: (title.isNotEmpty
+                                  ? Text(actors, style: Styles.fonts.comment)
+                                  : null),
                               trailing: Text(_checkType(item),
                                   style: Styles.fonts.comment),
                             ),
@@ -455,16 +459,21 @@ class _MainScreenState extends State<MainScreen> {
                         }
                       }
                     }
-                    // for (var person in actors_directors_writers) {
-                    //   if (person.name == item) {
-                    //     Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => PersonInfoScreen(person),
-                    //         ));
-                    //     return;
-                    //   }
-                    // }
+
+                    if (item.runtimeType == Person) {
+                      Person selected = item as Person;
+                      for (var person in people) {
+                        if (person.name == selected.name) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PersonInfoScreen(artist: person),
+                              ));
+                          return;
+                        }
+                      }
+                    }
                   });
                 },
                 searchBoxInputDecoration: InputDecoration(
