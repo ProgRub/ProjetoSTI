@@ -20,10 +20,9 @@ class GenresAPI {
     await getNewGenresFromMoviesAndTvShows();
     List<Genre> genres = [];
     var genresApi = await collection.get();
-    print(Color.fromARGB(255, 0, 255, 247).value);
     for (var genre in genresApi.docs) {
       genres.add(Genre.fromApi(genre));
-      collection.doc(genre.id).update({"Image": genres.last.name + ".jpg"});
+      // collection.doc(genre.id).update({"Image": genres.last.name + ".jpg"});
       // print(genres.last.name);
     }
     return genres;
