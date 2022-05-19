@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:projeto_sti/api/general.dart';
 import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
@@ -306,7 +307,30 @@ class _MainScreenState extends State<MainScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<Set<Object?>> snapshot) {
             Widget child;
-            child = Container();
+            child = TextField(
+              autocorrect: false,
+              enableSuggestions: false,
+              style: Styles.fonts.commentName,
+              decoration: InputDecoration(
+                hintText: 'What are you looking for?',
+                hintStyle: Styles.fonts.hintText,
+                fillColor: Colors.black,
+                filled: true,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                prefixIcon: Icon(Icons.search,
+                    size: 30.0, color: Styles.colors.lightBlue),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide:
+                      BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide:
+                      BorderSide(color: Styles.colors.lightBlue, width: 2.0),
+                ),
+              ),
+            );
             if (snapshot.hasData) {
               child = GFSearchBar(
                 searchList: snapshot.data!.toList(),
@@ -330,33 +354,19 @@ class _MainScreenState extends State<MainScreen> {
                         .toLowerCase()
                         .contains(query.toLowerCase());
                   }
-
-                  // } else if (item.runtimeType == TvShow) {
-                  //   TvShow tvShow = item as TvShow;
-                  //   return tvShow.title
-                  //       .toString()
-                  //       .toLowerCase()
-                  //       .contains(query.toLowerCase());
-                  // }
-
-                  // return item!
-                  //     .toString()
-                  //     .toLowerCase()
-                  //     .contains(query.toLowerCase());
                 }).toList(),
                 overlaySearchListItemBuilder: (dynamic item) {
                   String id;
                   String title = "";
-                  String actors = "";
+                  List<String> actors = [];
                   String name = "";
-                  String type = "";
                   String year = "";
                   if (item!.runtimeType == Movie) {
                     Movie movie = item as Movie;
                     id = movie.id;
                     title = movie.title;
                     year = movie.year.toString();
-                    actors = movie.cast.join(", ");
+                    actors = movie.cast;
                     posters[movie.id] = movie.getPoster();
                   } else if (item!.runtimeType == TvShow) {
                     TvShow tvShow = item as TvShow;
@@ -368,14 +378,13 @@ class _MainScreenState extends State<MainScreen> {
                       year = tvShow.years;
                     }
 
-                    actors = tvShow.cast.join(", ");
+                    actors = tvShow.cast;
                     posters[tvShow.id] = tvShow.getPoster();
                   } else {
                     Person person = item as Person;
                     people.add(person);
                     id = person.id;
                     name = person.name;
-                    type = person.type;
                     posters[person.id] = person.getPhoto();
                   }
 
@@ -419,7 +428,21 @@ class _MainScreenState extends State<MainScreen> {
                                   : Text(name,
                                       style: Styles.fonts.commentName)),
                               subtitle: (title.isNotEmpty
-                                  ? Text(actors, style: Styles.fonts.comment)
+                                  ? FutureBuilder(
+                                      future: PersonsAPI().getPeople(actors),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<List<Person>>
+                                              snapshot) {
+                                        var people = [];
+                                        if (snapshot.hasData) {
+                                          for (var person in snapshot.data!) {
+                                            people.add(person.name);
+                                          }
+                                        }
+                                        return Text(people.join(', '),
+                                            style: Styles.fonts.comment);
+                                      },
+                                    )
                                   : null),
                               trailing: Text(_checkType(item),
                                   style: Styles.fonts.comment),
@@ -432,6 +455,7 @@ class _MainScreenState extends State<MainScreen> {
                 },
                 onItemSelected: (dynamic item) {
                   setState(() {
+                    print(item.runtimeType);
                     if (item.runtimeType == Movie) {
                       Movie selected = item as Movie;
                       for (var movie in movies) {

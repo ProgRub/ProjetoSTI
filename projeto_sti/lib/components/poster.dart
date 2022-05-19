@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_sti/screens/movieInfoScreen.dart';
 
 class Poster extends StatelessWidget {
   late int type;

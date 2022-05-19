@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/api/exceptions.dart';
@@ -14,7 +12,6 @@ import 'package:projeto_sti/validators.dart';
 
 import '../api/authentication.dart';
 import '../components/appLogo.dart';
-import '../components/inputFieldLabel.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 
@@ -25,11 +22,11 @@ class TVShowsAPI {
     for (var show in shows.docs) {
       tvShows.add(TvShow.fromApi(show));
       var actors = [];
-      for (var actor in tvShows.last.cast) {
-        // print(actor);
-        // PersonsAPI().addActorIfNotInDB(actor);
-        actors.add(await PersonsAPI().addActorIfNotInDB(actor));
-      }
+      // for (var actor in tvShows.last.cast) {
+      //   // print(actor);
+      //   // PersonsAPI().addActorIfNotInDB(actor);
+      //   actors.add(await PersonsAPI().addActorIfNotInDB(actor));
+      // }
       // collection.doc(tvShows.last.id).update({"Actors": actors});
       // print("Wallpaper " + tvShows.last.title);
     }

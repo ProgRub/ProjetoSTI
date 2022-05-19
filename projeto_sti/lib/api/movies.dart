@@ -1,14 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
-
-import 'package:http/http.dart' as http;
 
 class MoviesAPI {
   MoviesAPI._privateConstructor();
@@ -28,11 +21,11 @@ class MoviesAPI {
     List<Movie> returnMovies = [];
     for (var movie in movies.docs) {
       returnMovies.add(Movie.fromApi(movie));
-      var actors = [];
-      for (var actor in returnMovies.last.cast) {
-        // print(actor);
-        actors.add(await PersonsAPI().addActorIfNotInDB(actor));
-      }
+      // var actors = [];
+      // for (var actor in returnMovies.last.cast) {
+      //   // print(actor);
+      //   actors.add(await PersonsAPI().addActorIfNotInDB(actor));
+      // }
       // if (returnMovies.last.title == "Se7en")
       //   collection.doc(returnMovies.last.id).update({"Actors": actors});
       // print("Wallpaper " + returnMovies.last.title);

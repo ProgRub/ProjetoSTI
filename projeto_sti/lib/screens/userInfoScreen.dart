@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';

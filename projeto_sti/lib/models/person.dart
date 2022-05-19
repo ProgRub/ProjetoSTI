@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class Person {
   String id;
-  String name, summary, type, photo, born;
+  String name, summary, type, photo, born, died;
   num awardWins, awardNominations;
 
   Person(
@@ -15,6 +15,7 @@ class Person {
       required this.type,
       required this.awardWins,
       required this.born,
+      required this.died,
       required this.awardNominations});
 
   Person.fromApi(DocumentSnapshot<Map<String, dynamic>> apiResponse)
@@ -24,13 +25,11 @@ class Person {
         type = apiResponse["type"],
         photo = apiResponse["photo"],
         born = apiResponse["born"],
+        died = apiResponse["died"],
         awardWins = apiResponse["awardWins"],
         awardNominations = apiResponse["awardNoms"];
 
   Future<Image> getPhoto() async {
-    Reference ref =
-        FirebaseStorage.instance.ref().child("personPhotos/" + photo);
-    String url = (await ref.getDownloadURL()).toString();
-    return Image.network(url);
+    return Image.network(photo);
   }
 }

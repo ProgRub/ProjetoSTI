@@ -10,13 +10,22 @@ class PersonsAPI {
   static final PersonsAPI _instance = PersonsAPI._privateConstructor();
 
   CollectionReference<Map<String, dynamic>> collection =
-      FirebaseFirestore.instance.collection('personsTEST');
+      FirebaseFirestore.instance.collection('persons');
 
   factory PersonsAPI() {
     return _instance;
   }
   Future<Person> getPersonByID(String id) async =>
       Person.fromApi(await collection.doc(id).get());
+
+  Future<List<Person>> getPeople(List<String> ids) async {
+    List<Person> returnPeople = [];
+    for (var id in ids) {
+      var person = await collection.doc(id).get();
+      returnPeople.add(Person.fromApi(person));
+    }
+    return returnPeople;
+  }
 
   Future<List<Person>> getAllPeople() async {
     var people = await collection.get();
@@ -29,8 +38,9 @@ class PersonsAPI {
 
   Future<String> addActorIfNotInDB(String actorName) async {
     var actors = await collection.get();
-    if (actors.docs.any((element) =>
-        element["name"] == actorName && element["type"] == "Actor")) {
+    if (!actorName.contains(" ") ||
+        actors.docs.any((element) =>
+            element["name"] == actorName && element["type"] == "Actor")) {
       return "";
     }
     // return;

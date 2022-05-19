@@ -3,7 +3,6 @@ import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
-import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/models/genre.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
@@ -254,15 +253,6 @@ class _ByGenreState extends State<ByGenreScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  GestureDetector _buildPoster(int index, int type) {
-    return GestureDetector(
-      onTap: () {
-        print("POSTER CLICKED");
-      },
-      child: Poster(type: type),
     );
   }
 }

@@ -9,7 +9,6 @@ import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/movie.dart';
-import 'movieInfoScreen.dart';
 
 class PersonInfoScreen extends StatefulWidget {
   PersonInfoScreen({Key? key, required this.artist}) : super(key: key);
@@ -372,15 +371,6 @@ class _PersonInfoState extends State<PersonInfoScreen> {
           style: style,
         ),
       ),
-    );
-  }
-
-  GestureDetector _buildPoster(int index, int type) {
-    return GestureDetector(
-      onTap: () {
-        print("POSTER CLICKED");
-      },
-      child: Poster(type: type),
     );
   }
 }

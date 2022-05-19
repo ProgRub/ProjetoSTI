@@ -1,12 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
-import 'package:projeto_sti/components/poster.dart';
+import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
+import 'package:projeto_sti/screens/personInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:like_button/like_button.dart';
@@ -424,30 +424,65 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
         height: 150,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: tvShow.cast.length,
           itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 52.0,
-                      backgroundColor: Styles.colors.button,
-                      child: const CircleAvatar(
-                        radius: 50.0,
-                        backgroundImage: AssetImage(
-                            "packages/projeto_sti/assets/images/joaquin_phoenix.jpg"),
-                      ),
+            return FutureBuilder(
+                future: PersonsAPI().getPersonByID(tvShow.cast[index]),
+                builder:
+                    (BuildContext context, AsyncSnapshot<Person> snapshot) {
+                  if (!snapshot.hasData) {
+                    return const SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  var actor = snapshot.data!;
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PersonInfoScreen(artist: actor),
+                          ));
+                    },
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            FutureBuilder(
+                                future: snapshot.data!.getPhoto(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<Image> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return CircleAvatar(
+                                    radius: 52.0,
+                                    backgroundColor: Styles.colors.button,
+                                    child: CircleAvatar(
+                                      radius: 50.0,
+                                      backgroundImage: snapshot.data!.image,
+                                    ),
+                                  );
+                                }),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 13.0),
+                          child: Text(actor.name,
+                              style: Styles.fonts.plot,
+                              textAlign: TextAlign.center),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 13.0),
-                  child: Text("Joaquin Phoenix",
-                      style: Styles.fonts.plot, textAlign: TextAlign.center),
-                ),
-              ],
-            );
+                  );
+                });
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(

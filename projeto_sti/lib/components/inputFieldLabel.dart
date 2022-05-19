@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 class InputFieldLabel extends StatelessWidget {

@@ -93,17 +93,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - packages/projeto_sti/assets/db/genres.json
-    - packages/projeto_sti/assets/images/profile.jpg
     - packages/projeto_sti/assets/images/film-popcorn.gif
     - packages/projeto_sti/assets/images/avatar.jpg
-    - packages/projeto_sti/assets/images/joaquin_phoenix.jpg
-    - packages/projeto_sti/assets/images/joker_image.png
-    - packages/projeto_sti/assets/images/joker_poster.jpg
-    - packages/projeto_sti/assets/images/profile_pic.jpg
-    - packages/projeto_sti/assets/images/stranger_poster.jpg
-    - packages/projeto_sti/assets/images/xmen.jpg
-    - packages/projeto_sti/assets/images/popcorn.png
+  
     # - db/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

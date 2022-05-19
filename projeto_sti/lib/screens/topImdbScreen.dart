@@ -35,6 +35,7 @@ class _TopImdbState extends State<TopImdbScreen> {
 
   @override
   initState() {
+    filters.add("All");
     selectedCategory = 0;
     super.initState();
   }
@@ -144,13 +145,15 @@ class _TopImdbState extends State<TopImdbScreen> {
                 future: genresFuture,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Genre>> snapshot) {
-                  if (snapshot.hasData && filters.isEmpty) {
+                  if (snapshot.hasData && filters.length == 1) {
                     var genres = snapshot.data!;
+                    filters = [];
                     for (var genre in genres) {
                       filters.add(genre.name);
                     }
                     filters.sort(
                         (a, b) => a.compareTo(b)); //ordena alfabeticamente
+
                     filters.insert(0, "All");
                   }
                   return DropdownButton<String>(
@@ -217,12 +220,9 @@ class _TopImdbState extends State<TopImdbScreen> {
                     builder:
                         (BuildContext context, AsyncSnapshot<Image> snapshot) {
                       Widget child;
-                      child = const SkeletonItem(
-                        child: SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                            width: 155,
-                          ),
-                        ),
+                      child = Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: SkeletonListTile(),
                       );
                       if (snapshot.hasData) {
                         var movie = movies[index];
@@ -267,12 +267,9 @@ class _TopImdbState extends State<TopImdbScreen> {
                     builder:
                         (BuildContext context, AsyncSnapshot<Image> snapshot) {
                       Widget child;
-                      child = const SkeletonItem(
-                        child: SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                            width: 155,
-                          ),
-                        ),
+                      child = Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: SkeletonListTile(),
                       );
                       if (snapshot.hasData) {
                         var tvShow = tvShows[index];

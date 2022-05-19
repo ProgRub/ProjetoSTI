@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/users.dart';
-import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/screens/loginScreen.dart';
 import 'package:projeto_sti/screens/mainScreen.dart';
 import 'package:projeto_sti/styles/style.dart';

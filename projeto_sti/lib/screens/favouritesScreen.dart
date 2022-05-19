@@ -3,7 +3,6 @@ import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
-import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
