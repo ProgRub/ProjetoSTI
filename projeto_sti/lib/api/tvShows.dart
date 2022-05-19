@@ -21,15 +21,20 @@ class TVShowsAPI {
     List<TvShow> tvShows = [];
     for (var show in shows.docs) {
       tvShows.add(TvShow.fromApi(show));
-      var actors = [];
-      // for (var actor in tvShows.last.cast) {
-      //   // print(actor);
-      //   // PersonsAPI().addActorIfNotInDB(actor);
-      //   actors.add(await PersonsAPI().addActorIfNotInDB(actor));
-      // }
-      // collection.doc(tvShows.last.id).update({"Actors": actors});
+      if (tvShows.last.cast.any((element) => element.contains(" "))) {
+        var actors = [];
+        for (var actor in tvShows.last.cast) {
+          // print(actor);
+          // PersonsAPI().addActorIfNotInDB(actor);
+          actors.add(await PersonsAPI().addActorIfNotInDB(actor));
+        }
+        if (actors.any((element) => element.isEmpty)) continue;
+        // print("CHANGED ACTORS TVSHOWS");
+        // collection.doc(tvShows.last.id).update({"Actors": actors});
+      }
       // print("Wallpaper " + tvShows.last.title);
     }
+    print("FINISHED TVSHOWS");
     return tvShows;
   }
 

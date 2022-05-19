@@ -21,15 +21,21 @@ class MoviesAPI {
     List<Movie> returnMovies = [];
     for (var movie in movies.docs) {
       returnMovies.add(Movie.fromApi(movie));
-      // var actors = [];
-      // for (var actor in returnMovies.last.cast) {
-      //   // print(actor);
-      //   actors.add(await PersonsAPI().addActorIfNotInDB(actor));
-      // }
-      // if (returnMovies.last.title == "Se7en")
-      //   collection.doc(returnMovies.last.id).update({"Actors": actors});
+      if (returnMovies.last.cast.any((element) => element.contains(" "))) {
+        var actors = [];
+        for (var actor in returnMovies.last.cast) {
+          // print(actor);
+          actors.add(await PersonsAPI().addActorIfNotInDB(actor));
+        }
+        // if (returnMovies.last.title == "Se7en")
+        print(actors);
+        if (actors.any((element) => element.isEmpty)) continue;
+        // print("CHANGED ACTORS MOVIES");
+        // collection.doc(returnMovies.last.id).update({"Actors": actors});
+      }
       // print("Wallpaper " + returnMovies.last.title);
     }
+    print("FINISHED MOVIES");
     return returnMovies;
   }
 
