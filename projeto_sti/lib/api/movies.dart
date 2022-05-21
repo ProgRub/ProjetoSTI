@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/movie.dart';
+import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 
 class MoviesAPI {
@@ -22,16 +24,39 @@ class MoviesAPI {
     for (var movie in movies.docs) {
       returnMovies.add(Movie.fromApi(movie));
       if (returnMovies.last.cast.any((element) => element.contains(" "))) {
-        var actors = [];
+        List<String> actors = [];
         for (var actor in returnMovies.last.cast) {
           // print(actor);
-          actors.add(await PersonsAPI().addActorIfNotInDB(actor));
+          actors.add(await PersonsAPI().addPersonIfNotInDB(actor, "Actor"));
         }
         // if (returnMovies.last.title == "Se7en")
-        print(actors);
-        if (actors.any((element) => element.isEmpty)) continue;
+        // print(actors);
+        if (actors.any((element) => element.isEmpty || element.contains(" ")))
+          continue;
         // print("CHANGED ACTORS MOVIES");
-        // collection.doc(returnMovies.last.id).update({"Actors": actors});
+        collection.doc(returnMovies.last.id).update({"Actors": actors});
+        returnMovies.last.cast = actors;
+      }
+      if (returnMovies.last.directors.any((element) => element.contains(" "))) {
+        List<String> directors = [];
+        for (var director in returnMovies.last.directors) {
+          directors
+              .add(await PersonsAPI().addPersonIfNotInDB(director, "Director"));
+        }
+        if (directors.any(
+            (element) => element.isEmpty || element.contains(" "))) continue;
+        collection.doc(returnMovies.last.id).update({"Director": directors});
+        returnMovies.last.directors = directors;
+      }
+      if (returnMovies.last.writers.any((element) => element.contains(" "))) {
+        List<String> writers = [];
+        for (var writer in returnMovies.last.writers) {
+          writers.add(await PersonsAPI().addPersonIfNotInDB(writer, "Writer"));
+        }
+        if (writers.any((element) => element.isEmpty || element.contains(" ")))
+          continue;
+        collection.doc(returnMovies.last.id).update({"Writer": writers});
+        returnMovies.last.writers = writers;
       }
       // print("Wallpaper " + returnMovies.last.title);
     }

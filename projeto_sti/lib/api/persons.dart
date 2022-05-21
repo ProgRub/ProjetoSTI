@@ -30,30 +30,58 @@ class PersonsAPI {
   }
 
   Future<List<Person>> getAllPeople() async {
-    // var movies = await MoviesAPI().getAllMovies();
-    // var shows = await TVShowsAPI().getAllTvShows();
+    clearPeopleNotBeingUsed();
     var people = await collection.get();
     List<Person> returnPeople = [];
     for (var person in people.docs) {
-      // if (person["photo"].isEmpty) collection.doc(person.id).delete();
+      if (person["photo"].isEmpty) print("NO PHOTO " + person["name"]);
       returnPeople.add(Person.fromApi(person));
       // print(returnPeople.last.name);
     }
     return returnPeople;
   }
 
-  Future<String> addActorIfNotInDB(String actorName) async {
-    var actors = await collection.get();
-    // print("GETTING " + actorName);
-    if (actors.docs.any((element) => element["name"] == actorName)) {
-      return actors.docs
-          .firstWhere((element) => element["name"] == actorName)
-          .id;
+  Future<void> clearPeopleNotBeingUsed() async {
+    var movies = await MoviesAPI().getAllMovies();
+    var shows = await TVShowsAPI().getAllTvShows();
+    var people = await collection.get();
+    for (var person in people.docs) {
+      if (!movies.any((element) => element.cast.contains(person.id)) &&
+          !shows.any((element) => element.cast.contains(person.id)) &&
+          !movies.any((element) => element.directors.contains(person.id)) &&
+          !shows.any((element) => element.directors.contains(person.id)) &&
+          !movies.any((element) => element.writers.contains(person.id)) &&
+          !shows.any((element) => element.writers.contains(person.id))) {
+        print("DELETING " + person.id);
+        collection.doc(person.id).delete();
+      }
     }
-    if (actorName.contains(" ")) {
-      print("SUMMARY");
+  }
+
+  Future<String> addPersonIfNotInDB(String actorName, String type) async {
+    var people = await collection.get();
+    // print("GETTING " + actorName);
+    if (!actorName.contains(" ")) {
+      var person = await collection.doc(actorName).get();
+      if (!person["type"].contains(type)) {
+        collection.doc(actorName).update({"type": person["type"] + "," + type});
+      }
+      return actorName;
+    }
+    if (people.docs.any((element) => element["name"] == actorName)) {
+      var person =
+          people.docs.firstWhere((element) => element["name"] == actorName);
+      if (!person["type"].contains(type)) {
+        collection.doc(person.id).update({"type": person["type"] + "," + type});
+      }
+      return person.id;
+    }
+    print("GETTING: " + actorName + " " + type);
+    print("SUMMARY");
+    try {
       Response resSummary = await get(Uri.parse(
           "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=${actorName.replaceAll(" ", "%20")}"));
+
       var summary = "";
       if (resSummary.statusCode == 200) {
         var body = jsonDecode(resSummary.body);
@@ -393,61 +421,77 @@ class PersonsAPI {
         } else {
           // print(actorName + "5555");
         }
-
-        return (await collection.add({
-          "awardNoms": awardNoms,
-          "awardWins": awardWins,
-          "born": dateBorn,
-          "died": dateDied,
-          "name": actorName,
-          "photo": "",
-          "summary": summary,
-          "type": "Actor"
-        }))
-            .id;
         // print(actorName + " " + awardWins.toString());
         // print(actorName + " " + awardNoms.toString());
       }
-    }
 
-    print("PHOTO");
-    var actor = await collection.doc(actorName).get();
-    print(actor["name"]);
-    Response resPhoto = await get(Uri.parse(
-        "https://en.wikipedia.org/w/api.php?action=query&titles=${actor["name"].replaceAll(" ", "%20")}&prop=pageimages&format=json&pithumbsize=2000"));
-    if (resPhoto.statusCode == 200) {
-      var body = jsonDecode(resPhoto.body);
-      try {
-        collection.doc(actorName).update({
-          "photo": body["query"]["pages"][body["query"]["pages"].keys.first]
-              ["thumbnail"]["source"]
-        });
-        // print(body["query"]["pages"][body["query"]["pages"].keys.first]
-        //     ["thumbnail"]["source"]);
-      } catch (e) {
-        resPhoto = await get(Uri.parse(
-            "https://en.wikipedia.org/w/api.php?action=query&titles=${actor["name"].replaceAll(" ", "%20")}%20(actor)&prop=pageimages&format=json&pithumbsize=2000"));
-        if (resPhoto.statusCode == 200) {
-          body = jsonDecode(resPhoto.body);
-          try {
-            collection.doc(actorName).update({
-              "photo": body["query"]["pages"][body["query"]["pages"].keys.first]
-                  ["thumbnail"]["source"]
-            });
-            // print(body["query"]["pages"][body["query"]["pages"].keys.first]
-            //     ["thumbnail"]["source"]);
-          } catch (e) {}
+      print("PHOTO");
+      var photo = "";
+      Response resPhoto = await get(Uri.parse(
+          "https://en.wikipedia.org/w/api.php?action=query&titles=${actorName.replaceAll(" ", "%20")}&prop=pageimages&format=json&pithumbsize=2000"));
+      if (resPhoto.statusCode == 200) {
+        var body = jsonDecode(resPhoto.body);
+        try {
+          photo = body["query"]["pages"][body["query"]["pages"].keys.first]
+              ["thumbnail"]["source"];
+        } catch (e) {
+          resPhoto = await get(Uri.parse(
+              "https://en.wikipedia.org/w/api.php?action=query&titles=${actorName.replaceAll(" ", "%20")}%20(actor)&prop=pageimages&format=json&pithumbsize=2000"));
+          if (resPhoto.statusCode == 200) {
+            body = jsonDecode(resPhoto.body);
+            try {
+              photo = body["query"]["pages"][body["query"]["pages"].keys.first]
+                  ["thumbnail"]["source"];
+            } catch (e) {}
+          }
         }
+      } else {
+        print("ERROR");
       }
-    } else {
-      print("ERROR");
-    }
-    if (actors.docs.any((element) => element["name"] == actorName)) {
-      return actors.docs
-          .firstWhere((element) => element["name"] == actorName)
+      if (people.docs.any((element) => element["name"] == actorName)) {
+        var person =
+            people.docs.firstWhere((element) => element["name"] == actorName);
+        if (!person["type"].contains(type)) {
+          collection
+              .doc(person.id)
+              .update({"type": person["type"] + "," + type});
+        }
+        return person.id;
+      }
+      // print({
+      //   "awardNoms": awardNoms,
+      //   "awardWins": awardWins,
+      //   "born": dateBorn,
+      //   "died": dateDied,
+      //   "name": actorName,
+      //   "photo": photo,
+      //   "summary": summary,
+      //   "type": type
+      // });
+      // return "";
+      return (await collection.add({
+        "awardNoms": awardNoms,
+        "awardWins": awardWins,
+        "born": dateBorn,
+        "died": dateDied,
+        "name": actorName,
+        "photo": photo,
+        "summary": summary,
+        "type": type
+      }))
+          .id;
+    } catch (e) {
+      return (await collection.add({
+        "awardNoms": 0,
+        "awardWins": 0,
+        "born": "",
+        "died": "",
+        "name": actorName,
+        "photo": "",
+        "summary": "",
+        "type": type
+      }))
           .id;
     }
-
-    return actor.id;
   }
 }

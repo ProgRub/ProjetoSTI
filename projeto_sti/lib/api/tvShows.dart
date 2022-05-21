@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 
@@ -22,15 +23,35 @@ class TVShowsAPI {
     for (var show in shows.docs) {
       tvShows.add(TvShow.fromApi(show));
       if (tvShows.last.cast.any((element) => element.contains(" "))) {
-        var actors = [];
+        List<String> actors = [];
         for (var actor in tvShows.last.cast) {
-          // print(actor);
-          // PersonsAPI().addActorIfNotInDB(actor);
-          actors.add(await PersonsAPI().addActorIfNotInDB(actor));
+          actors.add(await PersonsAPI().addPersonIfNotInDB(actor, "Actor"));
         }
-        if (actors.any((element) => element.isEmpty)) continue;
-        // print("CHANGED ACTORS TVSHOWS");
-        // collection.doc(tvShows.last.id).update({"Actors": actors});
+        if (actors.any((element) => element.isEmpty || element.contains(" ")))
+          continue;
+        collection.doc(tvShows.last.id).update({"Actors": actors});
+        tvShows.last.cast = actors;
+      }
+      if (tvShows.last.directors.any((element) => element.contains(" "))) {
+        List<String> directors = [];
+        for (var director in tvShows.last.directors) {
+          directors
+              .add(await PersonsAPI().addPersonIfNotInDB(director, "Director"));
+        }
+        if (directors.any(
+            (element) => element.isEmpty || element.contains(" "))) continue;
+        collection.doc(tvShows.last.id).update({"Director": directors});
+        tvShows.last.directors = directors;
+      }
+      if (tvShows.last.writers.any((element) => element.contains(" "))) {
+        List<String> writers = [];
+        for (var writer in tvShows.last.writers) {
+          writers.add(await PersonsAPI().addPersonIfNotInDB(writer, "Writer"));
+        }
+        if (writers.any((element) => element.isEmpty || element.contains(" ")))
+          continue;
+        collection.doc(tvShows.last.id).update({"Writer": writers});
+        tvShows.last.writers = writers;
       }
       // print("Wallpaper " + tvShows.last.title);
     }

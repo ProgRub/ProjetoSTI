@@ -512,10 +512,81 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       padding: const EdgeInsets.only(top: 10.0, left: 40.0),
       child: Align(
         alignment: Alignment.topLeft,
-        child: Text(
-          movie.directors.join(", "),
-          style: Styles.fonts.plot,
+        child: SizedBox(
+          height: 150,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: movie.directors.length,
+            itemBuilder: (BuildContext context, int index) {
+              return FutureBuilder(
+                  future: PersonsAPI().getPersonByID(movie.directors[index]),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Person> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    var director = snapshot.data!;
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PersonInfoScreen(artist: director),
+                            ));
+                      },
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              FutureBuilder(
+                                  future: snapshot.data!.getPhoto(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<Image> snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const SizedBox(
+                                        width: 60,
+                                        height: 60,
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                    return CircleAvatar(
+                                      radius: 52.0,
+                                      backgroundColor: Styles.colors.button,
+                                      child: CircleAvatar(
+                                        radius: 50.0,
+                                        backgroundImage: snapshot.data!.image,
+                                      ),
+                                    );
+                                  }),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 13.0),
+                            child: Text(director.name,
+                                style: Styles.fonts.plot,
+                                textAlign: TextAlign.center),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                width: 20.0,
+              );
+            },
+          ),
         ),
+        // child: Text(
+        //   movie.directors.join(", "),
+        //   style: Styles.fonts.plot,
+        // ),
       ),
     );
 
