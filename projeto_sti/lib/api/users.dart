@@ -128,10 +128,10 @@ class UserAPI {
 
     if (type == "movie") {
       loggedInUser!.favouriteMovies = favourites;
-      MoviesAPI().changeFavouriteCount(id, favourites.length);
+      MoviesAPI().changeFavouriteCount(id, 1);
     } else {
       loggedInUser!.favouriteTvShows = favourites;
-      TVShowsAPI().changeFavouriteCount(id, favourites.length);
+      TVShowsAPI().changeFavouriteCount(id, 1);
     }
   }
 
@@ -153,10 +153,10 @@ class UserAPI {
     }
     if (type == "movie") {
       loggedInUser!.favouriteMovies = favourites;
-      MoviesAPI().changeFavouriteCount(id, favourites.length);
+      MoviesAPI().changeFavouriteCount(id, -1);
     } else {
       loggedInUser!.favouriteTvShows = favourites;
-      TVShowsAPI().changeFavouriteCount(id, favourites.length);
+      TVShowsAPI().changeFavouriteCount(id, -1);
     }
   }
 
@@ -176,10 +176,10 @@ class UserAPI {
     }
     if (type == "movie") {
       loggedInUser!.watchedMovies = watched;
-      MoviesAPI().changeWatchedCount(id, watched.length);
+      MoviesAPI().changeWatchedCount(id, 1);
     } else {
       loggedInUser!.watchedTvShows = watched;
-      TVShowsAPI().changeWatchedCount(id, watched.length);
+      TVShowsAPI().changeWatchedCount(id, 1);
     }
   }
 
@@ -199,10 +199,10 @@ class UserAPI {
     }
     if (type == "movie") {
       loggedInUser!.watchedMovies = watched;
-      MoviesAPI().changeWatchedCount(id, watched.length);
+      MoviesAPI().changeWatchedCount(id, -1);
     } else {
       loggedInUser!.watchedTvShows = watched;
-      TVShowsAPI().changeWatchedCount(id, watched.length);
+      TVShowsAPI().changeWatchedCount(id, -1);
     }
   }
 

@@ -106,6 +106,8 @@ class _MainScreenState extends State<MainScreen> {
             child = skeletonPosterList;
             if (snapshot.hasData) {
               movies = snapshot.data!;
+              movies.sort(
+                  ((a, b) => b.timesFavourited.compareTo(a.timesFavourited)));
               child = ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: movies.length,
@@ -165,6 +167,8 @@ class _MainScreenState extends State<MainScreen> {
             child = skeletonPosterList;
             if (snapshot.hasData) {
               tvShows = snapshot.data!;
+              tvShows.sort(
+                  ((a, b) => b.timesFavourited.compareTo(a.timesFavourited)));
               child = ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: tvShows.length,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
@@ -22,6 +24,9 @@ class MoviesAPI {
     var movies = await collection.get();
     List<Movie> returnMovies = [];
     for (var movie in movies.docs) {
+      // collection
+      //     .doc(movie.id)
+      //     .update({"timesFavourited": 0, "timesWatched": 0});
       returnMovies.add(Movie.fromApi(movie));
       if (returnMovies.last.cast.any((element) => element.contains(" "))) {
         List<String> actors = [];
@@ -128,11 +133,19 @@ class MoviesAPI {
     return returnMovies;
   }
 
-  void changeFavouriteCount(String id, int numTimes) {
-    collection.doc(id).update({"timesFavourited": numTimes});
+  void changeFavouriteCount(String id, int numTimes) async {
+    int timesFavourited = (await collection.doc(id).get())["timesFavourited"];
+    // print(timesFavourited.toString());
+    collection
+        .doc(id)
+        .update({"timesFavourited": max(0, timesFavourited + numTimes)});
   }
 
-  void changeWatchedCount(String id, int numTimes) {
-    collection.doc(id).update({"timesWatched": numTimes});
+  void changeWatchedCount(String id, int numTimes) async {
+    int timesWatched = (await collection.doc(id).get())["timesWatched"];
+    // print(timesWatched.toString());
+    collection
+        .doc(id)
+        .update({"timesWatched": max(0, timesWatched + numTimes)});
   }
 }
