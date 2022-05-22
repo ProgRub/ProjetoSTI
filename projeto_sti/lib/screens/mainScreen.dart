@@ -40,6 +40,8 @@ class _MainScreenState extends State<MainScreen> {
   List<Movie> movies = [];
   Future<List<TvShow>> tvShowsFuture = TVShowsAPI().getAllTvShows();
   List<TvShow> tvShows = [];
+  late Future<List<Object>> programsCombinedFuture = combineMoviesTvShows();
+  List<Object> programsCombined = [];
   late Future<Set<Object?>> searchTermsFuture =
       GeneralAPI().getSearchTerms(moviesFuture, tvShowsFuture);
 
@@ -90,6 +92,101 @@ class _MainScreenState extends State<MainScreen> {
           width: 20.0,
         );
       },
+    );
+
+    var trendingNowSection = Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 20.0,
+      ),
+      child: SizedBox(
+        height: 230,
+        child: FutureBuilder(
+          future: programsCombinedFuture,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Object>> snapshot) {
+            Widget child;
+            child = skeletonPosterList;
+            if (snapshot.hasData) {
+              programsCombined = snapshot.data!;
+              programsCombined.sort(((a, b) {
+                Movie movieA, movieB;
+                TvShow showA, showB;
+                if (a.runtimeType == Movie) {
+                  movieA = a as Movie;
+                  if (b.runtimeType == Movie) {
+                    movieB = b as Movie;
+                    return movieB.timesFavourited
+                        .compareTo(movieA.timesFavourited);
+                  } else {
+                    showB = b as TvShow;
+                    return showB.timesFavourited
+                        .compareTo(movieA.timesFavourited);
+                  }
+                } else {
+                  showA = a as TvShow;
+                  if (b.runtimeType == Movie) {
+                    movieB = b as Movie;
+                    return movieB.timesFavourited
+                        .compareTo(showA.timesFavourited);
+                  } else {
+                    showB = b as TvShow;
+                    return showB.timesFavourited
+                        .compareTo(showA.timesFavourited);
+                  }
+                }
+              }));
+              child = ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: programsCombined.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FutureBuilder(
+                      future: programsCombined[index].runtimeType == Movie
+                          ? (programsCombined[index] as Movie).getPoster()
+                          : (programsCombined[index] as TvShow).getPoster(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Image> snapshot2) {
+                        Widget child;
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
+                        );
+                        if (snapshot2.hasData) {
+                          child = GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          programsCombined[index].runtimeType ==
+                                                  Movie
+                                              ? MovieInfoScreen(
+                                                  movie: programsCombined[index]
+                                                      as Movie)
+                                              : TvShowInfoScreen(
+                                                  programsCombined[index]
+                                                      as TvShow),
+                                    ));
+                              },
+                              child: snapshot2.data!);
+                        }
+                        return child;
+                      });
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    width: 20.0,
+                  );
+                },
+              );
+            }
+            return child;
+          },
+        ),
+      ),
     );
 
     var topMovies = Padding(
@@ -528,7 +625,6 @@ class _MainScreenState extends State<MainScreen> {
             return child;
           },
         ));
-
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -554,7 +650,7 @@ class _MainScreenState extends State<MainScreen> {
                   _buildTextLabel("New Releases", Styles.fonts.title),
                   topTvShows, //apenas para testar layout
                   _buildTextLabel("Trending Now", Styles.fonts.title),
-                  topMovies, //apenas para testar layout
+                  trendingNowSection, //apenas para testar layout
                   _buildTextLabel("Top Movies", Styles.fonts.title),
                   topMovies,
                   _buildTextLabel("Top Tv Shows", Styles.fonts.title),
@@ -620,5 +716,9 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+  }
+
+  Future<List<Object>> combineMoviesTvShows() async {
+    return [...await moviesFuture, ...await tvShowsFuture];
   }
 }
