@@ -80,6 +80,8 @@ dev_dependencies:
   google_fonts: ^2.3.1
   page_transition: ^2.0.5
   device_preview: ^1.0.0
+  flutter_rating_bar: ^3.0.1+1
+  reactive_forms: ^12.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -96,6 +98,7 @@ flutter:
   assets:
     - packages/projeto_sti/assets/images/film-popcorn.gif
     - packages/projeto_sti/assets/images/avatar.jpg
+    - packages/projeto_sti/assets/images/popcorn.png
   
     # - db/a_dot_ham.jpeg
 
