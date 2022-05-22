@@ -22,6 +22,8 @@ import '../models/genre.dart';
 import '../models/person.dart';
 import '../models/tvShow.dart';
 
+import 'dart:io' show Platform;
+
 class MovieInfoScreen extends StatefulWidget {
   final Movie movie;
   const MovieInfoScreen({Key? key, required this.movie}) : super(key: key);
@@ -177,11 +179,21 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   size: 35.0,
                   color: Styles.colors.purple,
                 ),
-                onPressed: () {
-                  setState(() {
-                    _videoController.seekTo(Duration.zero);
-                    playingTrailer = true;
-                    _videoController.play();
+                onPressed: () async {
+                  setState(() async {
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      _videoController.seekTo(Duration.zero);
+                      playingTrailer = true;
+                      _videoController.play();
+                      return;
+                    }
+                    print("HERE");
+                    if (!await launchUrl(Uri.parse(
+                        'https://www.youtube.com/watch?v=' + movie.trailer))) {
+                      print("ERROR");
+                    } else {
+                      print("SUCESS");
+                    }
                   });
                 },
                 style: ElevatedButton.styleFrom(
@@ -765,7 +777,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 children: [
                   Stack(
                     children: [
-                      playingTrailer
+                      playingTrailer //(Platform.isAndroid || Platform.isIOS) &&
                           ? Stack(
                               children: [
                                 SizedBox(

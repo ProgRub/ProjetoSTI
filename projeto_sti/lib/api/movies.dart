@@ -127,4 +127,12 @@ class MoviesAPI {
     }
     return returnMovies;
   }
+
+  void changeFavouriteCount(String id, int numTimes) {
+    collection.doc(id).update({"timesFavourited": numTimes});
+  }
+
+  void changeWatchedCount(String id, int numTimes) {
+    collection.doc(id).update({"timesWatched": numTimes});
+  }
 }

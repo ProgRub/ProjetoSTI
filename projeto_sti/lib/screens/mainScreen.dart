@@ -36,10 +36,12 @@ class _MainScreenState extends State<MainScreen> {
   String usersName = UserAPI().loggedInUser!.name;
   late final ScrollController _controller;
   bool visibleAppBar = false;
-  late Future<List<Movie>> moviesFuture;
+  Future<List<Movie>> moviesFuture = MoviesAPI().getAllMovies();
   List<Movie> movies = [];
-  late Future<List<TvShow>> tvShowsFuture;
+  Future<List<TvShow>> tvShowsFuture = TVShowsAPI().getAllTvShows();
   List<TvShow> tvShows = [];
+  late Future<Set<Object?>> searchTermsFuture =
+      GeneralAPI().getSearchTerms(moviesFuture, tvShowsFuture);
 
   late Map<String, Future<Image>> posters;
 
@@ -47,8 +49,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   initState() {
-    moviesFuture = MoviesAPI().getAllMovies();
-    tvShowsFuture = TVShowsAPI().getAllTvShows();
     posters = {};
 
     super.initState();
@@ -303,7 +303,7 @@ class _MainScreenState extends State<MainScreen> {
     var searchBar = Padding(
         padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
         child: FutureBuilder(
-          future: GeneralAPI().getSearchTerms(),
+          future: searchTermsFuture,
           builder:
               (BuildContext context, AsyncSnapshot<Set<Object?>> snapshot) {
             Widget child;
@@ -455,7 +455,7 @@ class _MainScreenState extends State<MainScreen> {
                 },
                 onItemSelected: (dynamic item) {
                   setState(() {
-                    print(item.runtimeType);
+                    // print(item.runtimeType);
                     if (item.runtimeType == Movie) {
                       Movie selected = item as Movie;
                       for (var movie in movies) {

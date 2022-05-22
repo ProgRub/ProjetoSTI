@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/tvShows.dart';
+import 'package:projeto_sti/models/movie.dart';
+import 'package:projeto_sti/models/tvShow.dart';
 
 class GeneralAPI {
   FirebaseFirestore firebase = FirebaseFirestore.instance;
@@ -15,40 +17,28 @@ class GeneralAPI {
     return _instance;
   }
 
-  Future<Set<Object?>> getSearchTerms() async {
+  Future<Set<Object?>> getSearchTerms(Future<List<Movie>> moviesFuture,
+      Future<List<TvShow>> tvShowsFuture) async {
     Set<Object?> results = {};
-    var movies = await MoviesAPI().getAllMovies();
-    var tvShows = await TVShowsAPI().getAllTvShows();
-    var people = await PersonsAPI().getAllPeople();
+    var movies = await moviesFuture;
+    var tvShows = await tvShowsFuture;
+    var people = await PersonsAPI().getAllPeople(movies, tvShows);
 
-    Map<String, Future<Image>> posters = {};
+    // Map<String, Future<Image>> posters = {};
 
     for (var movie in movies) {
       results.add(movie);
-      posters[movie.id] = movie.getPoster();
-      // results.add(movie.title);
-      // results.addAll(movie.cast);
-      // results.addAll(movie.directors);
+      // posters[movie.id] = movie.getPoster();
     }
 
     for (var tvShow in tvShows) {
       results.add(tvShow);
-      posters[tvShow.id] = tvShow.getPoster();
-      // results.add(tvShow.title);
-      // results.addAll(tvShow.cast);
-      // results.addAll(tvShow.writers);
+      // posters[tvShow.id] = tvShow.getPoster();
     }
 
     for (var person in people) {
       results.add(person);
-      // posters[person.id] = person.getPhoto();
-      // results.add(tvShow.title);
-      // results.addAll(tvShow.cast);
-      // results.addAll(tvShow.writers);
     }
-
-    // Set<String> sortedSet =
-    //     SplayTreeSet.from(results, (a, b) => a.compareTo(b));
 
     return results;
   }

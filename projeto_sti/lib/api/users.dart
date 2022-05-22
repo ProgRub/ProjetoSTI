@@ -3,6 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projeto_sti/api/authentication.dart';
 import 'package:projeto_sti/api/genres.dart';
+import 'package:projeto_sti/api/movies.dart';
+import 'package:projeto_sti/api/tvShows.dart';
 
 import '../models/user.dart';
 
@@ -126,8 +128,10 @@ class UserAPI {
 
     if (type == "movie") {
       loggedInUser!.favouriteMovies = favourites;
+      MoviesAPI().changeFavouriteCount(id, favourites.length);
     } else {
       loggedInUser!.favouriteTvShows = favourites;
+      TVShowsAPI().changeFavouriteCount(id, favourites.length);
     }
   }
 
@@ -149,8 +153,10 @@ class UserAPI {
     }
     if (type == "movie") {
       loggedInUser!.favouriteMovies = favourites;
+      MoviesAPI().changeFavouriteCount(id, favourites.length);
     } else {
       loggedInUser!.favouriteTvShows = favourites;
+      TVShowsAPI().changeFavouriteCount(id, favourites.length);
     }
   }
 
@@ -168,11 +174,12 @@ class UserAPI {
       user.update(
           {(type == "movie" ? "watchedMovies" : "watchedTvShows"): watched});
     }
-
     if (type == "movie") {
       loggedInUser!.watchedMovies = watched;
+      MoviesAPI().changeWatchedCount(id, watched.length);
     } else {
       loggedInUser!.watchedTvShows = watched;
+      TVShowsAPI().changeWatchedCount(id, watched.length);
     }
   }
 
@@ -192,8 +199,10 @@ class UserAPI {
     }
     if (type == "movie") {
       loggedInUser!.watchedMovies = watched;
+      MoviesAPI().changeWatchedCount(id, watched.length);
     } else {
       loggedInUser!.watchedTvShows = watched;
+      TVShowsAPI().changeWatchedCount(id, watched.length);
     }
   }
 

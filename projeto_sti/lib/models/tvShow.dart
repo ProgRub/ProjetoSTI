@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class TvShow {
   String id;
-  int seasons;
+  int seasons, timesWatched, timesFavourited;
   double rating;
   List<String> genres, videos;
   String plot,
@@ -35,7 +35,9 @@ class TvShow {
       required this.directors,
       required this.writers,
       required this.videos,
-      required this.trailer});
+      required this.trailer,
+      required this.timesWatched,
+      required this.timesFavourited});
 
   TvShow.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
@@ -54,7 +56,9 @@ class TvShow {
         videos = apiResponse["Videos"].cast<String>(),
         directors = apiResponse["Director"].cast<String>(),
         writers = apiResponse["Writer"].cast<String>(),
-        trailer = apiResponse["Trailer"];
+        trailer = apiResponse["Trailer"],
+        timesWatched = apiResponse["timesWatched"],
+        timesFavourited = apiResponse["timesFavourited"];
 
   Future<Image> getPoster() async {
     Reference ref =

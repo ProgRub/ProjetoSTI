@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class Movie {
   String id;
-  int year;
+  int year, timesWatched, timesFavourited;
   double rating;
   List<String> genres;
   String plot, title, poster, length, language, ageRating, wallpaper, trailer;
@@ -26,7 +26,9 @@ class Movie {
       required this.directors,
       required this.writers,
       required this.videos,
-      required this.trailer});
+      required this.trailer,
+      required this.timesWatched,
+      required this.timesFavourited});
 
   Movie.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
@@ -44,7 +46,9 @@ class Movie {
         poster = apiResponse["Poster"],
         writers = apiResponse["Writer"].cast<String>(),
         videos = apiResponse["Videos"].cast<String>(),
-        trailer = apiResponse["Trailer"];
+        trailer = apiResponse["Trailer"],
+        timesWatched = apiResponse["timesWatched"],
+        timesFavourited = apiResponse["timesFavourited"];
 
   Future<Image> getPoster() async {
     Reference ref =

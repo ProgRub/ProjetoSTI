@@ -4,7 +4,9 @@ import 'package:http/http.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 
+import '../models/movie.dart';
 import '../models/person.dart';
+import '../models/tvShow.dart';
 
 class PersonsAPI {
   PersonsAPI._privateConstructor();
@@ -29,29 +31,30 @@ class PersonsAPI {
     return returnPeople;
   }
 
-  Future<List<Person>> getAllPeople() async {
-    clearPeopleNotBeingUsed();
+  Future<List<Person>> getAllPeople(
+      List<Movie> movies, List<TvShow> tvShows) async {
+    clearPeopleNotBeingUsed(movies, tvShows);
     var people = await collection.get();
     List<Person> returnPeople = [];
     for (var person in people.docs) {
-      if (person["photo"].isEmpty) print("NO PHOTO " + person["name"]);
+      // if (person["photo"].isEmpty) print("NO PHOTO " + person["name"]);
       returnPeople.add(Person.fromApi(person));
       // print(returnPeople.last.name);
     }
+    print("FINISHED PEOPLE");
     return returnPeople;
   }
 
-  Future<void> clearPeopleNotBeingUsed() async {
-    var movies = await MoviesAPI().getAllMovies();
-    var shows = await TVShowsAPI().getAllTvShows();
+  Future<void> clearPeopleNotBeingUsed(
+      List<Movie> movies, List<TvShow> tvShows) async {
     var people = await collection.get();
     for (var person in people.docs) {
       if (!movies.any((element) => element.cast.contains(person.id)) &&
-          !shows.any((element) => element.cast.contains(person.id)) &&
+          !tvShows.any((element) => element.cast.contains(person.id)) &&
           !movies.any((element) => element.directors.contains(person.id)) &&
-          !shows.any((element) => element.directors.contains(person.id)) &&
+          !tvShows.any((element) => element.directors.contains(person.id)) &&
           !movies.any((element) => element.writers.contains(person.id)) &&
-          !shows.any((element) => element.writers.contains(person.id))) {
+          !tvShows.any((element) => element.writers.contains(person.id))) {
         print("DELETING " + person.id);
         collection.doc(person.id).delete();
       }
