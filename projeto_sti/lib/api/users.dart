@@ -240,4 +240,16 @@ class UserAPI {
         SettableMetadata(contentType: 'image/jpeg'));
     return image.ref.getDownloadURL();
   }
+
+  Future<List<String>> getUserById(String userId) async {
+    var users = await collection.get();
+    List<String> returnUser = [];
+    for (var user in users.docs) {
+      if(user["authId"] == userId){
+        returnUser.add(user["name"]);
+        returnUser.add(user["imageDownloadUrl"]);
+      }
+    }
+    return returnUser;
+  }
 }

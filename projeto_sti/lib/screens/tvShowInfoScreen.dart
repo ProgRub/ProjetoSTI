@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
+import 'package:projeto_sti/api/comments.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
+import 'package:projeto_sti/components/commentBox.dart';
 import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/personInfoScreen.dart';
@@ -19,6 +21,7 @@ import '../api/genres.dart';
 import '../api/movies.dart';
 import '../api/tvShows.dart';
 import '../models/genre.dart';
+import '../models/comment.dart';
 import 'movieInfoScreen.dart';
 
 class TvShowInfoScreen extends StatefulWidget {
@@ -47,6 +50,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   late List<String> tvShowVideos;
 
   _TvShowInfoState(this.tvShow);
+
+
+  late Future<List<Comment>> comFuture;
+  List<Comment> comments = [];
+  List<String> user = [];
 
   @override
   void initState() {
@@ -585,69 +593,42 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
           ),
           child: SizedBox(
             height: 200,
-            child: ListView.separated(
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Styles.colors.lightBlue,
-                          child: const CircleAvatar(
-                            radius: 28.0,
-                            backgroundImage: AssetImage(
-                                "packages/projeto_sti/assets/images/profile_pic.jpg"),
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Joaquin Phoenix",
-                              style: Styles.fonts.commentName,
-                            ),
-                            const SizedBox(
-                              height: 8.0,
-                            ),
-                            Text("I totally recommend it!",
-                                style: Styles.fonts.comment),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text("9/10", style: Styles.fonts.comment),
-                                const SizedBox(
-                                  width: 5.0,
-                                ),
-                                const Icon(Icons.star,
-                                    size: 20.0, color: Colors.yellow),
-                              ],
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+            child: FutureBuilder(
+              future: CommentAPI().getComments(tvShow.id),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Comment>> snapshot) {
+                Widget child;
+                child = const Text('No comments yet', style: TextStyle(color: Colors.deepPurple, fontSize: 24));
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                  comments = snapshot.data!;
+                  if (comments.isNotEmpty) {
+                    child = ListView.separated(
+                      itemCount: comments.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FutureBuilder(
+                          future: UserAPI().getUserById(comments[index].userId),
+                          builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                            String userName = "...";
+                            String userImage = 'https://images.unsplash.com/photo-1611590027211-b954fd027b51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDd8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60';
+                            if (snapshot.hasData) {
+                              user = snapshot.data!;
+                              userName = user[0];
+                              userImage = user[1];
+                            }
+                            return child = CommentBox(comment:comments[index].comment, rate:comments[index].rate,date:comments[index].date,userName: userName, userImage: userImage);
+                          },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          height: 20.0,
+                        );
+                      },);
+                  }
+                }
+                return child;
               },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 20.0,
-                );
-              },
-            ),
+            )
           ),
         ),
         Padding(
