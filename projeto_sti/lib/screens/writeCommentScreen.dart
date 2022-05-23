@@ -34,6 +34,7 @@ class _WriteCommentState extends State<WriteCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const double tickMarkRadius = 18;
     return SafeArea(
       child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -85,7 +86,14 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                     ),
                   ),
 
-                    Slider(
+                  SliderTheme(
+                    data: const SliderThemeData(
+                      trackHeight: 7,
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 25),
+                      //rangeTickMarkShape: RoundRangeSliderTickMarkShape(tickMarkRadius: 18.0)
+                    ),
+                    child: Slider(
                       value: rating,
                       onChanged: (newRating) {
                         setState(() {
@@ -96,8 +104,10 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                       divisions: 9,
                       min: 0,
                       max: 9,
-
+                      activeColor: Colors.deepOrange,
+                      inactiveColor: Colors.grey,
                     ),
+                  ),
 
                     Expanded(
                       child: Padding(
