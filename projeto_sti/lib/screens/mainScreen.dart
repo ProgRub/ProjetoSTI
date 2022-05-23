@@ -49,6 +49,8 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Person> people = [];
 
+  final int AMOUNT_PROGRAMS_LOAD = 9;
+
   @override
   initState() {
     posters = {};
@@ -116,34 +118,59 @@ class _MainScreenState extends State<MainScreen> {
                   movieA = a as Movie;
                   if (b.runtimeType == Movie) {
                     movieB = b as Movie;
-                    return movieB.timesFavourited
-                        .compareTo(movieA.timesFavourited);
+                    return movieB.year.compareTo(movieA.year);
                   } else {
                     showB = b as TvShow;
-                    return showB.timesFavourited
-                        .compareTo(movieA.timesFavourited);
+                    var yearShow = 2023;
+                    var yearSplit = showB.years.split('–');
+                    if (yearSplit.length == 1) {
+                      yearShow = int.parse(yearSplit.first);
+                    } else {
+                      if (int.tryParse(yearSplit.last) != null) {
+                        yearShow = int.parse(yearSplit.last);
+                      }
+                    }
+                    return yearShow.compareTo(movieA.year);
                   }
                 } else {
                   showA = a as TvShow;
+                  var yearShowA = 2023;
+                  var yearSplitA = showA.years.split('–');
+                  if (yearSplitA.length == 1) {
+                    yearShowA = int.parse(yearSplitA.first);
+                  } else {
+                    if (int.tryParse(yearSplitA.last) != null) {
+                      yearShowA = int.parse(yearSplitA.last);
+                    }
+                  }
                   if (b.runtimeType == Movie) {
                     movieB = b as Movie;
-                    return movieB.timesFavourited
-                        .compareTo(showA.timesFavourited);
+                    return movieB.year.compareTo(yearShowA);
                   } else {
                     showB = b as TvShow;
-                    return showB.timesFavourited
-                        .compareTo(showA.timesFavourited);
+                    var yearShowB = 2023;
+                    var yearSplitB = showB.years.split('–');
+                    if (yearSplitB.length == 1) {
+                      yearShowB = int.parse(yearSplitB.first);
+                    } else {
+                      if (int.tryParse(yearSplitB.last) != null) {
+                        yearShowB = int.parse(yearSplitB.last);
+                      }
+                    }
+                    return yearShowB.compareTo(yearShowA);
                   }
                 }
               }));
+              var newReleases =
+                  programsCombined.take(AMOUNT_PROGRAMS_LOAD).toList();
               child = ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: programsCombined.length,
+                itemCount: newReleases.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FutureBuilder(
-                      future: programsCombined[index].runtimeType == Movie
-                          ? (programsCombined[index] as Movie).getPoster()
-                          : (programsCombined[index] as TvShow).getPoster(),
+                      future: newReleases[index].runtimeType == Movie
+                          ? (newReleases[index] as Movie).getPoster()
+                          : (newReleases[index] as TvShow).getPoster(),
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot2) {
                         Widget child;
@@ -160,15 +187,14 @@ class _MainScreenState extends State<MainScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          programsCombined[index].runtimeType ==
-                                                  Movie
-                                              ? MovieInfoScreen(
-                                                  movie: programsCombined[index]
-                                                      as Movie)
-                                              : TvShowInfoScreen(
-                                                  programsCombined[index]
-                                                      as TvShow),
+                                      builder: (context) => newReleases[index]
+                                                  .runtimeType ==
+                                              Movie
+                                          ? MovieInfoScreen(
+                                              movie:
+                                                  newReleases[index] as Movie)
+                                          : TvShowInfoScreen(
+                                              newReleases[index] as TvShow),
                                     ));
                               },
                               child: snapshot2.data!);
@@ -231,14 +257,16 @@ class _MainScreenState extends State<MainScreen> {
                   }
                 }
               }));
+              var trending =
+                  programsCombined.take(AMOUNT_PROGRAMS_LOAD).toList();
               child = ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: programsCombined.length,
+                itemCount: trending.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FutureBuilder(
-                      future: programsCombined[index].runtimeType == Movie
-                          ? (programsCombined[index] as Movie).getPoster()
-                          : (programsCombined[index] as TvShow).getPoster(),
+                      future: trending[index].runtimeType == Movie
+                          ? (trending[index] as Movie).getPoster()
+                          : (trending[index] as TvShow).getPoster(),
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot2) {
                         Widget child;
@@ -256,14 +284,12 @@ class _MainScreenState extends State<MainScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          programsCombined[index].runtimeType ==
-                                                  Movie
+                                          trending[index].runtimeType == Movie
                                               ? MovieInfoScreen(
-                                                  movie: programsCombined[index]
-                                                      as Movie)
+                                                  movie:
+                                                      trending[index] as Movie)
                                               : TvShowInfoScreen(
-                                                  programsCombined[index]
-                                                      as TvShow),
+                                                  trending[index] as TvShow),
                                     ));
                               },
                               child: snapshot2.data!);
@@ -300,12 +326,13 @@ class _MainScreenState extends State<MainScreen> {
               movies = snapshot.data!;
               movies.sort(
                   ((a, b) => b.timesFavourited.compareTo(a.timesFavourited)));
+              var topMovies = movies.take(AMOUNT_PROGRAMS_LOAD).toList();
               child = ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: movies.length,
+                itemCount: topMovies.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FutureBuilder(
-                      future: movies[index].getPoster(),
+                      future: topMovies[index].getPoster(),
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot2) {
                         Widget child;
@@ -322,8 +349,8 @@ class _MainScreenState extends State<MainScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          MovieInfoScreen(movie: movies[index]),
+                                      builder: (context) => MovieInfoScreen(
+                                          movie: topMovies[index]),
                                     ));
                               },
                               child: snapshot2.data!);
@@ -361,12 +388,13 @@ class _MainScreenState extends State<MainScreen> {
               tvShows = snapshot.data!;
               tvShows.sort(
                   ((a, b) => b.timesFavourited.compareTo(a.timesFavourited)));
+              var topTvShows = tvShows.take(AMOUNT_PROGRAMS_LOAD).toList();
               child = ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: tvShows.length,
+                  itemCount: topTvShows.length,
                   itemBuilder: (BuildContext context, int index) {
                     return FutureBuilder(
-                      future: tvShows[index].getPoster(),
+                      future: topTvShows[index].getPoster(),
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot) {
                         Widget child;
@@ -385,7 +413,7 @@ class _MainScreenState extends State<MainScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          TvShowInfoScreen(tvShows[index]),
+                                          TvShowInfoScreen(topTvShows[index]),
                                     ));
                               },
                               child: snapshot.data!);
