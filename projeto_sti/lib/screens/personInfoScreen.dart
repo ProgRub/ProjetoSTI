@@ -5,10 +5,14 @@ import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/poster.dart';
 import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
+import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../api/movies.dart';
+import '../api/tvShows.dart';
 import '../models/movie.dart';
+import 'movieInfoScreen.dart';
 
 class PersonInfoScreen extends StatefulWidget {
   PersonInfoScreen({Key? key, required this.artist}) : super(key: key);
@@ -20,19 +24,23 @@ class PersonInfoScreen extends StatefulWidget {
 }
 
 class _PersonInfoState extends State<PersonInfoScreen> {
-  late int selectedCategory;
+  late int selectedCategoryActor,
+      selectedCategoryDirector,
+      selectedCategoryWriter;
   final List<String> categories = ["Movies", "Tv Shows"];
   late Person artist;
-  late Future<List<Movie>> moviesFuture;
-  late Future<List<TvShow>> tvShowsFuture;
-  late List<Movie> movies;
-  late List<TvShow> tvShows;
+  late Future<Map<String, List<Movie>>> moviesFuture;
+  late Future<Map<String, List<TvShow>>> tvShowsFuture;
+  late Map<String, List<Movie>> allMovies;
+  late Map<String, List<TvShow>> allTvShows;
 
   _PersonInfoState(this.artist) {
-    // moviesFuture = MoviesAPI().getMoviesOfGenre(genre.name);
-    // tvShowsFuture = TVShowsAPI().getTvShowsOfGenre(genre.name);
+    moviesFuture = MoviesAPI().getMoviesOfPerson(artist.id);
+    tvShowsFuture = TVShowsAPI().getTvShowsOfPerson(artist.id);
     artist = artist;
-    selectedCategory = 0;
+    selectedCategoryActor = 0;
+    selectedCategoryDirector = 0;
+    selectedCategoryWriter = 0;
     super.initState();
   }
   @override
@@ -53,125 +61,145 @@ class _PersonInfoState extends State<PersonInfoScreen> {
       ),
     );
 
-    // var moviesGrid = Padding(
-    //     padding: const EdgeInsets.all(20.0),
-    //     child: SizedBox(
-    //         height: 230,
-    //         child: FutureBuilder(
-    //           future: moviesFuture,
-    //           builder:
-    //               (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-    //             Widget child;
-    //             child = const SizedBox(
-    //               width: 60,
-    //               height: 60,
-    //               child: CircularProgressIndicator(),
-    //             );
-    //             if (snapshot.hasData) {
-    //               movies = snapshot.data!;
-    //               child = GridView.builder(
-    //                 physics: const NeverScrollableScrollPhysics(),
-    //                 shrinkWrap: true,
-    //                 gridDelegate:
-    //                     const SliverGridDelegateWithMaxCrossAxisExtent(
-    //                         maxCrossAxisExtent: 200,
-    //                         childAspectRatio: 3 / 4,
-    //                         crossAxisSpacing: 20,
-    //                         mainAxisSpacing: 20),
-    //                 itemCount: movies.length,
-    //                 itemBuilder: (BuildContext context, int index) {
-    //                   return FutureBuilder(
-    //                       future: movies[index].getPoster(),
-    //                       builder: (BuildContext context,
-    //                           AsyncSnapshot<Image> snapshot) {
-    //                         Widget child;
-    //                         child = const SizedBox(
-    //                           width: 60,
-    //                           height: 60,
-    //                           child: CircularProgressIndicator(),
-    //                         );
-    //                         if (snapshot.hasData) {
-    //                           child = GestureDetector(
-    //                               onTap: () {
-    //                                 Navigator.push(
-    //                                     context,
-    //                                     MaterialPageRoute(
-    //                                       builder: (context) => MovieInfoScreen(
-    //                                           movie: movies[index]),
-    //                                     ));
-    //                               },
-    //                               child: snapshot.data!);
-    //                         }
-    //                         return child;
-    //                       });
-    //                 },
-    //               );
-    //             }
-    //             return child;
-    //           },
-    //         )));
+    Padding makeMovieGrid(role) {
+      return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SizedBox(
+              height: 230,
+              child: FutureBuilder(
+                future: moviesFuture,
+                builder: (BuildContext context,
+                    AsyncSnapshot<Map<String, List<Movie>>> snapshot) {
+                  Widget child;
+                  child = const SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  );
+                  if (snapshot.hasData) {
+                    allMovies = snapshot.data!;
+                    child = GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              childAspectRatio: 3 / 4,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20),
+                      itemCount: allMovies[role]!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FutureBuilder(
+                            future: allMovies[role]![index].getPoster(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<Image> snapshot) {
+                              Widget child;
+                              child = const SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              );
+                              if (snapshot.hasData) {
+                                child = GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MovieInfoScreen(
+                                                    movie: allMovies[role]![
+                                                        index]),
+                                          ));
+                                    },
+                                    child: snapshot.data!);
+                              }
+                              return child;
+                            });
+                      },
+                    );
+                  }
+                  return child;
+                },
+              )));
+    }
 
-    // var tvShowsGrid = Padding(
-    //     padding: const EdgeInsets.all(20.0),
-    //     child: SizedBox(
-    //         height: 230,
-    //         child: FutureBuilder(
-    //           future: tvShowsFuture,
-    //           builder:
-    //               (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
-    //             Widget child;
-    //             child = const SizedBox(
-    //               width: 60,
-    //               height: 60,
-    //               child: CircularProgressIndicator(),
-    //             );
-    //             if (snapshot.hasData) {
-    //               tvShows = snapshot.data!;
-    //               child = GridView.builder(
-    //                 physics: const NeverScrollableScrollPhysics(),
-    //                 shrinkWrap: true,
-    //                 gridDelegate:
-    //                     const SliverGridDelegateWithMaxCrossAxisExtent(
-    //                         maxCrossAxisExtent: 200,
-    //                         childAspectRatio: 3 / 4,
-    //                         crossAxisSpacing: 20,
-    //                         mainAxisSpacing: 20),
-    //                 itemCount: tvShows.length,
-    //                 itemBuilder: (BuildContext context, int index) {
-    //                   return FutureBuilder(
-    //                       future: tvShows[index].getPoster(),
-    //                       builder: (BuildContext context,
-    //                           AsyncSnapshot<Image> snapshot) {
-    //                         Widget child;
-    //                         child = const SizedBox(
-    //                           width: 60,
-    //                           height: 60,
-    //                           child: CircularProgressIndicator(),
-    //                         );
-    //                         if (snapshot.hasData) {
-    //                           child = snapshot.data!;
-    //                           // child = GestureDetector(
-    //                           //     onTap: () {
-    //                           //       Navigator.push(
-    //                           //           context,
-    //                           //           MaterialPageRoute(
-    //                           //             builder: (context) => MovieInfoScreen(
-    //                           //                 movie: tvShows[index]),
-    //                           //           ));
-    //                           //     },
-    //                           //     child: snapshot.data!);
-    //                         }
-    //                         return child;
-    //                       });
-    //                 },
-    //               );
-    //             }
-    //             return child;
-    //           },
-    //         )));
+    Padding makeTvShowGrid(role) {
+      return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SizedBox(
+              height: 230,
+              child: FutureBuilder(
+                future: tvShowsFuture,
+                builder: (BuildContext context,
+                    AsyncSnapshot<Map<String, List<TvShow>>> snapshot) {
+                  Widget child;
+                  child = const SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  );
+                  if (snapshot.hasData) {
+                    allTvShows = snapshot.data!;
+                    child = GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              childAspectRatio: 3 / 4,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20),
+                      itemCount: allTvShows[role]!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FutureBuilder(
+                            future: allTvShows[role]![index].getPoster(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<Image> snapshot) {
+                              Widget child;
+                              child = const SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CircularProgressIndicator(),
+                              );
+                              if (snapshot.hasData) {
+                                child = snapshot.data!;
+                                child = GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TvShowInfoScreen(
+                                                    allTvShows[role]![index]),
+                                          ));
+                                    },
+                                    child: snapshot.data!);
+                              }
+                              return child;
+                            });
+                      },
+                    );
+                  }
+                  return child;
+                },
+              )));
+    }
 
     //Method to create a tab
-    GestureDetector createTab(index, context) {
+    GestureDetector createTab(index, context, personRole) {
+      int selectedCategory = 0;
+      switch (personRole) {
+        case 0:
+          selectedCategory = selectedCategoryActor;
+          break;
+        case 1:
+          selectedCategory = selectedCategoryDirector;
+          break;
+        case 2:
+          selectedCategory = selectedCategoryWriter;
+          break;
+        default:
+      }
       return GestureDetector(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,14 +225,25 @@ class _PersonInfoState extends State<PersonInfoScreen> {
         onTap: () {
           setState(
             () {
-              selectedCategory = index;
+              switch (personRole) {
+                case 0:
+                  selectedCategoryActor = index;
+                  break;
+                case 1:
+                  selectedCategoryDirector = index;
+                  break;
+                case 2:
+                  selectedCategoryWriter = index;
+                  break;
+                default:
+              }
             },
           );
         },
       );
     }
 
-    Padding tabs = Padding(
+    Padding tabsActor = Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 30.0),
       child: SizedBox(
         height: 70,
@@ -214,7 +253,51 @@ class _PersonInfoState extends State<PersonInfoScreen> {
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
-              itemBuilder: (context, index) => createTab(index, context),
+              itemBuilder: (context, index) => createTab(index, context, 0),
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  width: 50,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Padding tabsDirector = Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 30.0),
+      child: SizedBox(
+        height: 70,
+        child: Row(
+          children: [
+            ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (context, index) => createTab(index, context, 1),
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  width: 50,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Padding tabsWriter = Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 30.0),
+      child: SizedBox(
+        height: 70,
+        child: Row(
+          children: [
+            ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (context, index) => createTab(index, context, 2),
               separatorBuilder: (BuildContext context, int index) {
                 return const SizedBox(
                   width: 50,
@@ -337,23 +420,37 @@ class _PersonInfoState extends State<PersonInfoScreen> {
                   ),
                 ],
               ),
-              _buildTextLabel(artist.type,
-                  Styles.fonts.title), //AJUSTAR DE ACORDO COM O GENERO
-              tabs,
+              _buildTextLabel(
+                  "Actor", Styles.fonts.title), //AJUSTAR DE ACORDO COM O GENERO
+              tabsActor,
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                firstChild: makeMovieGrid("Actor"),
+                secondChild: makeTvShowGrid("Actor"),
+                crossFadeState: selectedCategoryActor == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
               _buildTextLabel("Director", Styles.fonts.title),
-              tabs,
+              tabsDirector,
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                firstChild: makeMovieGrid("Director"),
+                secondChild: makeTvShowGrid("Director"),
+                crossFadeState: selectedCategoryDirector == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
               _buildTextLabel("Writer", Styles.fonts.title),
-              tabs,
-              // AnimatedCrossFade(
-              //   duration: const Duration(milliseconds: 200),
-              //   //firstChild: moviesGrid,
-              //   //secondChild: tvShowsGrid,
-              //   firstChild: null,
-              //   secondChild: null,
-              //   crossFadeState: selectedCategory == 0
-              //       ? CrossFadeState.showFirst
-              //       : CrossFadeState.showSecond,
-              // ),
+              tabsWriter,
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                firstChild: makeMovieGrid("Writer"),
+                secondChild: makeTvShowGrid("Writer"),
+                crossFadeState: selectedCategoryWriter == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
             ],
           ),
         ),

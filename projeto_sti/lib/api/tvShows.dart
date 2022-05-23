@@ -125,6 +125,35 @@ class TVShowsAPI {
     return returnShows;
   }
 
+  Future<Map<String, List<TvShow>>> getTvShowsOfPerson(String personId) async {
+    List<TvShow> actorTvShows = [];
+    List<TvShow> directorTvShows = [];
+    List<TvShow> writerTvShows = [];
+    var tvShowsAsActor =
+        await collection.where('Actors', arrayContains: personId).get();
+    for (var movie in tvShowsAsActor.docs) {
+      actorTvShows.add(TvShow.fromApi(movie));
+    }
+    var tvShowsAsDirector =
+        await collection.where('Director', arrayContains: personId).get();
+    for (var movie in tvShowsAsDirector.docs) {
+      directorTvShows.add(TvShow.fromApi(movie));
+    }
+    var tvShowsAsWriter =
+        await collection.where('Writer', arrayContains: personId).get();
+    for (var movie in tvShowsAsWriter.docs) {
+      writerTvShows.add(TvShow.fromApi(movie));
+    }
+    // print(actorTvShows);
+    // print(directorTvShows);
+    // print(writerTvShows);
+    return {
+      "Actor": actorTvShows,
+      "Director": directorTvShows,
+      "Writer": writerTvShows
+    };
+  }
+
   void changeFavouriteCount(String id, int numTimes) async {
     int timesFavourited = (await collection.doc(id).get())["timesFavourited"];
     // print(timesFavourited.toString());

@@ -133,6 +133,35 @@ class MoviesAPI {
     return returnMovies;
   }
 
+  Future<Map<String, List<Movie>>> getMoviesOfPerson(String personId) async {
+    List<Movie> actorMovies = [];
+    List<Movie> directorMovies = [];
+    List<Movie> writerMovies = [];
+    var moviesAsActor =
+        await collection.where('Actors', arrayContains: personId).get();
+    for (var movie in moviesAsActor.docs) {
+      actorMovies.add(Movie.fromApi(movie));
+    }
+    var moviesAsDirector =
+        await collection.where('Director', arrayContains: personId).get();
+    for (var movie in moviesAsDirector.docs) {
+      directorMovies.add(Movie.fromApi(movie));
+    }
+    var moviesAsWriter =
+        await collection.where('Writer', arrayContains: personId).get();
+    for (var movie in moviesAsWriter.docs) {
+      writerMovies.add(Movie.fromApi(movie));
+    }
+    // print(actorMovies);
+    // print(directorMovies);
+    // print(writerMovies);
+    return {
+      "Actor": actorMovies,
+      "Director": directorMovies,
+      "Writer": writerMovies
+    };
+  }
+
   void changeFavouriteCount(String id, int numTimes) async {
     int timesFavourited = (await collection.doc(id).get())["timesFavourited"];
     // print(timesFavourited.toString());
