@@ -190,9 +190,7 @@ class _MainScreenState extends State<MainScreen> {
                                       builder: (context) => newReleases[index]
                                                   .runtimeType ==
                                               Movie
-                                          ? MovieInfoScreen(
-                                              movie:
-                                                  newReleases[index] as Movie)
+                                          ? MovieInfoScreen(newReleases[index] as Movie)
                                           : TvShowInfoScreen(
                                               newReleases[index] as TvShow),
                                     ));
@@ -286,7 +284,6 @@ class _MainScreenState extends State<MainScreen> {
                                       builder: (context) =>
                                           trending[index].runtimeType == Movie
                                               ? MovieInfoScreen(
-                                                  movie:
                                                       trending[index] as Movie)
                                               : TvShowInfoScreen(
                                                   trending[index] as TvShow),
@@ -349,8 +346,7 @@ class _MainScreenState extends State<MainScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => MovieInfoScreen(
-                                          movie: topMovies[index]),
+                                      builder: (context) => MovieInfoScreen(topMovies[index]),
                                     ));
                               },
                               child: snapshot2.data!);
@@ -688,7 +684,7 @@ class _MainScreenState extends State<MainScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    MovieInfoScreen(movie: movie),
+                                    MovieInfoScreen(movie),
                               ));
                           return;
                         }

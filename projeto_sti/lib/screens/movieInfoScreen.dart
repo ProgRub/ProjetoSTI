@@ -10,6 +10,7 @@ import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/commentBox.dart';
 import 'package:projeto_sti/screens/personInfoScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
+import 'package:projeto_sti/screens/writeCommentScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/models/movie.dart';
 
@@ -28,8 +29,8 @@ import '../models/tvShow.dart';
 import 'dart:io' show Platform;
 
 class MovieInfoScreen extends StatefulWidget {
-  final Movie movie;
-  const MovieInfoScreen({Key? key, required this.movie}) : super(key: key);
+  late Movie movie;
+  MovieInfoScreen(this.movie, {Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _MovieInfoState(movie);
 }
@@ -40,7 +41,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   late String trailerUrl;
 
   late bool watched;
-  final Movie movie;
+  late Movie movie;
 
   late bool favourited;
 
@@ -673,7 +674,14 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   primary: Styles.colors.button,
                   minimumSize: const Size(260, 50),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            WriteCommentScreen(movie, true),
+                      ));
+                },
               ),
             ],
           ),
@@ -723,8 +731,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                                                   .runtimeType ==
                                               TvShow
                                           ? TvShowInfoScreen(programs[index])
-                                          : MovieInfoScreen(
-                                              movie: programs[index]),
+                                          : MovieInfoScreen(programs[index]),
                                     ));
                               },
                               child: snapshot.data!);
@@ -832,7 +839,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   castSection,
                   _buildTitle("Director"),
                   directorSection,
-                  _buildTitle("Comments"),
+                  _buildTitle("Comments and reviews"),
                   commentsSection,
                   _buildTitle("More like " + movie.title),
                   moreLikeThisSection,

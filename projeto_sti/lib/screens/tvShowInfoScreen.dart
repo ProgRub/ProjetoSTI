@@ -9,6 +9,7 @@ import 'package:projeto_sti/components/commentBox.dart';
 import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/personInfoScreen.dart';
+import 'package:projeto_sti/screens/writeCommentScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:like_button/like_button.dart';
@@ -601,6 +602,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                 child = const Text('No comments yet', style: TextStyle(color: Colors.deepPurple, fontSize: 24));
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   comments = snapshot.data!;
+                  comments.sort((a,b) {
+                    var adate = a.date;
+                    var bdate = b.date;
+                    return -adate.compareTo(bdate);
+                  });
                   if (comments.isNotEmpty) {
                     child = ListView.separated(
                       itemCount: comments.length,
@@ -647,7 +653,14 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   primary: Styles.colors.button,
                   minimumSize: const Size(260, 50),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            WriteCommentScreen(tvShow, false),
+                      ));
+                },
               ),
             ],
           ),
@@ -717,7 +730,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                               TvShow
                                           ? TvShowInfoScreen(programs[index])
                                           : MovieInfoScreen(
-                                              movie: programs[index]),
+                                              programs[index]),
                                     ));
                               },
                               child: snapshot.data!);
@@ -825,7 +838,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   castSection,
                   _buildTitle("Writers"),
                   writerSection,
-                  _buildTitle("Comments"),
+                  _buildTitle("Comments and reviews"),
                   commentsSection,
                   _buildTitle("More like " + tvShow.title),
                   moreLikeThisSection,

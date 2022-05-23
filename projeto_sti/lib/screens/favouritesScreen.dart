@@ -88,7 +88,7 @@ class _FavouritesState extends State<FavouritesScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          MovieInfoScreen(movie: movies[index]),
+                                          MovieInfoScreen(movies[index]),
                                     ));
                               },
                               child: snapshot.data!);

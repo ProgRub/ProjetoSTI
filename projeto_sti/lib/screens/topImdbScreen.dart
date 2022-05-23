@@ -334,7 +334,7 @@ class _TopImdbState extends State<TopImdbScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => type == 0
-                ? MovieInfoScreen(movie: movies[index])
+                ? MovieInfoScreen(movies[index])
                 : TvShowInfoScreen(tvShows[index]),
           ),
         );

@@ -116,7 +116,7 @@ class _ProfileState extends State<ProfileScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          MovieInfoScreen(movie: movies[index]),
+                                          MovieInfoScreen(movies[index]),
                                     ));
                               },
                               child: snapshot.data!);

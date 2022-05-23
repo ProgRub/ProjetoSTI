@@ -107,7 +107,7 @@ class _PersonInfoState extends State<PersonInfoScreen> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 MovieInfoScreen(
-                                                    movie: allMovies[role]![
+                                                    allMovies[role]![
                                                         index]),
                                           ));
                                     },

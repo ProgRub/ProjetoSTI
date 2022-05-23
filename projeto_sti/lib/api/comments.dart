@@ -23,4 +23,14 @@ class CommentAPI {
     }
     return returnComments;
   }
+
+  Future<void> addComment(String comment, String id_movie_tvshow, String id_user, String date, String rate) async {
+    var comments = await collection.add({
+      "comment": comment,
+      "date": date,
+      "id_movie_tvshow": id_movie_tvshow,
+      "id_user": id_user,
+      "rate": rate
+    });
+  }
 }

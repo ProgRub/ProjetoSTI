@@ -97,7 +97,7 @@ class _ByGenreState extends State<ByGenreScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          MovieInfoScreen(movie: movies[index]),
+                                          MovieInfoScreen(movies[index]),
                                     ));
                               },
                               child: snapshot.data!);
