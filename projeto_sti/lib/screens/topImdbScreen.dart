@@ -306,35 +306,34 @@ class _TopImdbState extends State<TopImdbScreen> {
                     children: [
                       const AppLogo(),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0, right: 20.0),
+                        padding: const EdgeInsets.only(top: 10.0, right: 10.0),
                         child: Container(
-                          width: 50,
-                          height: 50,
+                          width: 36,
+                          height: 37,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               color: Colors.grey[300], shape: BoxShape.circle),
                           child: Container(
-                            width: 47,
-                            height: 47,
+                            width: 34,
+                            height: 34,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Styles.colors.background,
+                              color: Styles.colors.button,
                             ),
                             child: Tooltip(
-                                height: 40,
-                                margin: const EdgeInsets.all(20),
-                                padding: const EdgeInsets.all(30.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.black),
-                                message:
-                                    "IMDb is the world's most popular and authoritative source for movie, TV and celebrity content!",
-                                triggerMode: TooltipTriggerMode.tap,
-                                child: Image.asset(
-                                    "packages/projeto_sti/assets/images/popcorn.png",
-                                    width: 30,
-                                    height: 30)),
+                              height: 40,
+                              margin: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(30.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black),
+                              message:
+                                  "IMDb is the world's most popular and authoritative source for movie, TV and celebrity content!",
+                              triggerMode: TooltipTriggerMode.tap,
+                              child: Icon(Icons.help,
+                                  size: 34, color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
