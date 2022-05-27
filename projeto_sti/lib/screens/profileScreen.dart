@@ -11,11 +11,13 @@ import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/models/user.dart';
 import 'package:projeto_sti/screens/editProfileScreen.dart';
+import 'package:projeto_sti/screens/genresScreen.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletons/skeletons.dart';
 import 'dart:math';
 
 import '../api/genres.dart';
@@ -65,9 +67,29 @@ class _ProfileState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Image.asset("packages/projeto_sti/assets/images/popcorn.png",
-                width: 80, height: 80),
+                width: 60, height: 60),
             const SizedBox(height: 20.0),
-            Text("You don't have favourite $type!", style: Styles.fonts.label)
+            Text("You don't have favourite $type\s!",
+                style: Styles.fonts.label),
+            const SizedBox(height: 10.0),
+            ElevatedButton(
+              child: Text("Find $type\s!", style: Styles.fonts.button),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                primary: Styles.colors.button,
+                minimumSize: const Size(120, 30),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenresScreen(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -82,10 +104,14 @@ class _ProfileState extends State<ProfileScreen> {
           future: moviesFuture,
           builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             Widget child;
-            child = const SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
+            child = SizedBox(
+              height: 200,
+              child: Center(
+                child: Image.asset(
+                    "packages/projeto_sti/assets/images/film-popcorn.gif",
+                    width: 70,
+                    height: 70),
+              ),
             );
             if (snapshot.hasData) {
               movies = snapshot.data!;
@@ -104,10 +130,12 @@ class _ProfileState extends State<ProfileScreen> {
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot) {
                         Widget child;
-                        child = const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
                         );
                         if (snapshot.hasData) {
                           child = GestureDetector(
@@ -137,10 +165,14 @@ class _ProfileState extends State<ProfileScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
             Widget child;
-            child = const SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
+            child = SizedBox(
+              height: 200,
+              child: Center(
+                child: Image.asset(
+                    "packages/projeto_sti/assets/images/film-popcorn.gif",
+                    width: 70,
+                    height: 70),
+              ),
             );
             if (snapshot.hasData) {
               tvShows = snapshot.data!;
@@ -159,10 +191,12 @@ class _ProfileState extends State<ProfileScreen> {
                       builder: (BuildContext context,
                           AsyncSnapshot<Image> snapshot) {
                         Widget child;
-                        child = const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
+                        child = const SkeletonItem(
+                          child: SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: 155,
+                            ),
+                          ),
                         );
                         if (snapshot.hasData) {
                           child = GestureDetector(

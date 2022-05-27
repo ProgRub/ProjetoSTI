@@ -199,10 +199,14 @@ class _TopImdbState extends State<TopImdbScreen> {
       future: moviesFuture,
       builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
         Widget child;
-        child = const SizedBox(
-          width: 60,
-          height: 60,
-          child: CircularProgressIndicator(),
+        child = SizedBox(
+          height: 300,
+          child: Center(
+            child: Image.asset(
+                "packages/projeto_sti/assets/images/film-popcorn.gif",
+                width: 70,
+                height: 70),
+          ),
         );
 
         if (snapshot.hasData) {
@@ -245,10 +249,14 @@ class _TopImdbState extends State<TopImdbScreen> {
       future: tvShowsFuture,
       builder: (BuildContext context, AsyncSnapshot<List<TvShow>> snapshot) {
         Widget child;
-        child = const SizedBox(
-          width: 60,
-          height: 60,
-          child: CircularProgressIndicator(),
+        child = SizedBox(
+          height: 300,
+          child: Center(
+            child: Image.asset(
+                "packages/projeto_sti/assets/images/film-popcorn.gif",
+                width: 70,
+                height: 70),
+          ),
         );
 
         if (snapshot.hasData) {
@@ -331,7 +339,7 @@ class _TopImdbState extends State<TopImdbScreen> {
                               message:
                                   "IMDb is the world's most popular and authoritative source for movie, TV and celebrity content!",
                               triggerMode: TooltipTriggerMode.tap,
-                              child: Icon(Icons.help,
+                              child: const Icon(Icons.help,
                                   size: 34, color: Colors.white),
                             ),
                           ),
@@ -366,7 +374,6 @@ class _TopImdbState extends State<TopImdbScreen> {
     var place = index + 1;
     return GestureDetector(
       onTap: () {
-        print(title);
         Navigator.push(
           context,
           MaterialPageRoute(

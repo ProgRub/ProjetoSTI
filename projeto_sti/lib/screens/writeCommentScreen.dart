@@ -110,9 +110,17 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
+                                  Text(
+                                    (rating + 1).toInt().toString() + "/10",
+                                    style: TextStyle(
+                                      color: Styles.colors.purple,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 36,
+                                    ),
+                                  ),
                                   Container(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                        const EdgeInsets.fromLTRB(13, 0, 0, 0),
                                     height: 60.0,
                                     alignment: Alignment.center,
                                     child: Image.asset(
@@ -121,14 +129,6 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                                       width: 40,
                                     ),
                                   ),
-                                  Text(
-                                    (rating + 1).toString(),
-                                    style: TextStyle(
-                                      color: Styles.colors.purple,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 40,
-                                    ),
-                                  )
                                 ]),
                             const SizedBox(height: 15),
                             Row(
@@ -139,7 +139,7 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                                     ratingLabel,
                                     style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 24,
+                                      fontSize: 22,
                                     ),
                                   )
                                 ])
@@ -267,8 +267,12 @@ class _WriteCommentState extends State<WriteCommentScreen> {
       DateTime currentTime = DateTime.now();
       String date = Jiffy(currentTime).format('MMM do yyyy');
 
-      CommentAPI().addComment(commentController.text, movieOrTvShow.id,
-          UserAPI().loggedInUser!.authId, date, (rating + 1).toString());
+      CommentAPI().addComment(
+          commentController.text,
+          movieOrTvShow.id,
+          UserAPI().loggedInUser!.authId,
+          date,
+          (rating + 1).toInt().toString());
 
       if (isMovie) {
         Navigator.push(

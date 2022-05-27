@@ -20,9 +20,7 @@ class _SplashState extends State<SplashScreen> {
     super.initState();
     final subscription = Authentication().auth.idTokenChanges().listen(null);
     subscription.onData((User? user) async {
-      // Update onData after listening.
       if (user == null) {
-        print('User is currently signed out!');
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => const LoginScreen()));
       } else {
@@ -30,7 +28,6 @@ class _SplashState extends State<SplashScreen> {
         await UserAPI().setLoggedInUser();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => const MainScreen()));
-        print('User is signed in!');
       }
       subscription.cancel();
     });

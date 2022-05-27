@@ -439,10 +439,13 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                 builder:
                     (BuildContext context, AsyncSnapshot<Person> snapshot) {
                   if (!snapshot.hasData) {
-                    return const SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: CircularProgressIndicator(),
+                    return Column(
+                      children: [
+                        const SkeletonAvatar(
+                          style: SkeletonAvatarStyle(
+                              shape: BoxShape.circle, width: 100, height: 100),
+                        )
+                      ],
                     );
                   }
                   var actor = snapshot.data!;
@@ -464,10 +467,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot<Image> snapshot) {
                                   if (!snapshot.hasData) {
-                                    return const SizedBox(
-                                      width: 60,
-                                      height: 60,
-                                      child: CircularProgressIndicator(),
+                                    return const SkeletonAvatar(
+                                      style: SkeletonAvatarStyle(
+                                          shape: BoxShape.circle,
+                                          width: 100,
+                                          height: 100),
                                     );
                                   }
                                   return CircleAvatar(
@@ -520,10 +524,9 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   builder:
                       (BuildContext context, AsyncSnapshot<Person> snapshot) {
                     if (!snapshot.hasData) {
-                      return const SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator(),
+                      return const SkeletonAvatar(
+                        style: SkeletonAvatarStyle(
+                            shape: BoxShape.circle, width: 100, height: 100),
                       );
                     }
                     var writer = snapshot.data!;
@@ -545,10 +548,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<Image> snapshot) {
                                     if (!snapshot.hasData) {
-                                      return const SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: CircularProgressIndicator(),
+                                      return const SkeletonAvatar(
+                                        style: SkeletonAvatarStyle(
+                                            shape: BoxShape.circle,
+                                            width: 100,
+                                            height: 100),
                                       );
                                     }
                                     return CircleAvatar(

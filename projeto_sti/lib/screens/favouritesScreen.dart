@@ -5,6 +5,7 @@ import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
+import 'package:projeto_sti/screens/genresScreen.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
@@ -250,9 +251,28 @@ class _FavouritesState extends State<FavouritesScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Image.asset("packages/projeto_sti/assets/images/popcorn.png",
-                width: 80, height: 80),
+                width: 70, height: 70),
             const SizedBox(height: 20.0),
-            Text("You don't have favourite $type!", style: Styles.fonts.label)
+            Text("You don't have favourite $type!", style: Styles.fonts.label),
+            const SizedBox(height: 10.0),
+            ElevatedButton(
+              child: Text("Find $type!", style: Styles.fonts.button),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                primary: Styles.colors.button,
+                minimumSize: const Size(120, 30),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenresScreen(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

@@ -466,11 +466,12 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 builder:
                     (BuildContext context, AsyncSnapshot<Person> snapshot) {
                   if (!snapshot.hasData) {
-                    return const SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: CircularProgressIndicator(),
-                    );
+                    return const SkeletonAvatar(
+                                    style: SkeletonAvatarStyle(
+                                        shape: BoxShape.circle,
+                                        width: 100,
+                                        height: 100),
+                                  );
                   }
                   var actor = snapshot.data!;
                   return GestureDetector(
@@ -491,11 +492,12 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot<Image> snapshot) {
                                   if (!snapshot.hasData) {
-                                    return const SizedBox(
-                                      width: 60,
-                                      height: 60,
-                                      child: CircularProgressIndicator(),
-                                    );
+                                    return const SkeletonAvatar(
+                                    style: SkeletonAvatarStyle(
+                                        shape: BoxShape.circle,
+                                        width: 100,
+                                        height: 100),
+                                  );
                                   }
                                   return CircleAvatar(
                                     radius: 52.0,
@@ -547,11 +549,12 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   builder:
                       (BuildContext context, AsyncSnapshot<Person> snapshot) {
                     if (!snapshot.hasData) {
-                      return const SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator(),
-                      );
+                      return const SkeletonAvatar(
+                                    style: SkeletonAvatarStyle(
+                                        shape: BoxShape.circle,
+                                        width: 100,
+                                        height: 100),
+                                  );
                     }
                     var director = snapshot.data!;
                     return GestureDetector(
@@ -572,11 +575,12 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<Image> snapshot) {
                                     if (!snapshot.hasData) {
-                                      return const SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: CircularProgressIndicator(),
-                                      );
+                                      return const SkeletonAvatar(
+                                    style: SkeletonAvatarStyle(
+                                        shape: BoxShape.circle,
+                                        width: 100,
+                                        height: 100),
+                                  );
                                     }
                                     return CircleAvatar(
                                       radius: 52.0,
@@ -607,10 +611,6 @@ class _MovieInfoState extends State<MovieInfoScreen> {
             },
           ),
         ),
-        // child: Text(
-        //   movie.directors.join(", "),
-        //   style: Styles.fonts.plot,
-        // ),
       ),
     );
 

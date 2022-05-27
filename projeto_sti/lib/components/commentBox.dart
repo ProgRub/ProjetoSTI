@@ -68,27 +68,27 @@ class CommentBox extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                    child: Text(
+                      rate + "/10",
+                      style: TextStyle(
+                        color: Styles.colors.purple,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                    height: 40.0,
+                    height: 36.0,
                     alignment: Alignment.center,
                     child: Image.asset(
                       "packages/projeto_sti/assets/images/popcorn.png",
                       fit: BoxFit.contain,
-                      width: 20,
+                      width: 18,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    child: Text(
-                      rate,
-                      style: TextStyle(
-                        color: Styles.colors.purple,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  )
                 ],
               ),
               Padding(

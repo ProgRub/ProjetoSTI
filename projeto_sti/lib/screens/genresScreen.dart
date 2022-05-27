@@ -110,7 +110,6 @@ class _GenresState extends State<GenresScreen> {
   GestureDetector _buildGenreButton(int index, Image image) {
     return GestureDetector(
       onTap: () {
-        print("GENRE CLICKED - " + genres[index].name);
         Navigator.push(
             context,
             MaterialPageRoute(
