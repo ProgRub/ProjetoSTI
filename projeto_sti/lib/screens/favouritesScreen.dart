@@ -215,7 +215,7 @@ class _FavouritesState extends State<FavouritesScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 1),
         body: SingleChildScrollView(

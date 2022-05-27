@@ -269,7 +269,7 @@ class _ProfileState extends State<ProfileScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 4),
         body: SingleChildScrollView(

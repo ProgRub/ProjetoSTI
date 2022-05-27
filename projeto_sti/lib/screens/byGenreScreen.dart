@@ -228,7 +228,7 @@ class _ByGenreState extends State<ByGenreScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 3),
         body: SingleChildScrollView(

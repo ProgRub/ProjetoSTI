@@ -310,7 +310,7 @@ class _PersonInfoState extends State<PersonInfoScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 3),
         body: SingleChildScrollView(

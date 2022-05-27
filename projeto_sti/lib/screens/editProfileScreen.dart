@@ -261,7 +261,7 @@ class _EditProfileState extends State<EditProfileScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         bottomNavigationBar: const AppBarBottom(currentIndex: 4),
         body: SingleChildScrollView(

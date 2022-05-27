@@ -92,7 +92,7 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         body: Stack(
           children: [

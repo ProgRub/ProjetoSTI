@@ -187,12 +187,13 @@ class _MainScreenState extends State<MainScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => newReleases[index]
-                                                  .runtimeType ==
-                                              Movie
-                                          ? MovieInfoScreen(newReleases[index] as Movie)
-                                          : TvShowInfoScreen(
-                                              newReleases[index] as TvShow),
+                                      builder: (context) =>
+                                          newReleases[index].runtimeType ==
+                                                  Movie
+                                              ? MovieInfoScreen(
+                                                  newReleases[index] as Movie)
+                                              : TvShowInfoScreen(
+                                                  newReleases[index] as TvShow),
                                     ));
                               },
                               child: snapshot2.data!);
@@ -284,7 +285,7 @@ class _MainScreenState extends State<MainScreen> {
                                       builder: (context) =>
                                           trending[index].runtimeType == Movie
                                               ? MovieInfoScreen(
-                                                      trending[index] as Movie)
+                                                  trending[index] as Movie)
                                               : TvShowInfoScreen(
                                                   trending[index] as TvShow),
                                     ));
@@ -346,7 +347,8 @@ class _MainScreenState extends State<MainScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => MovieInfoScreen(topMovies[index]),
+                                      builder: (context) =>
+                                          MovieInfoScreen(topMovies[index]),
                                     ));
                               },
                               child: snapshot2.data!);
@@ -683,8 +685,7 @@ class _MainScreenState extends State<MainScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    MovieInfoScreen(movie),
+                                builder: (context) => MovieInfoScreen(movie),
                               ));
                           return;
                         }
@@ -746,7 +747,7 @@ class _MainScreenState extends State<MainScreen> {
         ));
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         body: Stack(
           children: [

@@ -34,7 +34,7 @@ class _UserInfoState extends State<UserInfoScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Styles.colors.background,
         body: SingleChildScrollView(
           child: Column(
