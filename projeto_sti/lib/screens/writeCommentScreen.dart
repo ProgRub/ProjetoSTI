@@ -11,18 +11,20 @@ import 'package:jiffy/jiffy.dart';
 class WriteCommentScreen extends StatefulWidget {
   late var movieOrTvShow;
   late bool isMovie;
-  WriteCommentScreen(this.movieOrTvShow, this.isMovie, {Key? key}) : super(key: key);
+  WriteCommentScreen(this.movieOrTvShow, this.isMovie, {Key? key})
+      : super(key: key);
   @override
-  State<StatefulWidget> createState() => _WriteCommentState(movieOrTvShow, isMovie);
+  State<StatefulWidget> createState() =>
+      _WriteCommentState(movieOrTvShow, isMovie);
 }
 
 class _WriteCommentState extends State<WriteCommentScreen> {
-
   late var movieOrTvShow;
 
   late bool isMovie;
   _WriteCommentState(this.movieOrTvShow, this.isMovie);
   double rating = 0.0;
+  String ratingLabel = "";
   bool movedBar = false;
   late TextEditingController commentController;
 
@@ -34,113 +36,173 @@ class _WriteCommentState extends State<WriteCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const double tickMarkRadius = 18;
     return SafeArea(
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Styles.colors.background,
-          bottomNavigationBar: const AppBarBottom(currentIndex: 3),
-          body: Column(
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Styles.colors.background,
+            bottomNavigationBar: const AppBarBottom(currentIndex: 3),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 30, 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15.0, top: 15.0),
+                      child: Container(
+                        width: 47,
+                        height: 47,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xffF4F6FD),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                           icon: const Icon(
                             Icons.close,
-                            color: Colors.red,
-                            size: 25,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-
-                        getWidget(),
-
-                        SizedBox(
-                            width: 90,
-                            height: 130,
-                            child: FutureBuilder(
-                              future: movieOrTvShow.getPoster(),
-                              builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-                                Widget child;
-                                child = const SkeletonItem(
-                                  child: SkeletonAvatar(
-                                    style: SkeletonAvatarStyle(
-                                      width: 90,
-                                    ),
-                                  ),
-                                );
-                                if (snapshot.hasData) {
-                                  child = snapshot.data!;
-                                }
-                                return child;
-                              },
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-
-                  SliderTheme(
-                    data: const SliderThemeData(
-                      trackHeight: 7,
-                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15),
-                      overlayShape: RoundSliderOverlayShape(overlayRadius: 25),
-                      //rangeTickMarkShape: RoundRangeSliderTickMarkShape(tickMarkRadius: 18.0)
-                    ),
-                    child: Slider(
-                      value: rating,
-                      onChanged: (newRating) {
-                        setState(() {
-                          rating = newRating;
-                          movedBar = true;
-                        });
-                      },
-                      divisions: 9,
-                      min: 0,
-                      max: 9,
-                      activeColor: Colors.deepOrange,
-                      inactiveColor: Colors.grey,
-                    ),
-                  ),
-
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 24, 50),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
                             color: Colors.black,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextFormField(
-                            controller: commentController,
-                            obscureText: false,
-                            maxLines: double.maxFinite.floor(),
-                            style: const TextStyle(color: Colors.white),
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: '(Optional) Tell us what you think...',
-                              hintStyle: TextStyle(
-                                fontFamily: 'Lexend Deca',
-                                color: Color(0xFF57636C),
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              filled: true,
-                              contentPadding:
-                              EdgeInsetsDirectional.fromSTEB(24, 24, 20, 16),
-                            ),
+                            size: 20,
                           ),
                         ),
                       ),
                     ),
-
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 30, 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 75,
+                        height: 115,
+                        child: FutureBuilder(
+                          future: movieOrTvShow.getPoster(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Image> snapshot) {
+                            Widget child;
+                            child = const SkeletonItem(
+                              child: SkeletonAvatar(
+                                style: SkeletonAvatarStyle(
+                                  width: 75,
+                                ),
+                              ),
+                            );
+                            if (snapshot.hasData) {
+                              child = snapshot.data!;
+                            }
+                            return child;
+                          },
+                        ),
+                      ),
+                      movedBar
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 10, 0),
+                                        height: 60.0,
+                                        alignment: Alignment.center,
+                                        child: Image.asset(
+                                          "packages/projeto_sti/assets/images/popcorn.png",
+                                          fit: BoxFit.contain,
+                                          width: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        (rating + 1).toString(),
+                                        style: TextStyle(
+                                          color: Styles.colors.purple,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 40,
+                                        ),
+                                      )
+                                    ]),
+                                const SizedBox(height: 15),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        ratingLabel,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                        ),
+                                      )
+                                    ])
+                              ],
+                            )
+                          : beforeRate
+                    ],
+                  ),
+                ),
+                SliderTheme(
+                  data: const SliderThemeData(
+                    trackHeight: 5,
+                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 13),
+                    overlayShape: RoundSliderOverlayShape(overlayRadius: 25),
+                    //rangeTickMarkShape: RoundRangeSliderTickMarkShape(tickMarkRadius: 18.0)
+                  ),
+                  child: Slider(
+                    value: rating,
+                    onChanged: (newRating) {
+                      setState(() {
+                        rating = newRating;
+                        ratingLabel = getRatingName((rating + 1).toString());
+                        movedBar = true;
+                      });
+                    },
+                    divisions: 9,
+                    min: 0,
+                    max: 9,
+                    activeColor: Styles.colors.lightBlue,
+                    inactiveColor: Styles.colors.grey,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(24, 10, 24, 50),
+                  child: Container(
+                    height: 150,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TextFormField(
+                      controller: commentController,
+                      obscureText: false,
+                      maxLines: double.maxFinite.floor(),
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Tell us what you think... (Optional)',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Lexend Deca',
+                          color: Styles.colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        filled: true,
+                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                            24, 16, 24, 16),
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
                   child: ElevatedButton(
@@ -158,105 +220,68 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                   ),
                 ),
               ],
-          )
-      )
-    );
+            )));
   }
 
   var beforeRate = Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
     children: const [
-      Text('', style: TextStyle(color: Colors.white, fontSize: 26)),
-      Text('Select a rating', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-      Text('from 1 to 10', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+      Text('Select a rating',
+          style: TextStyle(
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+      Text('from 1 to 10',
+          style: TextStyle(
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
     ],
   );
 
-  Widget getWidget(){
-    if(movedBar){
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  height: 70.0,
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    "packages/projeto_sti/assets/images/popcorn.png",
-                    fit: BoxFit.contain,
-                    width: 45,
-                  ),
-                ),
-
-                Text((rating+1).toString(),
-                  style: const TextStyle(
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight. bold,
-                    fontSize: 50,
-                  ),
-                )
-              ]
-          ),
-
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
-              crossAxisAlignment: CrossAxisAlignment.center, //Center Row contents vertically,
-              children: [
-                Text(getRatingName((rating+1).toString()),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                  ),)
-              ]
-          )
-        ],
-      );
-    }
-    else{
-      return beforeRate;
-    }
-  }
-
-  String getRatingName(String rating){
+  String getRatingName(String rating) {
     switch (rating) {
-      case '1':
+      case '1.0':
         return 'Horrible';
-      case '2':
+      case '2.0':
         return 'Terrible';
-      case '3':
+      case '3.0':
         return 'Bad';
-      case '4':
+      case '4.0':
         return 'Poor';
-      case '5':
+      case '5.0':
         return 'Meh';
-      case '6':
+      case '6.0':
         return 'Decent';
-      case '7':
+      case '7.0':
         return 'Good';
-      case '8':
+      case '8.0':
         return 'Great';
-      case '9':
+      case '9.0':
         return 'Fantastic';
       default:
         return 'Amazing';
     }
   }
 
-  void post(){
-    if(movedBar){
+  void post() {
+    if (movedBar) {
       DateTime currentTime = DateTime.now();
       String date = Jiffy(currentTime).format('MMM do yyyy');
 
-      CommentAPI().addComment(commentController.text, movieOrTvShow.id, UserAPI().loggedInUser!.authId, date, (rating+1).toString());
+      CommentAPI().addComment(commentController.text, movieOrTvShow.id,
+          UserAPI().loggedInUser!.authId, date, (rating + 1).toString());
 
-      if(isMovie){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MovieInfoScreen(movieOrTvShow),));
+      if (isMovie) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MovieInfoScreen(movieOrTvShow),
+            ));
       } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TvShowInfoScreen(movieOrTvShow),));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TvShowInfoScreen(movieOrTvShow),
+            ));
       }
     }
   }
 }
-
