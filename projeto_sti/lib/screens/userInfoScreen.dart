@@ -18,7 +18,7 @@ class UserInfoScreen extends StatefulWidget {
   State<UserInfoScreen> createState() => _UserInfoState();
 }
 
-enum Gender { none, female, male }
+enum Gender { none, female, male, nonBynary, preferNotSay, other }
 
 class _UserInfoState extends State<UserInfoScreen> {
   late XFile? imageFile = null;
@@ -36,135 +36,248 @@ class _UserInfoState extends State<UserInfoScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Styles.colors.background,
-        body: Stack(
-          children: [
-            const AppLogo(),
-            Form(
-              key: _userInfoFormKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 70.0),
-                    child: Center(
-                      child: Text(
-                        "Tell us about yourself...",
-                        textAlign: TextAlign.center,
-                        style: Styles.fonts.title,
+                  const AppLogo(),
+                ],
+              ),
+              Form(
+                key: _userInfoFormKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Center(
+                        child: Text(
+                          "Tell us about yourself...",
+                          textAlign: TextAlign.center,
+                          style: Styles.fonts.title,
+                        ),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: InputFieldLabel(text: "Photo"),
-                  ),
-                  GestureDetector(
-                    onTap: () => _onImageButtonPressed(),
-                    child: Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Styles.colors.lightBlue,
-                            radius: 38.0,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: imageFile == null
-                                  ? null
-                                  //: Image.file(File(imageFile!.path)).image,
-                                  : Image.network(imageFile!.path).image,
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: InputFieldLabel(text: "Photo"),
+                    ),
+                    GestureDetector(
+                      onTap: () => _onImageButtonPressed(),
+                      child: Center(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Styles.colors.lightBlue,
+                              radius: 38.0,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                backgroundImage: imageFile == null
+                                    ? null
+                                    //: Image.file(File(imageFile!.path)).image,
+                                    : Image.network(imageFile!.path).image,
+                                radius: 34.0,
+                              ),
+                            ),
+                            CircleAvatar(
+                              backgroundColor: Styles.colors.darker,
                               radius: 34.0,
                             ),
+                            const Icon(Icons.file_upload_outlined,
+                                color: Colors.white, size: 40),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    InputField(
+                      label: "Name",
+                      hintText: "Enter your name",
+                      validator: nameValidator,
+                      controller: _name,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 20.0),
+                      child: InputFieldLabel(text: "Gender"),
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildGender(Gender.female),
+                              _buildGender(Gender.male),
+                              _buildGender(Gender.nonBynary),
+                            ],
                           ),
-                          CircleAvatar(
-                            backgroundColor: Styles.colors.darker,
-                            radius: 34.0,
-                          ),
-                          const Icon(Icons.file_upload_outlined,
-                              color: Colors.white, size: 40),
+                          const SizedBox(height: 20.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 50.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildGender(Gender.preferNotSay),
+                                _buildGender(Gender.other),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
-                  ),
-                  InputField(
-                    label: "Name",
-                    hintText: "Enter your name",
-                    validator: nameValidator,
-                    controller: _name,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 10.0),
-                    child: InputFieldLabel(text: "Gender"),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildGender(Gender.female),
-                        _buildGender(Gender.male),
-                      ]),
-                  InputField(
-                    label: "Age",
-                    hintText: "Enter your age",
-                    validator: ageValidator,
-                    controller: _age,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: 60.0, left: 60.0, bottom: 10.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    const SizedBox(height: 30.0),
+                    InputField(
+                      label: "Age",
+                      hintText: "Enter your age",
+                      validator: ageValidator,
+                      controller: _age,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          right: 60.0, left: 60.0, bottom: 10.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          primary: Styles.colors.button,
+                          minimumSize: const Size(300, 50),
                         ),
-                        primary: Styles.colors.button,
-                        minimumSize: const Size(300, 50),
-                      ),
-                      onPressed: () {
-                        if (_userInfoFormKey.currentState!.validate()) {
-                          if (_gender == Gender.none) {
-                            showPopupMessage(
-                                context, "error", "Choose your gender!");
-                          } else if (imageFile == null) {
-                            showPopupMessage(
-                                context, "error", "Upload your photo!");
-                          } else {
-                            UserAPI().addUser(
-                                UserModel(
-                                    id: "",
-                                    name: _name.text,
-                                    gender: _gender.toString(),
-                                    age: int.parse(_age.text),
-                                    imageDownloadUrl: "",
-                                    authId: "",
-                                    genrePreferences: {},
-                                    favouriteMovies: [],
-                                    favouriteTvShows: [],
-                                    watchedMovies: [],
-                                    watchedTvShows: []),
-                                imageFile!);
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const ChooseGenresScreen()));
+                        onPressed: () {
+                          if (_userInfoFormKey.currentState!.validate()) {
+                            if (_gender == Gender.none) {
+                              showPopupMessage(
+                                  context, "error", "Choose your gender!");
+                            } else if (imageFile == null) {
+                              showPopupMessage(
+                                  context, "error", "Upload your photo!");
+                            } else {
+                              UserAPI().addUser(
+                                  UserModel(
+                                      id: "",
+                                      name: _name.text,
+                                      gender: _gender.toString(),
+                                      age: int.parse(_age.text),
+                                      imageDownloadUrl: "",
+                                      authId: "",
+                                      genrePreferences: {},
+                                      favouriteMovies: [],
+                                      favouriteTvShows: [],
+                                      watchedMovies: [],
+                                      watchedTvShows: []),
+                                  imageFile!);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const ChooseGenresScreen()));
+                            }
                           }
-                        }
-                      },
-                      child: Text(
-                        'Next',
-                        style: Styles.fonts.button,
+                        },
+                        child: Text(
+                          'Next',
+                          style: Styles.fonts.button,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   GestureDetector _buildGender(Gender gender) {
+    Stack stack = Stack();
+    if (gender == Gender.nonBynary) {
+      stack = Stack(
+        alignment: Alignment.center,
+        children: [
+          const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 27.0,
+          ),
+          CircleAvatar(
+            backgroundColor: (_gender == Gender.none || _gender != gender)
+                ? Styles.colors.darker
+                : Styles.colors.greenButton,
+            radius: 26.0,
+          ),
+          Column(
+            children: [
+              Text("Non", style: Styles.fonts.edit),
+              Text("Binary", style: Styles.fonts.edit),
+            ],
+          ),
+        ],
+      );
+    } else if (gender == Gender.female || gender == Gender.male) {
+      stack = Stack(
+        alignment: Alignment.center,
+        children: [
+          const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 27.0,
+          ),
+          CircleAvatar(
+            backgroundColor: (_gender == Gender.none || _gender != gender)
+                ? Styles.colors.darker
+                : (gender == Gender.female
+                    ? Styles.colors.female
+                    : Styles.colors.male),
+            radius: 26.0,
+          ),
+          Icon(gender == Gender.female ? Icons.female : Icons.male,
+              color: Colors.white, size: 40),
+        ],
+      );
+    } else if (gender == Gender.preferNotSay) {
+      stack = Stack(
+        alignment: Alignment.center,
+        children: [
+          const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 27.0,
+          ),
+          CircleAvatar(
+            backgroundColor: (_gender == Gender.none || _gender != gender)
+                ? Styles.colors.darker
+                : Colors.indigo,
+            radius: 26.0,
+          ),
+          Column(
+            children: [
+              Text("Prefer", style: Styles.fonts.edit),
+              Text("not say", style: Styles.fonts.edit),
+            ],
+          ),
+        ],
+      );
+    } else if (gender == Gender.other) {
+      stack = Stack(
+        alignment: Alignment.center,
+        children: [
+          const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 27.0,
+          ),
+          CircleAvatar(
+            backgroundColor: (_gender == Gender.none || _gender != gender)
+                ? Styles.colors.darker
+                : Colors.orangeAccent,
+            radius: 26.0,
+          ),
+          Text("Other", style: Styles.fonts.edit),
+        ],
+      );
+    }
+
     return GestureDetector(
       onTap: () {
         setState(
@@ -177,25 +290,7 @@ class _UserInfoState extends State<UserInfoScreen> {
           },
         );
       },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          const CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 25.0,
-          ),
-          CircleAvatar(
-            backgroundColor: (_gender == Gender.none || _gender != gender)
-                ? Styles.colors.darker
-                : (gender == Gender.female
-                    ? Styles.colors.female
-                    : Styles.colors.male),
-            radius: 23.0,
-          ),
-          Icon(gender == Gender.female ? Icons.female : Icons.male,
-              color: Colors.white, size: 40),
-        ],
-      ),
+      child: stack,
     );
   }
 

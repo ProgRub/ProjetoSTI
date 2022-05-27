@@ -454,7 +454,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           _buildButton(
             const FaIcon(FontAwesomeIcons.trophy, size: 20.0),
-            "Top iMDB",
+            "Top IMDb",
             const TopImdbScreen(),
           ),
           _buildButton(
