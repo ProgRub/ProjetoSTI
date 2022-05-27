@@ -63,7 +63,7 @@ class _PersonInfoState extends State<PersonInfoScreen> {
 
     Padding makeMovieGrid(role) {
       return Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: SizedBox(
               height: 230,
               child: FutureBuilder(
@@ -107,8 +107,7 @@ class _PersonInfoState extends State<PersonInfoScreen> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 MovieInfoScreen(
-                                                    allMovies[role]![
-                                                        index]),
+                                                    allMovies[role]![index]),
                                           ));
                                     },
                                     child: snapshot.data!);
@@ -323,134 +322,140 @@ class _PersonInfoState extends State<PersonInfoScreen> {
                 alignment: Alignment.topLeft,
               ),
               genreTitle,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Stack(
-                        children: [
-                          FutureBuilder(
-                            future: artist.getPhoto(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<Image> snapshot) {
-                              if (snapshot.hasData) {
-                                return Center(
-                                  child: CircleAvatar(
-                                    backgroundColor: Styles.colors.lightBlue,
-                                    radius: 70.0,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: snapshot.data!.image,
-                                      radius: 66.0,
-                                      child: CircleAvatar(
-                                        backgroundColor: Styles.colors.darker,
-                                        radius: 66.0,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Text("Born: ", style: Styles.fonts.label),
-                          Text(artist.born, style: Styles.fonts.comment)
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text("Awards: ", style: Styles.fonts.label),
-                          Text(artist.awardWins.toString(),
-                              style: Styles.fonts.comment),
-                          const SizedBox(width: 5),
-                          const FaIcon(FontAwesomeIcons.trophy,
-                              size: 15.0, color: Colors.yellow),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text("Nominations: ", style: Styles.fonts.label),
-                          Text(artist.awardNominations.toString(),
-                              style: Styles.fonts.comment),
-                          const SizedBox(width: 5),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: RichText(
-                                textAlign: TextAlign.justify,
-                                text: TextSpan(
-                                  text: "Bio: ",
-                                  style: Styles.fonts.label,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: artist.summary,
-                                      style: Styles.fonts.comment,
-                                    ),
-                                  ],
-                                ),
+                  FutureBuilder(
+                    future: artist.getPhoto(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<Image> snapshot) {
+                      if (snapshot.hasData) {
+                        return Center(
+                          child: CircleAvatar(
+                            backgroundColor: Styles.colors.lightBlue,
+                            radius: 70.0,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage: snapshot.data!.image,
+                              radius: 66.0,
+                              child: CircleAvatar(
+                                backgroundColor: Styles.colors.darker,
+                                radius: 66.0,
                               ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
                   ),
                 ],
               ),
-              _buildTextLabel(
-                  "Actor", Styles.fonts.title), //AJUSTAR DE ACORDO COM O GENERO
-              tabsActor,
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 200),
-                firstChild: makeMovieGrid("Actor"),
-                secondChild: makeTvShowGrid("Actor"),
-                crossFadeState: selectedCategoryActor == 0
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, top: 30.0),
+                child: Row(
+                  children: [
+                    Text("Born: ", style: Styles.fonts.label),
+                    Text(artist.born, style: Styles.fonts.comment)
+                  ],
+                ),
               ),
-              _buildTextLabel("Director", Styles.fonts.title),
-              tabsDirector,
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 200),
-                firstChild: makeMovieGrid("Director"),
-                secondChild: makeTvShowGrid("Director"),
-                crossFadeState: selectedCategoryDirector == 0
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, top: 10.0, right: 20.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Expanded(
+                    child: RichText(
+                      textAlign: TextAlign.justify,
+                      text: TextSpan(
+                        text: "Bio: ",
+                        style: Styles.fonts.label,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: artist.summary,
+                            style: Styles.fonts.comment,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              _buildTextLabel("Writer", Styles.fonts.title),
-              tabsWriter,
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 200),
-                firstChild: makeMovieGrid("Writer"),
-                secondChild: makeTvShowGrid("Writer"),
-                crossFadeState: selectedCategoryWriter == 0
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Row(
+                  children: [
+                    Text("Awards: ", style: Styles.fonts.label),
+                    Text(artist.awardWins.toString(),
+                        style: Styles.fonts.comment),
+                    const SizedBox(width: 5),
+                    const FaIcon(FontAwesomeIcons.trophy,
+                        size: 15.0, color: Colors.yellow),
+                  ],
+                ),
               ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Row(
+                  children: [
+                    Text("Nominations: ", style: Styles.fonts.label),
+                    Text(artist.awardNominations.toString(),
+                        style: Styles.fonts.comment),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+              ),
+              artist.type.contains("Actor")
+                  ? Column(
+                      children: [
+                        _buildTextLabel("Actor", Styles.fonts.title),
+                        tabsActor,
+                        AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 200),
+                          firstChild: makeMovieGrid("Actor"),
+                          secondChild: makeTvShowGrid("Actor"),
+                          crossFadeState: selectedCategoryActor == 0
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                        ),
+                      ],
+                    )
+                  : Container(),
+              artist.type.contains("Director")
+                  ? Column(
+                      children: [
+                        _buildTextLabel("Director", Styles.fonts.title),
+                        tabsDirector,
+                        AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 200),
+                          firstChild: makeMovieGrid("Director"),
+                          secondChild: makeTvShowGrid("Director"),
+                          crossFadeState: selectedCategoryDirector == 0
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                        ),
+                      ],
+                    )
+                  : Container(),
+              artist.type.contains("Writer")
+                  ? Column(
+                      children: [
+                        _buildTextLabel("Writer", Styles.fonts.title),
+                        tabsWriter,
+                        AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 200),
+                          firstChild: makeMovieGrid("Writer"),
+                          secondChild: makeTvShowGrid("Writer"),
+                          crossFadeState: selectedCategoryWriter == 0
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                        ),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
         ),

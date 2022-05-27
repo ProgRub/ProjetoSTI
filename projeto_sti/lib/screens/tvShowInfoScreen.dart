@@ -52,7 +52,6 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
 
   _TvShowInfoState(this.tvShow);
 
-
   late Future<List<Comment>> comFuture;
   List<Comment> comments = [];
   List<String> user = [];
@@ -503,7 +502,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
     );
 
     var writerSection = Padding(
-      padding: const EdgeInsets.only(top: 10.0, left: 40.0),
+      padding: const EdgeInsets.only(
+        top: 30.0,
+        left: 20.0,
+        right: 20.0,
+      ),
       child: Align(
         alignment: Alignment.topLeft,
         child: SizedBox(
@@ -592,50 +595,79 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
             left: 20.0,
             right: 20.0,
           ),
-          child: SizedBox(
-            height: 200,
-            child: FutureBuilder(
-              future: CommentAPI().getComments(tvShow.id),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Comment>> snapshot) {
-                Widget child;
-                child = const Text('No comments yet', style: TextStyle(color: Colors.deepPurple, fontSize: 24));
-                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                  comments = snapshot.data!;
-                  comments.sort((a,b) {
-                    var adate = a.date;
-                    var bdate = b.date;
-                    return -adate.compareTo(bdate);
-                  });
-                  if (comments.isNotEmpty) {
-                    child = ListView.separated(
-                      itemCount: comments.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return FutureBuilder(
-                          future: UserAPI().getUserById(comments[index].userId),
-                          builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-                            String userName = "...";
-                            String userImage = 'https://images.unsplash.com/photo-1611590027211-b954fd027b51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDd8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60';
-                            if (snapshot.hasData) {
-                              user = snapshot.data!;
-                              userName = user[0];
-                              userImage = user[1];
-                            }
-                            return child = CommentBox(comment:comments[index].comment, rate:comments[index].rate,date:comments[index].date,userName: userName, userImage: userImage);
-                          },
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          height: 20.0,
-                        );
-                      },);
+          child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              height: 140,
+              child: FutureBuilder(
+                future: CommentAPI().getComments(tvShow.id),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Comment>> snapshot) {
+                  Widget child;
+                  child = Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text("No Comments!", style: Styles.fonts.label),
+                          const SizedBox(height: 8.0),
+                          Text("Be the first person to",
+                              style: Styles.fonts.plot),
+                          Text("comment about this movie!",
+                              style: Styles.fonts.plot)
+                        ],
+                      ),
+                    ),
+                  );
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData) {
+                    comments = snapshot.data!;
+                    comments.sort((a, b) {
+                      var adate = a.date;
+                      var bdate = b.date;
+                      return -adate.compareTo(bdate);
+                    });
+                    if (comments.isNotEmpty) {
+                      child = ListView.separated(
+                        itemCount: comments.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return FutureBuilder(
+                            future:
+                                UserAPI().getUserById(comments[index].userId),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<String>> snapshot) {
+                              String userName = "...";
+                              String userImage =
+                                  'https://images.unsplash.com/photo-1611590027211-b954fd027b51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDd8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60';
+                              if (snapshot.hasData) {
+                                user = snapshot.data!;
+                                userName = user[0];
+                                userImage = user[1];
+                              }
+                              return child = CommentBox(
+                                  comment: comments[index].comment,
+                                  rate: comments[index].rate,
+                                  date: comments[index].date,
+                                  userName: userName,
+                                  userImage: userImage);
+                            },
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(
+                            height: 20.0,
+                          );
+                        },
+                      );
+                    }
                   }
-                }
-                return child;
-              },
-            )
-          ),
+                  return child;
+                },
+              )),
         ),
         Padding(
           padding: const EdgeInsets.only(
@@ -657,8 +689,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            WriteCommentScreen(tvShow, false),
+                        builder: (context) => WriteCommentScreen(tvShow, false),
                       ));
                 },
               ),
@@ -729,8 +760,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                                   .runtimeType ==
                                               TvShow
                                           ? TvShowInfoScreen(programs[index])
-                                          : MovieInfoScreen(
-                                              programs[index]),
+                                          : MovieInfoScreen(programs[index]),
                                     ));
                               },
                               child: snapshot.data!);
@@ -838,7 +868,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   castSection,
                   _buildTitle("Writers"),
                   writerSection,
-                  _buildTitle("Comments and reviews"),
+                  _buildTitle("Comments and Reviews"),
                   commentsSection,
                   _buildTitle("More like " + tvShow.title),
                   moreLikeThisSection,
