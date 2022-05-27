@@ -746,50 +746,59 @@ class _MainScreenState extends State<MainScreen> {
           },
         ));
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Styles.colors.background,
-        body: Stack(
-          children: [
-            Padding(
-              padding: visibleAppBar
-                  ? const EdgeInsets.only(bottom: 80.0)
-                  : const EdgeInsets.only(bottom: 0.0),
-              child: SingleChildScrollView(
-                controller: _controller,
-                child: Column(children: [
-                  const Align(
-                    child: AppLogo(),
-                    alignment: Alignment.topLeft,
-                  ),
-                  topSection,
-                  buttonsSection,
-                  searchBar,
-                  _buildTextLabel("Today's Recommendation", Styles.fonts.title),
-                  recommendationSection,
-                  _buildTextLabel("New Releases", Styles.fonts.title),
-                  newReleasesSection,
-                  _buildTextLabel("Trending Now", Styles.fonts.title),
-                  trendingNowSection,
-                  _buildTextLabel("Top Movies", Styles.fonts.title),
-                  topMovies,
-                  _buildTextLabel("Top Tv Shows", Styles.fonts.title),
-                  topTvShows,
-                ]),
-              ),
-            ),
-            visibleAppBar
-                ? Visibility(
-                    visible: visibleAppBar,
-                    child: const Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: AppBarBottom(currentIndex: 0),
+      child: WillPopScope(
+        onWillPop: () async {
+          if (Navigator.of(context).userGestureInProgress)
+            return false;
+          else
+            return true;
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Styles.colors.background,
+          body: Stack(
+            children: [
+              Padding(
+                padding: visibleAppBar
+                    ? const EdgeInsets.only(bottom: 80.0)
+                    : const EdgeInsets.only(bottom: 0.0),
+                child: SingleChildScrollView(
+                  controller: _controller,
+                  child: Column(children: [
+                    const Align(
+                      child: AppLogo(),
+                      alignment: Alignment.topLeft,
                     ),
-                  )
-                : const SizedBox(width: 0.0),
-          ],
+                    topSection,
+                    buttonsSection,
+                    searchBar,
+                    _buildTextLabel(
+                        "Today's Recommendation", Styles.fonts.title),
+                    recommendationSection,
+                    _buildTextLabel("New Releases", Styles.fonts.title),
+                    newReleasesSection,
+                    _buildTextLabel("Trending Now", Styles.fonts.title),
+                    trendingNowSection,
+                    _buildTextLabel("Top Movies", Styles.fonts.title),
+                    topMovies,
+                    _buildTextLabel("Top Tv Shows", Styles.fonts.title),
+                    topTvShows,
+                  ]),
+                ),
+              ),
+              visibleAppBar
+                  ? Visibility(
+                      visible: visibleAppBar,
+                      child: const Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: AppBarBottom(currentIndex: 0),
+                      ),
+                    )
+                  : const SizedBox(width: 0.0),
+            ],
+          ),
         ),
       ),
     );

@@ -180,28 +180,36 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Styles.colors.background,
-        body: Stack(
-          children: [
-            const AppLogo(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                tabs,
-                AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 300),
-                  firstChild: loginPage,
-                  secondChild: signUpPage,
-                  crossFadeState: selectedCategory == 0
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                ),
-              ],
-            ),
-          ],
+      child: WillPopScope(
+        onWillPop: () async {
+          if (Navigator.of(context).userGestureInProgress)
+            return false;
+          else
+            return true;
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Styles.colors.background,
+          body: Stack(
+            children: [
+              const AppLogo(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  tabs,
+                  AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 300),
+                    firstChild: loginPage,
+                    secondChild: signUpPage,
+                    crossFadeState: selectedCategory == 0
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
