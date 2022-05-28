@@ -39,15 +39,23 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         children: <Widget>[
           InputField(
-              label: "Email",
-              hintText: "Enter your email",
-              validator: emailValidator,
-              controller: _email),
+            label: "Email",
+            hintText: "Enter your email",
+            validator: emailValidator,
+            controller: _email,
+            onFieldSubmitted: (value) {
+              tryLogin(context);
+            },
+          ),
           InputField(
-              label: "Password",
-              hintText: "Enter your password",
-              validator: passwordValidator,
-              controller: _password),
+            label: "Password",
+            hintText: "Enter your password",
+            validator: passwordValidator,
+            controller: _password,
+            onFieldSubmitted: (value) {
+              tryLogin(context);
+            },
+          ),
           Padding(
             padding: const EdgeInsets.only(
               top: 30.0,
@@ -86,18 +94,27 @@ class _LoginScreenState extends State<LoginScreen> {
             hintText: "Enter your email",
             validator: emailValidator,
             controller: _email,
+            onFieldSubmitted: (value) {
+              trySignUp(context);
+            },
           ),
           InputField(
             label: "Password",
             hintText: "Enter your password",
             validator: passwordValidator,
             controller: _password,
+            onFieldSubmitted: (value) {
+              trySignUp(context);
+            },
           ),
           InputField(
             label: "Confirm password",
             hintText: "Enter your password",
             validator: confirmPasswordValidator,
             controller: _confirmPass,
+            onFieldSubmitted: (value) {
+              trySignUp(context);
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(

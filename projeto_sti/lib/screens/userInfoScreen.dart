@@ -104,6 +104,9 @@ class _UserInfoState extends State<UserInfoScreen> {
                         hintText: "Enter your name",
                         validator: nameValidator,
                         controller: _name,
+                        onFieldSubmitted: (value) {
+                          tryAddUser(context);
+                        },
                       ),
                       const Padding(
                         padding: EdgeInsets.only(bottom: 20.0),
@@ -143,6 +146,9 @@ class _UserInfoState extends State<UserInfoScreen> {
                         hintText: "Enter your age",
                         validator: ageValidator,
                         controller: _age,
+                        onFieldSubmitted: (value) {
+                          tryAddUser(context);
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -155,36 +161,8 @@ class _UserInfoState extends State<UserInfoScreen> {
                             primary: Styles.colors.button,
                             minimumSize: const Size(300, 50),
                           ),
-                          onPressed: () async {
-                            if (_userInfoFormKey.currentState!.validate()) {
-                              if (_gender == Gender.none) {
-                                showPopupMessage(context, "error",
-                                    "Choose your gender!", false);
-                              } else if (imageFile == null) {
-                                showPopupMessage(context, "error",
-                                    "Upload your photo!", false);
-                              } else {
-                                UserAPI().addUser(
-                                    UserModel(
-                                        id: "",
-                                        name: _name.text,
-                                        gender: _gender.toString(),
-                                        age: int.parse(_age.text),
-                                        imageDownloadUrl: "",
-                                        authId: "",
-                                        genrePreferences: {},
-                                        favouriteMovies: [],
-                                        favouriteTvShows: [],
-                                        watchedMovies: [],
-                                        watchedTvShows: []),
-                                    imageFile!);
-                                 await  UserAPI().setLoggedInUser();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const ChooseGenresScreen()));
-                              }
-                            }
+                          onPressed: () {
+                            tryAddUser(context);
                           },
                           child: Text(
                             'Next',
@@ -201,6 +179,34 @@ class _UserInfoState extends State<UserInfoScreen> {
         ),
       ),
     );
+  }
+
+  void tryAddUser(BuildContext context) async {
+    if (_userInfoFormKey.currentState!.validate()) {
+      if (_gender == Gender.none) {
+        showPopupMessage(context, "error", "Choose your gender!", false);
+      } else if (imageFile == null) {
+        showPopupMessage(context, "error", "Upload your photo!", false);
+      } else {
+        UserAPI().addUser(
+            UserModel(
+                id: "",
+                name: _name.text,
+                gender: _gender.toString(),
+                age: int.parse(_age.text),
+                imageDownloadUrl: "",
+                authId: "",
+                genrePreferences: {},
+                favouriteMovies: [],
+                favouriteTvShows: [],
+                watchedMovies: [],
+                watchedTvShows: []),
+            imageFile!);
+        await UserAPI().setLoggedInUser();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => const ChooseGenresScreen()));
+      }
+    }
   }
 
   GestureDetector _buildGender(Gender gender) {
