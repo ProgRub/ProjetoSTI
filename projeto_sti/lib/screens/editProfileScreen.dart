@@ -143,12 +143,18 @@ class _EditProfileState extends State<EditProfileScreen> {
       hintText: "Enter your email",
       validator: emailValidator,
       controller: _email,
+      onFieldSubmitted: (value) {
+        trySaveChanges(context);
+      },
     );
 
     var ageEdit = InputField(
         label: "Age",
         hintText: "Enter your age",
         validator: ageValidator,
+        onFieldSubmitted: (value) {
+          trySaveChanges(context);
+        },
         controller: _age);
 
     var changePassButton = Padding(
@@ -200,35 +206,7 @@ class _EditProfileState extends State<EditProfileScreen> {
           minimumSize: const Size(300, 50),
         ),
         onPressed: () {
-          if (_userEditFormKey.currentState!.validate()) {
-            bool changedAge =
-                _age.text != UserAPI().loggedInUser!.age.toString();
-            bool changedEmail =
-                _email.text != Authentication().loggedInUser!.email.toString();
-            bool changedName = _name.text != UserAPI().loggedInUser!.name;
-            bool changedPhoto = imageFile != null;
-            bool changedPassword = newPassword.isNotEmpty;
-            bool changedGenrePreferences = newGenrePreferences.isNotEmpty;
-
-            UserAPI().updateUserPreferences(
-                age: changedAge ? int.parse(_age.text) : null,
-                name: changedName ? _name.text : null,
-                email: changedEmail ? _email.text : null,
-                imageFile: changedPhoto ? imageFile : null,
-                password: changedPassword ? newPassword : null,
-                selectedGenres:
-                    changedGenrePreferences ? newGenrePreferences : null);
-
-            showPopupMessageWithFunction(
-                context, "success", "Your changes have been saved!", () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                ),
-              );
-            });
-          }
+          trySaveChanges(context);
         },
         child: Text(
           'Save Changes',
@@ -297,6 +275,36 @@ class _EditProfileState extends State<EditProfileScreen> {
         ),
       ),
     );
+  }
+
+  void trySaveChanges(BuildContext context) {
+    if (_userEditFormKey.currentState!.validate()) {
+      bool changedAge = _age.text != UserAPI().loggedInUser!.age.toString();
+      bool changedEmail =
+          _email.text != Authentication().loggedInUser!.email.toString();
+      bool changedName = _name.text != UserAPI().loggedInUser!.name;
+      bool changedPhoto = imageFile != null;
+      bool changedPassword = newPassword.isNotEmpty;
+      bool changedGenrePreferences = newGenrePreferences.isNotEmpty;
+
+      UserAPI().updateUserPreferences(
+          age: changedAge ? int.parse(_age.text) : null,
+          name: changedName ? _name.text : null,
+          email: changedEmail ? _email.text : null,
+          imageFile: changedPhoto ? imageFile : null,
+          password: changedPassword ? newPassword : null,
+          selectedGenres: changedGenrePreferences ? newGenrePreferences : null);
+
+      showPopupMessageWithFunction(
+          context, "success", "Your changes have been saved!", () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProfileScreen(),
+          ),
+        );
+      });
+    }
   }
 
   Future _navigateAndDisplayChange(BuildContext context) async {

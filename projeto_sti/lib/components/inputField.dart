@@ -6,26 +6,29 @@ class InputField extends StatelessWidget {
   final String hintText;
   final String? Function(String?) validator;
   final String label;
+  final Function(String)? onFieldSubmitted;
 
-  const InputField(
+  InputField(
       {required this.controller,
       required this.hintText,
       required this.validator,
       required this.label,
+      required this.onFieldSubmitted,
       Key? key})
       : super(key: key);
 
   TextInputType _inputType() {
     if (hintText.contains("email")) {
       return TextInputType.emailAddress;
-    } else if (hintText.contains("password")) {
-      return TextInputType.multiline;
     } else if (hintText.contains("name")) {
       return TextInputType.name;
     } else if (hintText.contains("age")) {
       return TextInputType.number;
     }
     return TextInputType.text;
+    // else if (hintText.contains("password")) {
+    //   return TextInputType.multiline;
+    // }
   }
 
   @override
@@ -57,6 +60,7 @@ class InputField extends StatelessWidget {
             width: 300,
             child: TextFormField(
               controller: controller,
+              onFieldSubmitted: onFieldSubmitted,
               textAlign: TextAlign.center,
               keyboardType: _inputType(),
               obscureText: hintText.contains("password"),
