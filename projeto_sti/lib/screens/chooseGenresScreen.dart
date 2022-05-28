@@ -41,7 +41,8 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
         child: Text(
           genre,
           style: GoogleFonts.lato(
-            fontSize: 12,
+            fontSize:
+                genre == "Documentary" ? 9 : (genre == "Adventure" ? 11 : 12),
             color: alreadySelected ? Colors.black : Colors.white,
             fontWeight: FontWeight.w400,
           ),
@@ -68,7 +69,9 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
           child: Text(
             element.name,
             style: GoogleFonts.lato(
-              fontSize: 12,
+              fontSize: element.name == "Documentary"
+                  ? 9
+                  : (element.name == "Adventure" ? 11 : 12),
               color: Colors.black,
               fontWeight: FontWeight.w400,
             ),
@@ -140,7 +143,11 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                                   child: Text(
                                     element.name,
                                     style: GoogleFonts.lato(
-                                      fontSize: 12,
+                                      fontSize: element.name == "Documentary"
+                                          ? 9
+                                          : (element.name == "Adventure"
+                                              ? 11
+                                              : 12),
                                       color: Colors.black,
                                       fontWeight: FontWeight.w400,
                                     ),

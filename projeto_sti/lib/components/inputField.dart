@@ -6,6 +6,7 @@ class InputField extends StatelessWidget {
   final String hintText;
   final String? Function(String?) validator;
   final String label;
+  final bool hasNextField;
   final Function(String)? onFieldSubmitted;
 
   InputField(
@@ -13,6 +14,7 @@ class InputField extends StatelessWidget {
       required this.hintText,
       required this.validator,
       required this.label,
+      required this.hasNextField,
       required this.onFieldSubmitted,
       Key? key})
       : super(key: key);
@@ -61,6 +63,7 @@ class InputField extends StatelessWidget {
             child: TextFormField(
               controller: controller,
               onFieldSubmitted: onFieldSubmitted,
+              textInputAction: hasNextField ? TextInputAction.next : TextInputAction.done,
               textAlign: TextAlign.center,
               keyboardType: _inputType(),
               obscureText: hintText.contains("password"),

@@ -30,7 +30,10 @@ class GenreOval extends StatelessWidget {
                   builder: (context) => ByGenreScreen(genre: genre),
                 ));
           },
-          child: Text(genre.name, style: Styles.fonts.genre)),
+          child: Text(genre.name,
+              style: genre.name == "Documentary"
+                  ? Styles.fonts.edit
+                  : Styles.fonts.genre)),
     );
   }
 }

@@ -142,6 +142,7 @@ class _EditProfileState extends State<EditProfileScreen> {
       label: "Email",
       hintText: "Enter your email",
       validator: emailValidator,
+      hasNextField: true,
       controller: _email,
       onFieldSubmitted: (value) {
         trySaveChanges(context);
@@ -152,6 +153,7 @@ class _EditProfileState extends State<EditProfileScreen> {
         label: "Age",
         hintText: "Enter your age",
         validator: ageValidator,
+        hasNextField: false,
         onFieldSubmitted: (value) {
           trySaveChanges(context);
         },

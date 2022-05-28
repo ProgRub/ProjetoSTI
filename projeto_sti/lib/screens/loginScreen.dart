@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             label: "Email",
             hintText: "Enter your email",
             validator: emailValidator,
+                        hasNextField: true,
             controller: _email,
             onFieldSubmitted: (value) {
               tryLogin(context);
@@ -51,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
             label: "Password",
             hintText: "Enter your password",
             validator: passwordValidator,
+                        hasNextField: false,
             controller: _password,
             onFieldSubmitted: (value) {
               tryLogin(context);
@@ -92,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InputField(
             label: "Email",
             hintText: "Enter your email",
+                        hasNextField: true,
             validator: emailValidator,
             controller: _email,
             onFieldSubmitted: (value) {
@@ -101,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InputField(
             label: "Password",
             hintText: "Enter your password",
+                        hasNextField: true,
             validator: passwordValidator,
             controller: _password,
             onFieldSubmitted: (value) {
@@ -110,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InputField(
             label: "Confirm password",
             hintText: "Enter your password",
+                        hasNextField: false,
             validator: confirmPasswordValidator,
             controller: _confirmPass,
             onFieldSubmitted: (value) {

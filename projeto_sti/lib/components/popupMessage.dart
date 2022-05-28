@@ -132,7 +132,7 @@ showPopupMessage(
     BuildContext context, String type, String message, bool cancel) {
   // late Timer _timer;
   showDialog(
-      barrierDismissible: false,
+      barrierDismissible: cancel ? true : false,
       context: context,
       builder: (BuildContext builderContext) {
         // _timer = Timer(const Duration(seconds: 2), () {

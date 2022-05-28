@@ -105,6 +105,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                       InputField(
                         label: "Name",
                         hintText: "Enter your name",
+                        hasNextField: true,
                         validator: nameValidator,
                         controller: _name,
                         onFieldSubmitted: (value) {
@@ -146,6 +147,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                       const SizedBox(height: 30.0),
                       InputField(
                         label: "Age",
+                        hasNextField: false,
                         hintText: "Enter your age",
                         validator: ageValidator,
                         controller: _age,
