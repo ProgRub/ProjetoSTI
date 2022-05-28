@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/inputField.dart';
@@ -9,7 +12,8 @@ import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/models/user.dart';
 import 'package:projeto_sti/screens/chooseGenresScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:developer' as developer;
 import 'package:image_picker/image_picker.dart';
 import 'package:projeto_sti/validators.dart';
 
@@ -23,6 +27,10 @@ class UserInfoScreen extends StatefulWidget {
 enum Gender { none, female, male, nonBynary, preferNotSay, other }
 
 class _UserInfoState extends State<UserInfoScreen> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  
   late XFile? imageFile = null;
   final ImagePicker _picker = ImagePicker();
 
@@ -31,6 +39,43 @@ class _UserInfoState extends State<UserInfoScreen> {
   final TextEditingController _age = TextEditingController();
 
   Gender? _gender = Gender.none;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +232,8 @@ class _UserInfoState extends State<UserInfoScreen> {
   }
 
   void tryAddUser(BuildContext context) {
+    if (!hasInternet(context, _connectionStatus)) return;
+    
     if (_userInfoFormKey.currentState!.validate()) {
       if (_gender == Gender.none) {
         showPopupMessage(context, "error", "Choose your gender!", false);

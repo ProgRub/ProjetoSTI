@@ -1,13 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:bubble_chart/bubble_chart.dart';
+import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/screens/mainScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import '../components/appLogo.dart';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:developer' as developer;
 import '../models/genre.dart';
 
 class ChooseGenresScreen extends StatefulWidget {
@@ -18,6 +24,9 @@ class ChooseGenresScreen extends StatefulWidget {
 }
 
 class _ChooseGenresState extends State<ChooseGenresScreen> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   List<BubbleNode> childrenNodes = [];
   List<String> selectedGenres = [];
   final Future<List<Genre>> genresFuture = GenresAPI().getAllGenres();
@@ -29,6 +38,38 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   void initState() {
     changingPreferences = alreadySelected.isNotEmpty;
     super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
   }
 
   void clickedGenre(BubbleNode node) {
@@ -201,6 +242,8 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                       return;
                     } else {
                       if (!changingPreferences) {
+                        if (hasInternet(context, _connectionStatus)) return;
+
                         UserAPI().setUserPreferences(selectedGenres);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (BuildContext context) =>

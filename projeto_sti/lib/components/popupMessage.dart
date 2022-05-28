@@ -132,17 +132,9 @@ showPopupMessage(
     BuildContext context, String type, String message, bool cancel) {
   // late Timer _timer;
   showDialog(
-      barrierDismissible: cancel ? true : false,
+      barrierDismissible: cancel ? false : true,
       context: context,
       builder: (BuildContext builderContext) {
-        // _timer = Timer(const Duration(seconds: 2), () {
-        //   Navigator.of(context).pop();
-        // });
-
         return PopupMessage(type: type, message: message, cancel: cancel);
-      }).then((val) {
-    // if (_timer.isActive) {
-    //   _timer.cancel();
-    // }
-  });
+      }).then((val) {});
 }

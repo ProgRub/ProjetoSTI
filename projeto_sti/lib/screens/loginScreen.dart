@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:projeto_sti/api/exceptions.dart';
+import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/inputField.dart';
 import 'package:projeto_sti/components/popupMessage.dart';
@@ -9,7 +13,8 @@ import 'package:projeto_sti/screens/mainScreen.dart';
 import 'package:projeto_sti/screens/userInfoScreen.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/validators.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:developer' as developer;
 import '../api/authentication.dart';
 import '../components/appLogo.dart';
 
@@ -21,6 +26,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   final Authentication authentication = Authentication();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
@@ -30,6 +39,43 @@ class _LoginScreenState extends State<LoginScreen> {
 
   int selectedCategory = 0;
   final List<String> categories = ["Login", "Sign Up"];
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
             label: "Email",
             hintText: "Enter your email",
             validator: emailValidator,
-                        hasNextField: true,
+            hasNextField: true,
             controller: _email,
             onFieldSubmitted: (value) {
               tryLogin(context);
@@ -52,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
             label: "Password",
             hintText: "Enter your password",
             validator: passwordValidator,
-                        hasNextField: false,
+            hasNextField: false,
             controller: _password,
             onFieldSubmitted: (value) {
               tryLogin(context);
@@ -94,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InputField(
             label: "Email",
             hintText: "Enter your email",
-                        hasNextField: true,
+            hasNextField: true,
             validator: emailValidator,
             controller: _email,
             onFieldSubmitted: (value) {
@@ -104,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InputField(
             label: "Password",
             hintText: "Enter your password",
-                        hasNextField: true,
+            hasNextField: true,
             validator: passwordValidator,
             controller: _password,
             onFieldSubmitted: (value) {
@@ -114,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
           InputField(
             label: "Confirm password",
             hintText: "Enter your password",
-                        hasNextField: false,
+            hasNextField: false,
             validator: confirmPasswordValidator,
             controller: _confirmPass,
             onFieldSubmitted: (value) {
@@ -243,6 +289,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void trySignUp(BuildContext context) async {
+    if (!hasInternet(context, _connectionStatus)) return;
+
     try {
       await authentication.signUserUp(
           _email.text, _password.text, _confirmPass.text);
@@ -288,6 +336,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void tryLogin(BuildContext context) async {
+    if (!hasInternet(context, _connectionStatus)) return;
+
     try {
       await authentication.login(_email.text, _password.text);
       var chosenGenres = UserAPI().loggedInUser!.genrePreferences.isNotEmpty;
@@ -299,17 +349,6 @@ class _LoginScreenState extends State<LoginScreen> {
               (chosenGenres ? const MainScreen() : const ChooseGenresScreen()),
         ),
       );
-      // Timer(
-      //   const Duration(seconds: 3),
-      //   () => Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => (chosenGenres
-      //           ? const MainScreen()
-      //           : const ChooseGenresScreen()),
-      //     ),
-      //   ),
-      // );
     } on LoginException catch (e) {
       String message = "";
       switch (e.code) {

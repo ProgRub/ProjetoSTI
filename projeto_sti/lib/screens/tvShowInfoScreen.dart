@@ -1,4 +1,9 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/api/comments.dart';
@@ -18,6 +23,7 @@ import 'package:skeletons/skeletons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import 'dart:developer' as developer;
 import '../api/genres.dart';
 import '../api/movies.dart';
 import '../api/tvShows.dart';
@@ -33,6 +39,10 @@ class TvShowInfoScreen extends StatefulWidget {
 }
 
 class _TvShowInfoState extends State<TvShowInfoScreen> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   late YoutubePlayerController _videoController;
   bool playingTrailer = false;
   late String trailerUrl;
@@ -73,6 +83,10 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
       ),
     );
     super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     tvShow.getPhotos().then((result) {
       tvShowPhotos = result;
       setState(() {});
@@ -88,10 +102,35 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   @override
   void dispose() {
     _videoController.dispose();
+    _connectivitySubscription.cancel();
     super.dispose();
   }
 
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
+
   Future<bool> onLikeButtonTapped(bool isLiked) async {
+    if (!hasInternet(context, _connectionStatus)) return isLiked;
+
     var snackBar;
     if (!isLiked && !favourited) {
       favourited = !favourited;
@@ -111,6 +150,8 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   }
 
   Future<void> onWatchedButtonTapped() async {
+    if (!hasInternet(context, _connectionStatus)) return;
+
     var snackBar;
     if (!watched) {
       snackBar =
@@ -182,6 +223,8 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   color: Styles.colors.purple,
                 ),
                 onPressed: () {
+                  if (!hasInternet(context, _connectionStatus)) return;
+
                   setState(() {
                     _videoController.seekTo(Duration.zero);
                     playingTrailer = true;

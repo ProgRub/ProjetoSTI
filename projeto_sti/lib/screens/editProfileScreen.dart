@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:projeto_sti/api/authentication.dart';
+import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
@@ -18,6 +22,7 @@ import 'package:projeto_sti/validators.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
 
+import 'dart:developer' as developer;
 import 'editPasswordScreen.dart';
 import 'loginScreen.dart';
 
@@ -31,6 +36,9 @@ class EditProfileScreen extends StatefulWidget {
 enum Gender { none, female, male }
 
 class _EditProfileState extends State<EditProfileScreen> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   late XFile? imageFile = null;
   final ImagePicker _picker = ImagePicker();
 
@@ -50,6 +58,38 @@ class _EditProfileState extends State<EditProfileScreen> {
     _email.text = Authentication().loggedInUser!.email.toString();
     _age.text = UserAPI().loggedInUser!.age.toString();
     super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
   }
 
   @override
@@ -221,6 +261,8 @@ class _EditProfileState extends State<EditProfileScreen> {
       padding: const EdgeInsets.only(right: 60, left: 60, bottom: 30.0),
       child: TextButton(
         onPressed: () {
+          if (!hasInternet(context, _connectionStatus)) return;
+
           showPopupMessageWithFunction(context, "error",
               "Are you sure you want to delete your account?", true, () {
             Authentication().deleteUser();
@@ -279,6 +321,8 @@ class _EditProfileState extends State<EditProfileScreen> {
   }
 
   void trySaveChanges(BuildContext context) {
+    if (!hasInternet(context, _connectionStatus)) return;
+
     if (_userEditFormKey.currentState!.validate()) {
       bool changedAge = _age.text != UserAPI().loggedInUser!.age.toString();
       bool changedEmail =

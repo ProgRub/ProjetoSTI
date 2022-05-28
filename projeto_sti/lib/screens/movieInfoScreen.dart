@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:projeto_sti/api/genres.dart';
+import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 import 'package:projeto_sti/api/users.dart';
@@ -20,6 +25,7 @@ import 'package:skeletons/skeletons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import 'dart:developer' as developer;
 import '../api/persons.dart';
 import '../models/genre.dart';
 import '../models/person.dart';
@@ -36,6 +42,10 @@ class MovieInfoScreen extends StatefulWidget {
 }
 
 class _MovieInfoState extends State<MovieInfoScreen> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   late YoutubePlayerController _videoController;
   bool playingTrailer = false;
   late String trailerUrl;
@@ -77,6 +87,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
       ),
     );
     super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     movie.getPhotos().then((result) {
       moviePhotos = result;
       setState(() {});
@@ -92,10 +107,35 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   @override
   void dispose() {
     _videoController.dispose();
+    _connectivitySubscription.cancel();
     super.dispose();
   }
 
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
+
   Future<bool> onLikeButtonTapped(bool isLiked) async {
+    if (!hasInternet(context, _connectionStatus)) return isLiked;
+
     var snackBar;
 
     if (!isLiked && !favourited) {
@@ -117,6 +157,8 @@ class _MovieInfoState extends State<MovieInfoScreen> {
   }
 
   Future<void> onWatchedButtonTapped() async {
+    if (!hasInternet(context, _connectionStatus)) return;
+
     var snackBar;
     if (!watched) {
       snackBar =
@@ -188,6 +230,8 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   color: Styles.colors.purple,
                 ),
                 onPressed: () async {
+                  if (!hasInternet(context, _connectionStatus)) return;
+                  
                   setState(() async {
                     if (Platform.isAndroid || Platform.isIOS) {
                       _videoController.seekTo(Duration.zero);
@@ -195,12 +239,9 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                       _videoController.play();
                       return;
                     }
-                    print("HERE");
                     if (!await launchUrl(Uri.parse(
                         'https://www.youtube.com/watch?v=' + movie.trailer))) {
-                      print("ERROR");
-                    } else {
-                      print("SUCESS");
+                      
                     }
                   });
                 },
@@ -330,7 +371,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                         if (!await launchUrl(Uri.parse(
                             'https://www.youtube.com/watch?v=' +
                                 movieVideos[index]))) {
-                          //ERROR MESSAGE
+                          if (!hasInternet(context, _connectionStatus)) return;
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -792,7 +833,7 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 children: [
                   Stack(
                     children: [
-                      playingTrailer //(Platform.isAndroid || Platform.isIOS) &&
+                      playingTrailer
                           ? Stack(
                               children: [
                                 SizedBox(
