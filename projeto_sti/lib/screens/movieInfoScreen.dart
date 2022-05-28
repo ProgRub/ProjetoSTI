@@ -690,6 +690,11 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     comments = snapshot.data!;
+                    comments.sort((a, b) {
+                      var adate = a.date;
+                      var bdate = b.date;
+                      return -adate.compareTo(bdate);
+                    });
                     if (comments.isNotEmpty) {
                       child = ListView.separated(
                         itemCount: comments.length,
