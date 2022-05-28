@@ -155,14 +155,14 @@ class _UserInfoState extends State<UserInfoScreen> {
                             primary: Styles.colors.button,
                             minimumSize: const Size(300, 50),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             if (_userInfoFormKey.currentState!.validate()) {
                               if (_gender == Gender.none) {
-                                showPopupMessage(
-                                    context, "error", "Choose your gender!");
+                                showPopupMessage(context, "error",
+                                    "Choose your gender!", false);
                               } else if (imageFile == null) {
-                                showPopupMessage(
-                                    context, "error", "Upload your photo!");
+                                showPopupMessage(context, "error",
+                                    "Upload your photo!", false);
                               } else {
                                 UserAPI().addUser(
                                     UserModel(
@@ -178,6 +178,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                                         watchedMovies: [],
                                         watchedTvShows: []),
                                     imageFile!);
+                                 await  UserAPI().setLoggedInUser();
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>

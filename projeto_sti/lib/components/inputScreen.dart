@@ -88,7 +88,7 @@ class InputState extends State<InputScreen> {
     if (description.isNotEmpty) {
       Navigator.of(context).pop(description);
     } else {
-      showPopupMessage(context, "error", "Please, enter your name!");
+      showPopupMessage(context, "error", "Please, enter your name!", false);
     }
   }
 }

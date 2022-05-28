@@ -102,11 +102,11 @@ class _ChangePasswordState extends State<ChangePasswordScreen> {
 
   Future editPassword() async {
     if (!password.isNotEmpty) {
-      showPopupMessage(context, "error", "Please, enter your new password!");
+      showPopupMessage(context, "error", "Please, enter your new password!", false);
     } else if (!confirmPassword.isNotEmpty) {
-      showPopupMessage(context, "error", "Please, confirm your password!");
+      showPopupMessage(context, "error", "Please, confirm your password!", false);
     } else if (password != confirmPassword) {
-      showPopupMessage(context, "error", "Password mismatch!");
+      showPopupMessage(context, "error", "Password mismatch!", false);
     } else {
       Navigator.of(context).pop(password);
     }

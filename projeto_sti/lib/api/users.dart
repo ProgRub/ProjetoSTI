@@ -34,7 +34,7 @@ class UserAPI {
       "watchedMovies": [],
       "watchedTvShows": []
     });
-    setLoggedInUser();
+    
   }
 
   Future<void> deleteUser() async {

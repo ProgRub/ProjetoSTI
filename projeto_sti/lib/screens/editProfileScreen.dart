@@ -220,7 +220,7 @@ class _EditProfileState extends State<EditProfileScreen> {
                     changedGenrePreferences ? newGenrePreferences : null);
 
             showPopupMessageWithFunction(
-                context, "success", "Your changes have been saved!", () {
+                context, "success", "Your changes have been saved!", false, () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -242,7 +242,7 @@ class _EditProfileState extends State<EditProfileScreen> {
       child: TextButton(
         onPressed: () {
           showPopupMessageWithFunction(
-              context, "error", "Are you sure you want to delete your account?",
+              context, "error", "Are you sure you want to delete your account?", true,
               () {
             Authentication().deleteUser();
             UserAPI().deleteUser();

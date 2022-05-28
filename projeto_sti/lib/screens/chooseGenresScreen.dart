@@ -23,11 +23,10 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
   final Future<List<Genre>> genresFuture = GenresAPI().getAllGenres();
   List<Genre> genres = [];
   late bool changingPreferences;
-  List<String> alreadySelected = [];
+  List<String> alreadySelected = UserAPI().getGenrePreferences();
 
   @override
   void initState() {
-    alreadySelected = UserAPI().getGenrePreferences();
     changingPreferences = alreadySelected.isNotEmpty;
     super.initState();
   }
@@ -191,7 +190,7 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                   onPressed: () {
                     if (selectedGenres.length < 3) {
                       showPopupMessage(context, "error",
-                          "You have to choose at least 3 genres!");
+                          "You have to choose at least 3 genres!", false);
                       return;
                     } else {
                       if (!changingPreferences) {

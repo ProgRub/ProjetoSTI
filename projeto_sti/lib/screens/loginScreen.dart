@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await authentication.signUserUp(
           _email.text, _password.text, _confirmPass.text);
       showPopupMessageWithFunction(
-          context, "success", "Your account has been created!", () {
+          context, "success", "Your account has been created!", false, () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -256,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
           message = "Password not strong enough.";
           break;
       }
-      showPopupMessage(context, "error", message);
+      showPopupMessage(context, "error", message, false);
     }
   }
 
@@ -305,7 +305,7 @@ class _LoginScreenState extends State<LoginScreen> {
           message = "Invalid credentials.";
           break;
       }
-      showPopupMessage(context, "error", message);
+      showPopupMessage(context, "error", message, false);
     }
   }
 

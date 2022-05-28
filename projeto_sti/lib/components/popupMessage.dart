@@ -5,11 +5,13 @@ import 'package:projeto_sti/styles/style.dart';
 class PopupMessage extends StatelessWidget {
   final String type;
   final String message;
+  final bool cancel;
   Null Function()? function;
 
   PopupMessage({
     required this.type,
     required this.message,
+    required this.cancel,
     this.function,
     Key? key,
   }) : super(key: key);
@@ -17,39 +19,72 @@ class PopupMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: popupColor(),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0))),
+      contentPadding: const EdgeInsets.all(20.0),
+      backgroundColor: Colors.black,
       title: type == "error"
-          ? Icon(Icons.error_outline, size: 40.0, color: Styles.colors.error)
-          : const Icon(Icons.check_circle, size: 40.0),
-      content: SizedBox(
-        height: 40,
-        child: Center(
-          child: Text(
-            message,
-            style: GoogleFonts.roboto(
-              fontSize: 18,
-              color: type == "error" ? Styles.colors.error : Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        Visibility(
-          visible: function != null,
-          child: TextButton(
-            child: const Text("OK"),
-            style: TextButton.styleFrom(
-              primary: Styles.colors.purple,
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+          ? const Icon(Icons.error_outline, size: 50.0, color: Colors.red)
+          : const Icon(Icons.check_circle, size: 50.0, color: Colors.green),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 40,
+            child: Center(
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
-            onPressed: function,
           ),
-        )
-      ],
+          (cancel || function != null)
+              ? Column(
+                  children: [
+                    const SizedBox(height: 30.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        cancel
+                            ? TextButton(
+                                child: const Text("Cancel"),
+                                style: TextButton.styleFrom(
+                                  primary: Styles.colors.errorText,
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog'),
+                              )
+                            : Container(),
+                        function != null
+                            ? TextButton(
+                                child: const Text("OK"),
+                                style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                onPressed: function,
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ],
+                )
+              : Container(),
+        ],
+      ),
     );
   }
 
@@ -66,7 +101,7 @@ class PopupMessage extends StatelessWidget {
 }
 
 showPopupMessageWithFunction(BuildContext context, String type, String message,
-    Null Function() functionToCall) {
+    bool cancel, Null Function() functionToCall) {
   // late Timer _timer;
   showDialog(
       context: context,
@@ -75,7 +110,10 @@ showPopupMessageWithFunction(BuildContext context, String type, String message,
         //   Navigator.of(context).pop();
         // });
         var popup = PopupMessage(
-            type: type, message: message, function: functionToCall);
+            type: type,
+            message: message,
+            cancel: cancel,
+            function: functionToCall);
         Null Function() f = () {
           Navigator.of(context, rootNavigator: true).pop(popup);
           functionToCall();
@@ -89,7 +127,8 @@ showPopupMessageWithFunction(BuildContext context, String type, String message,
   });
 }
 
-showPopupMessage(BuildContext context, String type, String message) {
+showPopupMessage(
+    BuildContext context, String type, String message, bool cancel) {
   // late Timer _timer;
   showDialog(
       context: context,
@@ -98,7 +137,7 @@ showPopupMessage(BuildContext context, String type, String message) {
         //   Navigator.of(context).pop();
         // });
 
-        return PopupMessage(type: type, message: message);
+        return PopupMessage(type: type, message: message, cancel: cancel);
       }).then((val) {
     // if (_timer.isActive) {
     //   _timer.cancel();

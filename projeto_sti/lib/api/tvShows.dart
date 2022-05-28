@@ -23,15 +23,15 @@ class TVShowsAPI {
     var shows = await collection.get();
     List<TvShow> tvShows = [];
     for (var show in shows.docs) {
-      // collection.doc(show.id).update({"timesFavourited": 0, "timesWatched": 0});
       tvShows.add(TvShow.fromApi(show));
       if (tvShows.last.cast.any((element) => element.contains(" "))) {
         List<String> actors = [];
         for (var actor in tvShows.last.cast) {
           actors.add(await PersonsAPI().addPersonIfNotInDB(actor, "Actor"));
         }
-        if (actors.any((element) => element.isEmpty || element.contains(" ")))
+        if (actors.any((element) => element.isEmpty || element.contains(" "))) {
           continue;
+        }
         collection.doc(tvShows.last.id).update({"Actors": actors});
         tvShows.last.cast = actors;
       }
@@ -51,14 +51,13 @@ class TVShowsAPI {
         for (var writer in tvShows.last.writers) {
           writers.add(await PersonsAPI().addPersonIfNotInDB(writer, "Writer"));
         }
-        if (writers.any((element) => element.isEmpty || element.contains(" ")))
+        if (writers.any((element) => element.isEmpty || element.contains(" "))) {
           continue;
+        }
         collection.doc(tvShows.last.id).update({"Writer": writers});
         tvShows.last.writers = writers;
       }
-      // print("Wallpaper " + tvShows.last.title);
     }
-    print("FINISHED TVSHOWS");
     return tvShows;
   }
 
@@ -68,7 +67,6 @@ class TVShowsAPI {
     for (var tvShow
         in tvShows.docs.where((element) => element["Genre"].contains(genre))) {
       returnTvShows.add(TvShow.fromApi(tvShow));
-      // print("Genre: " + returnTvShows.last.title);
     }
     return returnTvShows;
   }

@@ -23,8 +23,9 @@ class Authentication {
     if (user == null) {
       return;
     }
-    await auth.signOut();
     loggedInUser = null;
+    await auth.signOut();
+
     // final String uid = user.uid;
   }
 
