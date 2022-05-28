@@ -34,7 +34,7 @@ class UserAPI {
       "watchedMovies": [],
       "watchedTvShows": []
     });
-    
+    setLoggedInUser();
   }
 
   Future<void> deleteUser() async {
@@ -245,7 +245,7 @@ class UserAPI {
     var users = await collection.get();
     List<String> returnUser = [];
     for (var user in users.docs) {
-      if(user["authId"] == userId){
+      if (user["authId"] == userId) {
         returnUser.add(user["name"]);
         returnUser.add(user["imageDownloadUrl"]);
       }

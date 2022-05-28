@@ -186,7 +186,7 @@ class _UserInfoState extends State<UserInfoScreen> {
     );
   }
 
-  void tryAddUser(BuildContext context) async {
+  void tryAddUser(BuildContext context) {
     if (_userInfoFormKey.currentState!.validate()) {
       if (_gender == Gender.none) {
         showPopupMessage(context, "error", "Choose your gender!", false);
@@ -207,7 +207,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                 watchedMovies: [],
                 watchedTvShows: []),
             imageFile!);
-        await UserAPI().setLoggedInUser();
+         
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => const ChooseGenresScreen()));
       }
