@@ -242,7 +242,7 @@ class _ChooseGenresState extends State<ChooseGenresScreen> {
                       return;
                     } else {
                       if (!changingPreferences) {
-                        if (hasInternet(context, _connectionStatus)) return;
+                        if (!hasInternet(context, _connectionStatus)) return;
 
                         UserAPI().setUserPreferences(selectedGenres);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(

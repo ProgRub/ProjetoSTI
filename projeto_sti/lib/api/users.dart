@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projeto_sti/api/authentication.dart';
+import 'package:projeto_sti/api/comments.dart';
 import 'package:projeto_sti/api/genres.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
@@ -38,11 +39,13 @@ class UserAPI {
   }
 
   Future<void> deleteUser() async {
+    await CommentAPI().deleteUserComments(loggedInUser!.id);
     await collection.doc(loggedInUser!.id).delete();
     Reference ref = FirebaseStorage.instance
         .ref()
         .child("userPictures/" + Authentication().loggedInUser!.uid);
     await ref.delete();
+
     loggedInUser = null;
   }
 

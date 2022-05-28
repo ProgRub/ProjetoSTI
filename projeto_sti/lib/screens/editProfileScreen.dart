@@ -260,7 +260,7 @@ class _EditProfileState extends State<EditProfileScreen> {
     var deleteAccButton = Padding(
       padding: const EdgeInsets.only(right: 60, left: 60, bottom: 30.0),
       child: TextButton(
-        onPressed: () {
+        onPressed: () async {
           if (!hasInternet(context, _connectionStatus)) return;
 
           showPopupMessageWithFunction(context, "error",
