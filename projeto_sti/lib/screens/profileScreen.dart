@@ -6,6 +6,7 @@ import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/components/quarterCircle.dart';
 import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
@@ -300,9 +301,13 @@ class _ProfileState extends State<ProfileScreen> {
               _buildQuarterCircle(82, Styles.colors.blurred),
               GestureDetector(
                 onTap: () {
-                  Authentication().logout();
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) => const LoginScreen()));
+                  showPopupMessageWithFunction(context, "error",
+                      "Are you sure you want to log out?", true, () {
+                    Authentication().logout();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const LoginScreen()));
+                  });
                 },
                 child: Stack(children: [
                   _buildQuarterCircle(80, Colors.white),

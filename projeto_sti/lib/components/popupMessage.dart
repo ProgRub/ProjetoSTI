@@ -104,6 +104,7 @@ showPopupMessageWithFunction(BuildContext context, String type, String message,
     bool cancel, Null Function() functionToCall) {
   // late Timer _timer;
   showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext builderContext) {
         // _timer = Timer(const Duration(seconds: 2), () {
@@ -131,6 +132,7 @@ showPopupMessage(
     BuildContext context, String type, String message, bool cancel) {
   // late Timer _timer;
   showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext builderContext) {
         // _timer = Timer(const Duration(seconds: 2), () {

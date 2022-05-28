@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/api/users.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/styles/style.dart';
 import 'package:projeto_sti/api/comments.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
@@ -274,19 +275,22 @@ class _WriteCommentState extends State<WriteCommentScreen> {
           date,
           (rating + 1).toInt().toString());
 
-      if (isMovie) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MovieInfoScreen(movieOrTvShow),
-            ));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TvShowInfoScreen(movieOrTvShow),
-            ));
-      }
+      showPopupMessageWithFunction(
+          context, "success", "Your comment has been posted!", false, () {
+        if (isMovie) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieInfoScreen(movieOrTvShow),
+              ));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TvShowInfoScreen(movieOrTvShow),
+              ));
+        }
+      });
     }
   }
 }
