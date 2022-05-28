@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:projeto_sti/api/users.dart';
 import 'package:projeto_sti/components/appLogo.dart';
@@ -35,10 +37,11 @@ class _UserInfoState extends State<UserInfoScreen> {
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
-          if (Navigator.of(context).userGestureInProgress)
+          if (Navigator.of(context).userGestureInProgress) {
             return false;
-          else
+          } else {
             return true;
+          }
         },
         child: Scaffold(
           resizeToAvoidBottomInset: true,
@@ -47,8 +50,8 @@ class _UserInfoState extends State<UserInfoScreen> {
             child: Column(
               children: [
                 Row(
-                  children: [
-                    const AppLogo(),
+                  children: const [
+                    AppLogo(),
                   ],
                 ),
                 Form(
@@ -84,7 +87,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                                   backgroundImage: imageFile == null
                                       ? null
                                       //: Image.file(File(imageFile!.path)).image,
-                                      : Image.network(imageFile!.path).image,
+                                      : Image.file(File(imageFile!.path)).image,
                                   radius: 34.0,
                                 ),
                               ),

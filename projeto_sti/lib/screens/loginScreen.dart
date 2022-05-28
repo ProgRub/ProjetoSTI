@@ -56,9 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
               tryLogin(context);
             },
           ),
+          const SizedBox(height: 30.0),
           Padding(
             padding: const EdgeInsets.only(
-              top: 30.0,
               right: 60,
               left: 60,
             ),
@@ -116,9 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
               trySignUp(context);
             },
           ),
+          const SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.only(
-              top: 10.0,
               right: 60.0,
               left: 60.0,
             ),
@@ -199,33 +199,38 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
-          if (Navigator.of(context).userGestureInProgress)
+          if (Navigator.of(context).userGestureInProgress) {
             return false;
-          else
+          } else {
             return true;
+          }
         },
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: Styles.colors.background,
-          body: Stack(
-            children: [
-              const AppLogo(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  tabs,
-                  AnimatedCrossFade(
-                    duration: const Duration(milliseconds: 300),
-                    firstChild: loginPage,
-                    secondChild: signUpPage,
-                    crossFadeState: selectedCategory == 0
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond,
-                  ),
-                ],
-              ),
-            ],
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const AppLogo(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    tabs,
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 300),
+                      firstChild: loginPage,
+                      secondChild: signUpPage,
+                      crossFadeState: selectedCategory == 0
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
