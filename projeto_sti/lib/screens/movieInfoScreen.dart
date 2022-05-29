@@ -231,17 +231,13 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 ),
                 onPressed: () async {
                   if (!hasInternet(context, _connectionStatus)) return;
-                  
-                  setState(() async {
+
+                  setState(() {
                     if (Platform.isAndroid || Platform.isIOS) {
                       _videoController.seekTo(Duration.zero);
                       playingTrailer = true;
                       _videoController.play();
                       return;
-                    }
-                    if (!await launchUrl(Uri.parse(
-                        'https://www.youtube.com/watch?v=' + movie.trailer))) {
-                      
                     }
                   });
                 },
