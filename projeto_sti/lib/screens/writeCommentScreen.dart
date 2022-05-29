@@ -171,7 +171,7 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                   onChanged: (newRating) {
                     setState(() {
                       rating = newRating;
-                      ratingLabel = getRatingName((rating + 1).toString());
+                      ratingLabel = getRatingName((rating + 1).toInt().toString());
                       movedBar = true;
                     });
                   },
@@ -250,23 +250,23 @@ class _WriteCommentState extends State<WriteCommentScreen> {
 
   String getRatingName(String rating) {
     switch (rating) {
-      case '1.0':
+      case '1':
         return 'Horrible';
-      case '2.0':
+      case '2':
         return 'Terrible';
-      case '3.0':
+      case '3':
         return 'Bad';
-      case '4.0':
+      case '4':
         return 'Poor';
-      case '5.0':
+      case '5':
         return 'Meh';
-      case '6.0':
+      case '6':
         return 'Decent';
-      case '7.0':
+      case '7':
         return 'Good';
-      case '8.0':
+      case '8':
         return 'Great';
-      case '9.0':
+      case '9':
         return 'Fantastic';
       default:
         return 'Amazing';
