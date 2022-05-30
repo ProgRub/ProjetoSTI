@@ -30,7 +30,7 @@ class Movie {
       required this.timesWatched,
       required this.timesFavourited});
 
-  Movie.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
+  Movie.fromApi(DocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
         cast = apiResponse["Actors"].cast<String>(),
         directors = apiResponse["Director"].cast<String>(),

@@ -177,4 +177,12 @@ class MoviesAPI {
         .doc(id)
         .update({"timesWatched": max(0, timesWatched + numTimes)});
   }
+
+  Future<Movie?> getMovieById(String id) async {
+    var doc = await collection.doc(id).get();
+    if (doc.exists) {
+      return Movie.fromApi(doc);
+    }
+    return null;
+  }
 }

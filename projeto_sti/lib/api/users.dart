@@ -7,6 +7,8 @@ import 'package:projeto_sti/api/genres.dart';
 import 'package:projeto_sti/api/movies.dart';
 import 'package:projeto_sti/api/tvShows.dart';
 
+import '../models/movie.dart';
+import '../models/tvShow.dart';
 import '../models/user.dart';
 
 class UserAPI {
@@ -254,5 +256,48 @@ class UserAPI {
       }
     }
     return returnUser;
+  }
+
+  Future<dynamic> getDailySuggestion(Future<List<Movie>> moviesFuture,
+      Future<List<TvShow>> tvShowsFuture) async {
+    var movies = await moviesFuture;
+    var tvShows = await tvShowsFuture;
+    var user = collection.doc(loggedInUser!.id);
+    List<dynamic> dailySuggestions = <String>[];
+    await user.get().then((doc) {
+      dailySuggestions = doc["dailySuggestions"];
+    });
+    DateTime now = new DateTime.now();
+    DateTime date = new DateTime(now.year, now.month, now.day);
+    print(date.toString().split(" ")[0]);
+    for (var item in dailySuggestions) {
+      if (item["date"] == date.toString().split(" ")[0]) {
+        print(item["programId"]);
+        dynamic program =
+            movies.where((element) => element.id == item["programId"]);
+        if (program.length != 0) return program.first;
+        return tvShows.firstWhere((element) => element.id == item["programId"]);
+      }
+    }
+    List<dynamic> programs = [...movies, ...tvShows];
+    Set<String> preferredGenres = loggedInUser!.genrePreferences.keys
+        .where((element) => loggedInUser!.genrePreferences[element]! > 0.75)
+        .toSet();
+    Map<dynamic, num> preferredPrograms = {};
+    for (var program in programs) {
+      Set genresProgram = (program["Genre"]).toSet();
+      preferredPrograms.addEntries({
+        program.id: genresProgram.intersection(preferredGenres).length /
+            genresProgram.length
+      }.entries);
+    }
+    var sortedPrograms = preferredPrograms.entries.toList()
+      ..sort((e1, e2) {
+        var diff = e2.value.compareTo(e1.value);
+        if (diff == 0) diff = e2.key.compareTo(e1.key);
+        return diff;
+      });
+    print(sortedPrograms.first.key);
+    return null;
   }
 }

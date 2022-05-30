@@ -51,7 +51,8 @@ class TVShowsAPI {
         for (var writer in tvShows.last.writers) {
           writers.add(await PersonsAPI().addPersonIfNotInDB(writer, "Writer"));
         }
-        if (writers.any((element) => element.isEmpty || element.contains(" "))) {
+        if (writers
+            .any((element) => element.isEmpty || element.contains(" "))) {
           continue;
         }
         collection.doc(tvShows.last.id).update({"Writer": writers});
@@ -166,5 +167,13 @@ class TVShowsAPI {
     collection
         .doc(id)
         .update({"timesWatched": max(0, timesWatched + numTimes)});
+  }
+
+  Future<TvShow?> getTvShowById(String id) async {
+    var doc = await collection.doc(id).get();
+    if (doc.exists) {
+      return TvShow.fromApi(doc);
+    }
+    return null;
   }
 }

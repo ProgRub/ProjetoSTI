@@ -39,7 +39,7 @@ class TvShow {
       required this.timesWatched,
       required this.timesFavourited});
 
-  TvShow.fromApi(QueryDocumentSnapshot<Map<String, dynamic>> apiResponse)
+  TvShow.fromApi(DocumentSnapshot<Map<String, dynamic>> apiResponse)
       : id = apiResponse.id,
         years = apiResponse["Year"],
         seasons = apiResponse["totalSeasons"],
