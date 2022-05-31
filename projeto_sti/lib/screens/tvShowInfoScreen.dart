@@ -65,6 +65,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   late Future<List<Comment>> comFuture;
   List<Comment> comments = [];
   List<String> user = [];
+  late String usersRating = "-";
 
   @override
   void initState() {
@@ -287,6 +288,21 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   width: 8.0,
                 ),
                 const Icon(Icons.star, size: 25.0, color: Colors.yellow),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  "|  " + usersRating,
+                  style: Styles.fonts.rating,
+                ),
+                const SizedBox(
+                  width: 8.0,
+                ),
+                Image.asset(
+                  "packages/projeto_sti/assets/images/popcorn.png",
+                  fit: BoxFit.contain,
+                  width: 19,
+                )
               ]),
             ),
             Padding(
@@ -679,9 +695,11 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                       return -adate.compareTo(bdate);
                     });
                     if (comments.isNotEmpty) {
+                      int sumOfRatings = 0;
                       child = ListView.separated(
                         itemCount: comments.length,
                         itemBuilder: (BuildContext context, int index) {
+                          sumOfRatings += int.parse(comments[index].rate);
                           return FutureBuilder(
                             future:
                                 UserAPI().getUserById(comments[index].userId),
@@ -694,13 +712,20 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                 user = snapshot.data!;
                                 userName = user[0];
                                 userImage = user[1];
+
+                                double num = double.parse(
+                                    (sumOfRatings / comments.length)
+                                        .toStringAsFixed(1));
+                                usersRating = num.toString();
+                                return child = CommentBox(
+                                    comments[index].rate,
+                                    comments[index].comment,
+                                    comments[index].date,
+                                    userName,
+                                    userImage);
+                              } else {
+                                return CircularProgressIndicator();
                               }
-                              return child = CommentBox(
-                                  comment: comments[index].comment,
-                                  rate: comments[index].rate,
-                                  date: comments[index].date,
-                                  userName: userName,
-                                  userImage: userImage);
                             },
                           );
                         },

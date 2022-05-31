@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
 import '../styles/style.dart';
 
-class CommentBox extends StatelessWidget {
-  final String rate, comment, date, userName, userImage;
+class CommentBox extends StatefulWidget {
+  late String rate, comment, date, userName, userImage;
+  CommentBox(this.rate, this.comment, this.date, this.userName, this.userImage, {Key? key}) : super(key: key);
 
-  const CommentBox(
-      {required this.rate,
-      required this.comment,
-      required this.date,
-      required this.userName,
-      required this.userImage,
-      Key? key})
-      : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _CommentBoxState(rate, comment, date, userName, userImage);
+}
+
+class _CommentBoxState extends State<CommentBox> {
+  late String rate, comment, date, userName, userImage;
+  _CommentBoxState(this.rate, this.comment, this.date, this.userName, this.userImage);
+
+  late String firstHalf;
+  late String secondHalf;
+  late bool flag = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (comment.length > 200) {
+      firstHalf = comment.substring(0, 200);
+      secondHalf = comment.substring(200, comment.length);
+    } else {
+      firstHalf = comment;
+      secondHalf = "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +110,30 @@ class CommentBox extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                child: Text(comment, style: Styles.fonts.comment),
+                child: secondHalf.isEmpty
+                    ? Text(comment, style: Styles.fonts.comment)
+                    : Column(
+                        children: <Widget>[
+                          Text(flag ? (firstHalf + "...") : (firstHalf + secondHalf), style: Styles.fonts.comment),
+                          InkWell(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  flag ? "show more" : "show less",
+                                  style: const TextStyle(color: Colors.blue),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              setState(() {
+                                flag = !flag;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                //Text(comment, style: Styles.fonts.comment),
               ),
             ])),
       ),
