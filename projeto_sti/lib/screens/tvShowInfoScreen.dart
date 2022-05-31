@@ -642,29 +642,29 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
             left: 20.0,
             right: 20.0,
           ),
-          child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
+          child: SizedBox(
               height: 140,
               child: FutureBuilder(
                 future: CommentAPI().getComments(tvShow.id),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Comment>> snapshot) {
                   Widget child;
-                  child = Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
+                  child = Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
                     child: Center(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("No Comments!", style: Styles.fonts.label),
                           const SizedBox(height: 8.0),
                           Text("Be the first person to",
                               style: Styles.fonts.plot),
-                          Text("comment about this movie!",
+                          Text("comment about this tv show!",
                               style: Styles.fonts.plot)
                         ],
                       ),
