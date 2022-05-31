@@ -70,7 +70,7 @@ class _ProfileState extends State<ProfileScreen> {
             Image.asset("packages/projeto_sti/assets/images/popcorn.png",
                 width: 60, height: 60),
             const SizedBox(height: 20.0),
-            Text("You don't have favourite $type\s!",
+            Text("You don't have watched $type\s!",
                 style: Styles.fonts.label),
             const SizedBox(height: 10.0),
             ElevatedButton(
