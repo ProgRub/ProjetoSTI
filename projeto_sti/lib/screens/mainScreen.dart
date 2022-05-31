@@ -432,62 +432,91 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
 
-    var recommendationSection = FutureBuilder(
+    var recommendationSection = SizedBox(
+      width: MediaQuery.of(context).size.width - 60,
+      height: 160,
+      child: FutureBuilder(
         future: UserAPI().getDailySuggestion(moviesFuture, tvShowsFuture),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           Widget child;
-          child = skeletonPosterList;
+          child = SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+              width: 160,
+              height: MediaQuery.of(context).size.width - 60,
+            ),
+          );
           if (snapshot.hasData) {
             var program = snapshot.data!;
             child = FutureBuilder(
               future: program.runtimeType == Movie
                   ? program.getWallpaper(
-                      160, MediaQuery.of(context).size.width - 60)
+                      160.0, MediaQuery.of(context).size.width - 60)
                   : program.getWallpaper(
-                      160, MediaQuery.of(context).size.width - 60),
+                      160.0, MediaQuery.of(context).size.width - 60),
               builder: (BuildContext context, AsyncSnapshot<Image> snapshot2) {
                 Widget child;
-                child = Container(
-                  width: MediaQuery.of(context).size.width - 60,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    image: DecorationImage(
-                      image: AssetImage(
-                          "packages/projeto_sti/assets/images/avatar.jpg"),
-                      fit: BoxFit.fill,
-                    ),
+                child = SkeletonAvatar(
+                  style: SkeletonAvatarStyle(
+                    width: 160,
+                    height: MediaQuery.of(context).size.width - 60,
                   ),
                 );
                 if (snapshot2.hasData) {
                   child = GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => program.runtimeType == Movie
-                                  ? MovieInfoScreen(program as Movie)
-                                  : TvShowInfoScreen(program as TvShow),
-                            ));
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width - 60,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          image: DecorationImage(
-                            image: snapshot2.data!.image,
-                            fit: BoxFit.fill,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => program.runtimeType == Movie
+                                ? MovieInfoScreen(program as Movie)
+                                : TvShowInfoScreen(program as TvShow),
+                          ));
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width - 60,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            image: DecorationImage(
+                              image: snapshot2.data!.image,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
-                      ));
+                        Container(
+                          width: MediaQuery.of(context).size.width - 60,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            color: Styles.colors.darker,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            border: Border.all(
+                              width: 0.2,
+                              color: Styles.colors.purple,
+                            ),
+                          ),
+                        ),
+                        Center(
+                            child: Padding(
+                          padding: const EdgeInsets.only(top: 100.0),
+                          child: Text(program.title, style: Styles.fonts.label),
+                        )),
+                      ],
+                    ),
+                  );
                 }
                 return child;
               },
             );
           }
           return child;
-        });
+        },
+      ),
+    );
 
     var buttonsSection = Padding(
       padding: const EdgeInsets.only(top: 40.0),
