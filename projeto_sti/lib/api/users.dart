@@ -267,17 +267,22 @@ class UserAPI {
     await user.get().then((doc) {
       dailySuggestions = doc["dailySuggestions"];
     });
-    DateTime now = new DateTime.now();
-    DateTime date = new DateTime(now.year, now.month, now.day);
-    print(date.toString().split(" ")[0]);
+    DateTime now = DateTime.now();
+    DateTime date = DateTime(now.year, now.month, now.day);
+    List<String> alreadySuggestedPrograms = [];
     for (var item in dailySuggestions) {
-      if (item["date"] == date.toString().split(" ")[0]) {
-        print(item["programId"]);
-        dynamic program =
-            movies.where((element) => element.id == item["programId"]);
-        if (program.length != 0) return program.first;
-        return tvShows.firstWhere((element) => element.id == item["programId"]);
-      }
+      try {
+        if (item["date"] == date.toString().split(" ")[0]) {
+          print(item["programId"]);
+          dynamic program =
+              movies.where((element) => element.id == item["programId"]);
+          if (program.length != 0) return program.first;
+          return tvShows
+              .firstWhere((element) => element.id == item["programId"]);
+        } else {
+          alreadySuggestedPrograms.add(item["programId"]);
+        }
+      } catch (e) {}
     }
     List<dynamic> programs = [...movies, ...tvShows];
     Set<String> preferredGenres = loggedInUser!.genrePreferences.keys
@@ -285,7 +290,7 @@ class UserAPI {
         .toSet();
     Map<dynamic, num> preferredPrograms = {};
     for (var program in programs) {
-      Set genresProgram = (program["Genre"]).toSet();
+      Set genresProgram = (program.genres).toSet();
       preferredPrograms.addEntries({
         program.id: genresProgram.intersection(preferredGenres).length /
             genresProgram.length
@@ -293,11 +298,18 @@ class UserAPI {
     }
     var sortedPrograms = preferredPrograms.entries.toList()
       ..sort((e1, e2) {
-        var diff = e2.value.compareTo(e1.value);
-        if (diff == 0) diff = e2.key.compareTo(e1.key);
-        return diff;
+        return e2.value.compareTo(e1.value);
       });
-    print(sortedPrograms.first.key);
+    for (var program in sortedPrograms) {
+      if (!alreadySuggestedPrograms.contains(program.key)) {
+        collection.doc(loggedInUser!.id).update({
+          "dailySuggestions": FieldValue.arrayUnion([
+            {"date": date.toString().split(" ")[0], "programId": program.key}
+          ])
+        });
+        return programs.firstWhere((element) => element.id == program.key);
+      }
+    }
     return null;
   }
 }
