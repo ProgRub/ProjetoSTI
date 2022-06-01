@@ -34,6 +34,15 @@ class CommentAPI {
     }
   }
 
+  Future deleteUserComment(String id) async {
+    var comments = await collection.get();
+    for (var comment in comments.docs) {
+      if (comment.id == id) {
+        collection.doc(comment.id).delete();
+      }
+    }
+  }
+
   Future<void> addComment(String comment, String idMovieTvshow, String idUser,
       String date, String rate) async {
     var comments = await collection.add({

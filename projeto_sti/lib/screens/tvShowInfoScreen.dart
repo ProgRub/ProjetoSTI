@@ -11,6 +11,7 @@ import 'package:projeto_sti/components/appLogo.dart';
 import 'package:projeto_sti/components/bottomAppBar.dart';
 import 'package:projeto_sti/components/genreOval.dart';
 import 'package:projeto_sti/components/commentBox.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import 'package:projeto_sti/models/person.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/screens/personInfoScreen.dart';
@@ -747,14 +748,65 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                     (sumOfRatings / comments.length)
                                         .toStringAsFixed(1));
                                 usersRating = num.toString();
-                                return child = CommentBox(
+                                child = CommentBox(
                                     comments[index].rate,
                                     comments[index].comment,
                                     comments[index].date,
                                     userName,
                                     userImage);
+
+                                return comments[index].userId ==
+                                        UserAPI().loggedInUser!.authId
+                                    ? Dismissible(
+                                        key: Key(index.toString()),
+                                        direction: DismissDirection.endToStart,
+                                        confirmDismiss:
+                                            (DismissDirection direction) async {
+                                          return await showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return deleteCommentAlert(
+                                                  context);
+                                            },
+                                          );
+                                        },
+                                        onDismissed: (direction) async {
+                                          await CommentAPI().deleteUserComment(
+                                              comments[index].id);
+                                          setState(() {});
+                                        },
+                                        background:
+                                            Container(color: Colors.white),
+                                        secondaryBackground: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20),
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              right: 20.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.delete,
+                                                color: Styles.colors.background,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        child: child,
+                                      )
+                                    : child;
                               } else {
-                                return CircularProgressIndicator();
+                                return const SkeletonAvatar(
+                                  style: SkeletonAvatarStyle(
+                                    width: 150,
+                                    height: 110,
+                                  ),
+                                );
                               }
                             },
                           );

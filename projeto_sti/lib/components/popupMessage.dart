@@ -128,6 +128,67 @@ showPopupMessageWithFunction(BuildContext context, String type, String message,
   });
 }
 
+AlertDialog deleteCommentAlert(BuildContext context) {
+  return AlertDialog(
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25.0))),
+    contentPadding: const EdgeInsets.all(20.0),
+    backgroundColor: Colors.black,
+    title: const Icon(Icons.error_outline, size: 50.0, color: Colors.red),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 40,
+          child: Center(
+            child: Text(
+              "Are you sure you want to delete this comment?",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            const SizedBox(height: 30.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  child: const Text("Cancel"),
+                  style: TextButton.styleFrom(
+                    primary: Styles.colors.errorText,
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: const Text("Yes"),
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 showPopupMessage(
     BuildContext context, String type, String message, bool cancel) {
   // late Timer _timer;
