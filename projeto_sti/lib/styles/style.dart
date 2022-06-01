@@ -64,8 +64,8 @@ class _TextStyle {
   );
 
   final rating = GoogleFonts.lato(
-    fontSize: 18,
-    color: Colors.grey,
+    fontSize: 15,
+    color: Colors.white,
     fontWeight: FontWeight.w400,
   );
 

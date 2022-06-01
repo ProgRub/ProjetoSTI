@@ -66,6 +66,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
   List<Comment> comments = [];
   List<String> user = [];
   late String usersRating = "-";
+  late double commentSectionSize = 140;
 
   @override
   void initState() {
@@ -280,29 +281,55 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                 const SizedBox(
                   width: 10.0,
                 ),
-                Text(
-                  tvShow.rating.toString(),
-                  style: Styles.fonts.rating,
+                Tooltip(
+                  height: 40,
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black),
+                  message: "IMDb's rating",
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Row(
+                    children: [
+                      Text(
+                        tvShow.rating.toString(),
+                        style: Styles.fonts.rating,
+                      ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      const Icon(Icons.star, size: 22.0, color: Colors.yellow),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  width: 8.0,
-                ),
-                const Icon(Icons.star, size: 25.0, color: Colors.yellow),
                 const SizedBox(
                   width: 10.0,
                 ),
-                Text(
-                  "|  " + usersRating,
-                  style: Styles.fonts.rating,
+                Tooltip(
+                  height: 40,
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black),
+                  message: "User's rating",
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Row(
+                    children: [
+                      Text(
+                        "|  " + usersRating,
+                        style: Styles.fonts.rating,
+                      ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      Image.asset(
+                        "packages/projeto_sti/assets/images/popcorn.png",
+                        fit: BoxFit.contain,
+                        width: 16,
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  width: 8.0,
-                ),
-                Image.asset(
-                  "packages/projeto_sti/assets/images/popcorn.png",
-                  fit: BoxFit.contain,
-                  width: 19,
-                )
               ]),
             ),
             Padding(
@@ -659,7 +686,7 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
             right: 20.0,
           ),
           child: SizedBox(
-              height: 140,
+              height: commentSectionSize,
               child: FutureBuilder(
                 future: CommentAPI().getComments(tvShow.id),
                 builder: (BuildContext context,
@@ -694,6 +721,9 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                       var bdate = b.date;
                       return -adate.compareTo(bdate);
                     });
+                    comments.length > 1
+                        ? commentSectionSize = 250
+                        : commentSectionSize = 140;
                     if (comments.isNotEmpty) {
                       int sumOfRatings = 0;
                       child = ListView.separated(

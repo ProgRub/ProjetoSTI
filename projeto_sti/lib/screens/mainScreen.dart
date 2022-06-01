@@ -565,7 +565,7 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(
               height: 10.0,
             ),
-            Text("Let's find cool things to watch", style: Styles.fonts.rating),
+            Text("Let's find cool things to watch", style: Styles.fonts.plot),
           ],
         ),
         Stack(
