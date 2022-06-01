@@ -3,15 +3,19 @@ import '../styles/style.dart';
 
 class CommentBox extends StatefulWidget {
   late String rate, comment, date, userName, userImage;
-  CommentBox(this.rate, this.comment, this.date, this.userName, this.userImage, {Key? key}) : super(key: key);
+  CommentBox(this.rate, this.comment, this.date, this.userName, this.userImage,
+      {Key? key})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CommentBoxState(rate, comment, date, userName, userImage);
+  State<StatefulWidget> createState() =>
+      _CommentBoxState(rate, comment, date, userName, userImage);
 }
 
 class _CommentBoxState extends State<CommentBox> {
   late String rate, comment, date, userName, userImage;
-  _CommentBoxState(this.rate, this.comment, this.date, this.userName, this.userImage);
+  _CommentBoxState(
+      this.rate, this.comment, this.date, this.userName, this.userImage);
 
   late String firstHalf;
   late String secondHalf;
@@ -114,14 +118,19 @@ class _CommentBoxState extends State<CommentBox> {
                     ? Text(comment, style: Styles.fonts.comment)
                     : Column(
                         children: <Widget>[
-                          Text(flag ? (firstHalf + "...") : (firstHalf + secondHalf), style: Styles.fonts.comment),
+                          Text(
+                              flag
+                                  ? (firstHalf + "...")
+                                  : (firstHalf + secondHalf),
+                              style: Styles.fonts.comment),
                           InkWell(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Text(
                                   flag ? "show more" : "show less",
-                                  style: const TextStyle(color: Colors.blue),
+                                  style:
+                                      TextStyle(color: Styles.colors.lightBlue),
                                 ),
                               ],
                             ),
