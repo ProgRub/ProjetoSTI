@@ -36,7 +36,7 @@ class UserAPI {
       "favouriteTvShows": [],
       "watchedMovies": [],
       "watchedTvShows": [],
-      "dailySuggestions": {}
+      "dailySuggestions": []
     });
     setLoggedInUser();
   }
