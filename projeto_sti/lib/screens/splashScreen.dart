@@ -24,10 +24,15 @@ class _SplashState extends State<SplashScreen> {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => const LoginScreen()));
       } else {
-        Authentication().loggedInUser = user;
-        await UserAPI().setLoggedInUser();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => const MainScreen()));
+        try {
+          Authentication().loggedInUser = user;
+          await UserAPI().setLoggedInUser();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => const MainScreen()));
+        } catch (e) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => const LoginScreen()));
+        }
       }
       subscription.cancel();
     });
