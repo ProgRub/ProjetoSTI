@@ -22,6 +22,7 @@ class UserAPI {
       FirebaseFirestore.instance.collection('users');
 
   UserModel? loggedInUser;
+  late Map<String, num> signedUpUserPreferences;
 
   Future<void> addUser(UserModel user, XFile imageFile) async {
     var signingUpUser = await collection.add({
@@ -62,6 +63,7 @@ class UserAPI {
     var user = collection.doc(loggedInUser!.id);
     user.update({"genrePreferences": genrePreferences});
     loggedInUser!.genrePreferences = genrePreferences;
+    signedUpUserPreferences = genrePreferences;
   }
 
   List<String> getGenrePreferences() {
@@ -289,7 +291,13 @@ class UserAPI {
     Set<String> preferredGenres = loggedInUser!.genrePreferences.keys
         .where((element) => loggedInUser!.genrePreferences[element]! > 0.75)
         .toSet();
+    if (preferredGenres.isEmpty) {
+      preferredGenres = signedUpUserPreferences.keys
+          .where((element) => signedUpUserPreferences[element]! > 0.75)
+          .toSet();
+    }
     Map<dynamic, num> preferredPrograms = {};
+    print(preferredGenres);
     for (var program in programs) {
       Set genresProgram = (program.genres).toSet();
       preferredPrograms.addEntries({
@@ -301,6 +309,7 @@ class UserAPI {
       ..sort((e1, e2) {
         return e2.value.compareTo(e1.value);
       });
+    print(sortedPrograms);
     for (var program in sortedPrograms) {
       if (!alreadySuggestedPrograms.contains(program.key)) {
         collection.doc(loggedInUser!.id).update({
