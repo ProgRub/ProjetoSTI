@@ -30,7 +30,7 @@ class _UserInfoState extends State<UserInfoScreen> {
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  
+
   late XFile? imageFile = null;
   final ImagePicker _picker = ImagePicker();
 
@@ -132,7 +132,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                                   backgroundImage: imageFile == null
                                       ? null
                                       //: Image.file(File(imageFile!.path)).image,
-                                      : Image.file(File(imageFile!.path)).image,
+                                      : Image.network(imageFile!.path).image,
                                   radius: 34.0,
                                 ),
                               ),
@@ -233,7 +233,7 @@ class _UserInfoState extends State<UserInfoScreen> {
 
   void tryAddUser(BuildContext context) {
     if (!hasInternet(context, _connectionStatus)) return;
-    
+
     if (_userInfoFormKey.currentState!.validate()) {
       if (_gender == Gender.none) {
         showPopupMessage(context, "error", "Choose your gender!", false);
@@ -254,7 +254,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                 watchedMovies: [],
                 watchedTvShows: []),
             imageFile!);
-         
+
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => const ChooseGenresScreen()));
       }
