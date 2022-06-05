@@ -303,6 +303,12 @@ class _WriteCommentState extends State<WriteCommentScreen> {
               ));
         }
       });
+    } else {
+      showPopupMessage(
+          context,
+          "error",
+          isMovie ? "Please, rate this movie!" : "Please, rate this tv show!",
+          false);
     }
   }
 }
