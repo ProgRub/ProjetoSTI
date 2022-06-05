@@ -14,6 +14,9 @@ String? ageValidator(String? value) {
     return 'Please enter your age';
   } else if (!_isNumeric(value.toString())) {
     return 'Please enter a number';
+  } else if (int.parse(value.toString()) < 0 ||
+      int.parse(value.toString()) > 100) {
+    return 'Age between 1 and 100';
   }
   return null;
 }
