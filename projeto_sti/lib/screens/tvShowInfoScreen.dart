@@ -1051,19 +1051,48 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
               ),
             ),
             clickedImage
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        clickedImage = false;
-                      });
-                    },
-                    child: SizedBox.expand(
-                      child: Container(
-                        color: Styles.colors.backgroundDarker,
-                        child: Image(
-                          fit: BoxFit.fitWidth,
-                          image: clickedPhoto.image,
-                        ),
+                ? SizedBox.expand(
+                    child: Container(
+                      color: Styles.colors.backgroundDarker,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 10.0, top: 15.0, bottom: 15.0),
+                                  child: Container(
+                                    width: 47,
+                                    height: 47,
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xffF4F6FD),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          clickedImage = false;
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        color: Colors.black,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                          Image(
+                            fit: BoxFit.fitWidth,
+                            image: clickedPhoto.image,
+                          ),
+                          const SizedBox(height: 15.0)
+                        ],
                       ),
                     ),
                   )
