@@ -32,6 +32,7 @@ class _UserInfoState extends State<UserInfoScreen> {
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   late XFile? imageFile = null;
+  late ImageProvider<Object>? image = null;
   final ImagePicker _picker = ImagePicker();
 
   final GlobalKey<FormState> _userInfoFormKey = GlobalKey<FormState>();
@@ -129,10 +130,7 @@ class _UserInfoState extends State<UserInfoScreen> {
                                 radius: 38.0,
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white,
-                                  backgroundImage: imageFile == null
-                                      ? null
-                                      //: Image.file(File(imageFile!.path)).image,
-                                      : Image.network(imageFile!.path).image,
+                                  backgroundImage: image,
                                   radius: 34.0,
                                 ),
                               ),
@@ -370,7 +368,14 @@ class _UserInfoState extends State<UserInfoScreen> {
         source: ImageSource.gallery,
       );
       setState(() {
-        if (pickedFile != null) imageFile = pickedFile;
+        if (pickedFile != null) {
+          imageFile = pickedFile;
+          try {
+            image = Image.file(File(imageFile!.path)).image;
+          } catch (e) {
+            image = Image.network(imageFile!.path).image;
+          }
+        }
       });
     } catch (e) {
       print("ERROR");

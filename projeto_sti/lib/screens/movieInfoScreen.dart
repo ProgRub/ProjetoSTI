@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +33,6 @@ import '../models/genre.dart';
 import '../models/person.dart';
 import '../models/comment.dart';
 import '../models/tvShow.dart';
-
-import 'dart:io' show Platform;
 
 class MovieInfoScreen extends StatefulWidget {
   late Movie movie;
@@ -234,15 +233,19 @@ class _MovieInfoState extends State<MovieInfoScreen> {
                 ),
                 onPressed: () async {
                   if (!hasInternet(context, _connectionStatus)) return;
-
-                  setState(() {
-                    if (Platform.isAndroid || Platform.isIOS) {
+                  if (defaultTargetPlatform == TargetPlatform.iOS ||
+                      defaultTargetPlatform == TargetPlatform.android) {
+                    setState(() {
                       _videoController.seekTo(Duration.zero);
                       playingTrailer = true;
                       _videoController.play();
-                      return;
+                    });
+                  } else {
+                    if (!await launchUrl(Uri.parse(
+                        'https://www.youtube.com/watch?v=' + movie.trailer))) {
+                      if (!hasInternet(context, _connectionStatus)) return;
                     }
-                  });
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,

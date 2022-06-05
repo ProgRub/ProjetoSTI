@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_sti/api/internetConnection.dart';
@@ -225,14 +226,22 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                   size: 35.0,
                   color: Styles.colors.purple,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (!hasInternet(context, _connectionStatus)) return;
 
-                  setState(() {
-                    _videoController.seekTo(Duration.zero);
-                    playingTrailer = true;
-                    _videoController.play();
-                  });
+                  if (defaultTargetPlatform == TargetPlatform.iOS ||
+                      defaultTargetPlatform == TargetPlatform.android) {
+                    setState(() {
+                      _videoController.seekTo(Duration.zero);
+                      playingTrailer = true;
+                      _videoController.play();
+                    });
+                  } else {
+                    if (!await launchUrl(Uri.parse(
+                        'https://www.youtube.com/watch?v=' + tvShow.trailer))) {
+                      if (!hasInternet(context, _connectionStatus)) return;
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
