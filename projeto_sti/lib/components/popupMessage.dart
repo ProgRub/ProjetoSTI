@@ -25,7 +25,7 @@ class PopupMessage extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0))),
       contentPadding: const EdgeInsets.all(20.0),
-      backgroundColor: Colors.black,
+      backgroundColor: Styles.colors.background,
       title: type == "error"
           ? const Icon(Icons.error_outline, size: 50.0, color: Colors.red)
           : const Icon(Icons.check_circle, size: 50.0, color: Colors.green),
@@ -262,6 +262,7 @@ showPopupMessage(
   showDialog(
       barrierDismissible: cancel ? false : true,
       context: context,
+      barrierColor: Styles.colors.darker,
       builder: (BuildContext builderContext) {
         return PopupMessage(type: type, message: message, cancel: cancel);
       }).then((val) {});
