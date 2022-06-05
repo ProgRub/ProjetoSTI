@@ -171,7 +171,8 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                   onChanged: (newRating) {
                     setState(() {
                       rating = newRating;
-                      ratingLabel = getRatingName((rating + 1).toInt().toString());
+                      ratingLabel =
+                          getRatingName((rating + 1).toInt().toString());
                       movedBar = true;
                     });
                   },
@@ -189,6 +190,7 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.black,
+                    border: Border.all(color: Styles.colors.lightBlue),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextFormField(
@@ -196,18 +198,18 @@ class _WriteCommentState extends State<WriteCommentScreen> {
                     obscureText: false,
                     maxLines: double.maxFinite.floor(),
                     style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Tell us what you think... (Optional)',
                       hintStyle: TextStyle(
                         fontFamily: 'Lexend Deca',
-                        color: Styles.colors.grey,
+                        color: Colors.grey,
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                       ),
                       filled: true,
                       contentPadding:
-                          const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 16),
+                          EdgeInsetsDirectional.fromSTEB(24, 16, 24, 16),
                     ),
                   ),
                 ),
