@@ -51,6 +51,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final int AMOUNT_PROGRAMS_LOAD = 9;
 
+  GlobalKey dataKey = GlobalKey();
   @override
   initState() {
     posters = {};
@@ -604,6 +605,7 @@ class _MainScreenState extends State<MainScreen> {
               (BuildContext context, AsyncSnapshot<Set<Object?>> snapshot) {
             Widget child;
             child = TextField(
+              textInputAction: TextInputAction.none,
               autocorrect: false,
               enableSuggestions: false,
               style: Styles.fonts.commentName,
@@ -627,10 +629,31 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
             );
+
             if (snapshot.hasData) {
               child = GFSearchBar(
                 searchList: snapshot.data!.toList(),
+                noItemsFoundWidget: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset(
+                            "packages/projeto_sti/assets/images/popcorn.png",
+                            width: 40,
+                            height: 40),
+                        const SizedBox(height: 20.0),
+                        Text("Oops! Couldn't find that!",
+                            style: Styles.fonts.label),
+                        const SizedBox(height: 20.0),
+                      ],
+                    ),
+                  ),
+                ),
                 searchQueryBuilder: (query, list) => list.where((item) {
+                  Scrollable.ensureVisible(dataKey.currentContext!,
+                      duration: const Duration(seconds: 1));
                   if (item!.runtimeType == Movie) {
                     Movie movie = item as Movie;
                     return movie.title
@@ -845,6 +868,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     topSection,
                     buttonsSection,
+                    Container(key: dataKey),
                     searchBar,
                     _buildTextLabel(
                         "Today's Recommendation", Styles.fonts.title),

@@ -12,6 +12,7 @@ import 'package:projeto_sti/models/movie.dart';
 import 'package:projeto_sti/models/tvShow.dart';
 import 'package:projeto_sti/models/user.dart';
 import 'package:projeto_sti/screens/editProfileScreen.dart';
+import 'package:projeto_sti/screens/favouritesScreen.dart';
 import 'package:projeto_sti/screens/genresScreen.dart';
 import 'package:projeto_sti/screens/movieInfoScreen.dart';
 import 'package:projeto_sti/screens/tvShowInfoScreen.dart';
@@ -43,6 +44,7 @@ class _ProfileState extends State<ProfileScreen> {
   late Future<List<TvShow>> tvShowsFuture;
   late List<Movie> movies;
   late List<TvShow> tvShows;
+  GlobalKey dataKey = GlobalKey();
 
   @override
   initState() {
@@ -70,8 +72,7 @@ class _ProfileState extends State<ProfileScreen> {
             Image.asset("packages/projeto_sti/assets/images/popcorn.png",
                 width: 60, height: 60),
             const SizedBox(height: 20.0),
-            Text("You don't have watched $type\s!",
-                style: Styles.fonts.label),
+            Text("You don't have watched $type\s!", style: Styles.fonts.label),
             const SizedBox(height: 10.0),
             ElevatedButton(
               child: Text("Find $type\s!", style: Styles.fonts.button),
@@ -355,22 +356,39 @@ class _ProfileState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoSection(
-                          _countNumberFavourites().toString(), "Favourites"),
-                      _buildInfoSection(
-                          UserAPI()
-                              .loggedInUser!
-                              .watchedMovies
-                              .length
-                              .toString(),
-                          "Watched\n Movies"),
-                      _buildInfoSection(
-                          UserAPI()
-                              .loggedInUser!
-                              .watchedTvShows
-                              .length
-                              .toString(),
-                          "Watched \nTv Shows"),
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FavouritesScreen(),
+                            )),
+                        child: _buildInfoSection(
+                            _countNumberFavourites().toString(), "Favourites"),
+                      ),
+                      GestureDetector(
+                        onTap: () => Scrollable.ensureVisible(
+                            dataKey.currentContext!,
+                            duration: const Duration(seconds: 1)),
+                        child: _buildInfoSection(
+                            UserAPI()
+                                .loggedInUser!
+                                .watchedMovies
+                                .length
+                                .toString(),
+                            "Watched\n Movies"),
+                      ),
+                      GestureDetector(
+                        onTap: () => Scrollable.ensureVisible(
+                            dataKey.currentContext!,
+                            duration: const Duration(seconds: 1)),
+                        child: _buildInfoSection(
+                            UserAPI()
+                                .loggedInUser!
+                                .watchedTvShows
+                                .length
+                                .toString(),
+                            "Watched \nTv Shows"),
+                      ),
                     ],
                   ),
                   _buildTextLabel("Favourite Genres", Styles.fonts.label),
@@ -389,12 +407,7 @@ class _ProfileState extends State<ProfileScreen> {
                           children: list,
                         );
                       }),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     ...genres,
-                  //   ],
-                  // ),
+                  SizedBox(key: dataKey),
                   _buildTextLabel("Watched", Styles.fonts.label),
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0),
