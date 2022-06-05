@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_sti/components/popupMessage.dart';
 import '../styles/style.dart';
 
 class CommentBox extends StatefulWidget {
-  late String rate, comment, date, userName, userImage;
+  late String rate, comment, date, userName, userImage, id;
   CommentBox(this.rate, this.comment, this.date, this.userName, this.userImage,
+      this.id,
       {Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
-      _CommentBoxState(rate, comment, date, userName, userImage);
+      _CommentBoxState(rate, comment, date, userName, userImage, id);
 }
 
 class _CommentBoxState extends State<CommentBox> {
-  late String rate, comment, date, userName, userImage;
-  _CommentBoxState(
-      this.rate, this.comment, this.date, this.userName, this.userImage);
+  late String rate, comment, date, userName, userImage, id;
+  _CommentBoxState(this.rate, this.comment, this.date, this.userName,
+      this.userImage, this.id);
 
   late String firstHalf;
   late String secondHalf;
   late bool flag = true;
+  var _tapPosition;
 
   @override
   void initState() {
@@ -34,9 +37,47 @@ class _CommentBoxState extends State<CommentBox> {
     }
   }
 
+  _showPopupMenu() async {
+    await showMenu(
+      color: Colors.red,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      position: RelativeRect.fromRect(_tapPosition & const Size(40, 40),
+          Offset.zero & const Size(100, 100)),
+      items: [
+        PopupMenuItem(
+          onTap: () async {
+            await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return deleteCommentAlertWithFunction(context, id);
+              },
+            );
+          },
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: const [
+              Icon(Icons.delete),
+              Text("Delete Comment"),
+            ],
+          ),
+        ),
+      ],
+      elevation: 8.0,
+    );
+  }
+
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Container container = Container(
       decoration: const BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.all(
@@ -147,5 +188,11 @@ class _CommentBoxState extends State<CommentBox> {
             ])),
       ),
     );
+    return id != ""
+        ? GestureDetector(
+            onLongPress: _showPopupMenu,
+            onTapDown: _storePosition,
+            child: container)
+        : container;
   }
 }

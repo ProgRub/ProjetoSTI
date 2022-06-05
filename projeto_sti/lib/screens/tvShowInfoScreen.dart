@@ -758,12 +758,23 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                                     (sumOfRatings / comments.length)
                                         .toStringAsFixed(1));
                                 usersRating = num.toString();
-                                child = CommentBox(
-                                    comments[index].rate,
-                                    comments[index].comment,
-                                    comments[index].date,
-                                    userName,
-                                    userImage);
+
+                                child = comments[index].userId ==
+                                        UserAPI().loggedInUser!.authId
+                                    ? CommentBox(
+                                        comments[index].rate,
+                                        comments[index].comment,
+                                        comments[index].date,
+                                        userName,
+                                        userImage,
+                                        comments[index].id)
+                                    : CommentBox(
+                                        comments[index].rate,
+                                        comments[index].comment,
+                                        comments[index].date,
+                                        userName,
+                                        userImage,
+                                        "");
 
                                 return comments[index].userId ==
                                         UserAPI().loggedInUser!.authId

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projeto_sti/api/comments.dart';
 import 'package:projeto_sti/styles/style.dart';
 
 class PopupMessage extends StatelessWidget {
@@ -7,12 +8,14 @@ class PopupMessage extends StatelessWidget {
   final String message;
   final bool cancel;
   Null Function()? function;
+  late String? id;
 
   PopupMessage({
     required this.type,
     required this.message,
     required this.cancel,
     this.function,
+    this.id,
     Key? key,
   }) : super(key: key);
 
@@ -179,6 +182,70 @@ AlertDialog deleteCommentAlert(BuildContext context) {
                     ),
                   ),
                   onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+AlertDialog deleteCommentAlertWithFunction(BuildContext context, id) {
+  return AlertDialog(
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25.0))),
+    contentPadding: const EdgeInsets.all(20.0),
+    backgroundColor: Colors.black,
+    title: const Icon(Icons.error_outline, size: 50.0, color: Colors.red),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 40,
+          child: Center(
+            child: Text(
+              "Are you sure you want to delete this comment?",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            const SizedBox(height: 30.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  child: const Text("Cancel"),
+                  style: TextButton.styleFrom(
+                    primary: Styles.colors.errorText,
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: const Text("Yes"),
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () async {
+                    await CommentAPI().deleteUserComment(id);
+                    Navigator.of(context).pop(true);
+                  },
                 ),
               ],
             ),
