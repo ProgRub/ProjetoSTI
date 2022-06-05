@@ -210,9 +210,16 @@ class _EditProfileState extends State<EditProfileScreen> {
           minimumSize: const Size(300, 40),
         ),
         onPressed: () => _getPasswordChanged(context),
-        child: Text(
-          'Change Password',
-          style: Styles.fonts.button,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.password, size: 25),
+            const SizedBox(width: 10),
+            Text(
+              'Change Password',
+              style: Styles.fonts.button,
+            ),
+          ],
         ),
       ),
     );
@@ -230,9 +237,16 @@ class _EditProfileState extends State<EditProfileScreen> {
         onPressed: () {
           _getNewGenrePreferences(context);
         },
-        child: Text(
-          'Favourite Genres',
-          style: Styles.fonts.button,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.movie_filter, size: 25),
+            const SizedBox(width: 10),
+            Text(
+              'Favourite Genres ',
+              style: Styles.fonts.button,
+            )
+          ],
         ),
       ),
     );
