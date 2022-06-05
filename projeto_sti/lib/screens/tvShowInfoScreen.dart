@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:projeto_sti/api/internetConnection.dart';
 import 'package:projeto_sti/api/persons.dart';
 import 'package:projeto_sti/api/users.dart';
@@ -727,8 +728,8 @@ class _TvShowInfoState extends State<TvShowInfoScreen> {
                       snapshot.hasData) {
                     comments = snapshot.data!;
                     comments.sort((a, b) {
-                      var adate = a.date;
-                      var bdate = b.date;
+                      var adate = Jiffy(a.date, 'MMM do yyyy').dateTime;
+                      var bdate = Jiffy(b.date, 'MMM do yyyy').dateTime;
                       return -adate.compareTo(bdate);
                     });
                     comments.length > 1
